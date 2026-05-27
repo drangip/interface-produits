@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Compétitivité prix — Castorama | WPP Media</title>
+<script src="lib/react.min.js"></script>
+<script src="lib/react-dom.min.js"></script>
+<script src="lib/prop-types.min.js"></script>
+<script src="lib/recharts.js"></script>
+<script src="lib/babel.min.js"></script>
+<style>
+:root{--bg:#EEF1F6;--card:#fff;--nav:#0D1B4B;--primary:#006AB3;--t1:#0F1B35;--t2:#4B5675;--t3:#9CA3AF;--border:#E5E7EB;--r:10px;--rs:6px;--sh:0 1px 4px rgba(13,27,75,.07),0 2px 10px rgba(13,27,75,.04);--high:#EF4444;--low:#22C55E;--sim:#3B82F6}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;color:var(--t1);padding-top:42px}
+.content{padding:104px 20px 48px;max-width:1440px;margin:0 auto}
+.sec{margin-bottom:28px}
+.stit{font-size:20px;font-weight:700;color:var(--t1);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--primary)}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:16px}
+.ct{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-bottom:8px}
+.loading{display:flex;align-items:center;justify-content:center;height:100vh;gap:12px;font-size:14px;color:var(--t2)}
+.spin{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.fsel{padding:5px 10px;border:1.5px solid var(--border);border-radius:20px;background:#fff;color:var(--t1);font-size:12px;font-weight:500;cursor:pointer;outline:none;font-family:inherit;appearance:none;padding-right:24px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%239CA3AF'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:border-color .15s}
+.fsel:hover,.fsel:focus{border-color:var(--primary)}
+.fon{border-color:var(--primary);color:var(--primary);font-weight:600}
+.tbl{width:100%;border-collapse:collapse;font-size:12px}
+.tbl th{text-align:left;padding:8px 12px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t3);border-bottom:2px solid var(--border);white-space:nowrap}
+.tbl th.sort{cursor:pointer;user-select:none}
+.tbl th.sort:hover{color:var(--primary)}
+.tbl td{padding:7px 12px;border-bottom:1px solid #F8FAFC;vertical-align:middle}
+.tbl tr:last-child td{border-bottom:none}
+.lbl-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:700;white-space:nowrap}
+.ctt{background:#fff;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.ttl{font-weight:700;margin-bottom:3px;color:var(--t1);font-size:11px}
+.legend-box{background:#FFF5F5;border:1px solid #FECACA;border-radius:var(--rs);padding:14px;font-size:12px;line-height:1.7;color:var(--t2)}
+.legend-box b{color:var(--t1)}
+.legend-hl{background:#FEF3C7;border:1px solid #FDE68A;border-radius:4px;padding:6px 10px;margin-top:10px;font-size:11px;color:#92400E;font-weight:500}
+</style>
+</head>
+<body>
+
+<nav id="main-nav" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0D1B4B;height:42px;display:flex;align-items:center;padding:0 20px;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:inherit">
+  <a href="dashboard.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Suivi Produits</a>
+  <a href="audit_flux.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Audit de flux</a>
+  <a href="competitivite_prix.html" style="padding:4px 14px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Compétitivité prix</a>
+  <a href="mesure_efficacite.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
+</nav>
+
+<div id="subbar" style="position:fixed;top:42px;left:0;right:0;height:46px;background:#fff;border-bottom:1px solid #E5E7EB;z-index:100;display:flex;align-items:center;justify-content:flex-end;padding:0 20px;">
+  <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style="height:28px" onerror="this.style.display='none'">
+</div>
+
+<div id="root"></div>
+<script src="lib/react.min.js"></script>
+<script src="lib/react-dom.min.js"></script>
+<script src="lib/prop-types.min.js"></script>
+<script src="lib/recharts.js"></script>
+<script src="lib/babel.min.js"></script>
+<script type="text/babel">
+const {useState,useEffect,useMemo}=React;
+const {PieChart,Pie,Cell,Tooltip,ResponsiveContainer,Legend}=Recharts;
+
+function seededRand(seed){let s=seed;return()=>{s=(s*16807+0)%2147483647;return(s-1)/2147483646;};}
+
+const INTENSITIES=[
+  {k:'+', label:'>', pct_diff:[5,15]},
+  {k:'++', label:'>>', pct_diff:[15,30]},
+  {k:'+++', label:'>>>', pct_diff:[30,50]},
+  {k:'++++', label:'>>>>', pct_diff:[50,80]},
+];
+
+const LABEL_COLORS={High:'#EF4444',Low:'#22C55E',Similar:'#3B82F6'};
+const ROW_BG={High:'#FFF5F5',Low:'#F0FDF4',Similar:'#EFF6FF'};
+
+function genPriceData(prods){
+  const rnd=seededRand(333);
+  return prods.map(p=>{
+    const r=rnd();
+    let type,intKey,mult;
+    if(r<0.01){
+      type='Similar';intKey='';
+      mult=1+(rnd()-.5)*.08;
+    } else if(r<0.52){
+      type='High';
+      const r2=rnd();
+      if(r2<0.58){intKey='+';mult=1-(.05+rnd()*.10);}
+      else if(r2<0.79){intKey='++';mult=1-(.15+rnd()*.15);}
+      else if(r2<0.94){intKey='+++';mult=1-(.30+rnd()*.20);}
+      else{intKey='++++';mult=1-(.50+rnd()*.25);}
+    } else {
+      type='Low';
+      const r2=rnd();
+      if(r2<0.79){intKey='+';mult=1+(.05+rnd()*.10);}
+      else if(r2<0.91){intKey='++';mult=1+(.15+rnd()*.15);}
+      else if(r2<0.96){intKey='+++';mult=1+(.30+rnd()*.20);}
+      else{intKey='++++';mult=1+(.50+rnd()*.25);}
+    }
+    const bench=Math.round(p.price*mult*100)/100;
+    const diffPct=Math.round((p.price-bench)/bench*100*10)/10;
+    return{id:p.id,title:p.title||p.name,price:p.price,bench,label:`${type}/${intKey}`,type,intKey,diffPct,impressions:p.stats?.impressions||0,category:p.category,brand:p.brand};
+  });
+}
+
+function LabelBadge({type,intKey}){
+  const c=LABEL_COLORS[type]||'#94A3B8';
+  return <span className="lbl-badge" style={{background:c+'18',color:c}}>{type}{intKey?'/'+intKey:''}</span>;
+}
+
+function fmt(v){return new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',minimumFractionDigits:2}).format(v);}
+function fmtK(v){return v>=1000?(v/1000).toFixed(1)+'k':String(v);}
+
+function App(){
+  const [prods,setProds]=useState(null);
+  const [selType,setSelType]=useState('all');
+  const [selCat,setSelCat]=useState('all');
+  const [selBrand,setSelBrand]=useState('all');
+  const [sortCol,setSortCol]=useState('impressions');
+  const [sortDir,setSortDir]=useState(-1);
+
+  useEffect(()=>{fetch('./data/products.json').then(r=>r.json()).then(setProds).catch(()=>setProds([]));},[]);
+
+  const allData=useMemo(()=>prods?genPriceData(prods):null,[prods]);
+
+  const cats=useMemo(()=>allData?[...new Set(allData.map(d=>d.category))].sort():[],[allData]);
+  const brands=useMemo(()=>allData?[...new Set(allData.map(d=>d.brand))].sort():[],[allData]);
+
+  const filtered=useMemo(()=>{
+    if(!allData)return[];
+    return allData.filter(d=>
+      (selType==='all'||d.type===selType)&&
+      (selCat==='all'||d.category===selCat)&&
+      (selBrand==='all'||d.brand===selBrand)
+    );
+  },[allData,selType,selCat,selBrand]);
+
+  const overview=useMemo(()=>{
+    if(!filtered.length)return{pie:[],table:[],total:0};
+    const groups={};
+    filtered.forEach(d=>{groups[d.label]=(groups[d.label]||0)+1;});
+    const total=filtered.length;
+    const table=Object.entries(groups).map(([label,count])=>{
+      const [type]=label.split('/');
+      return{label,type,count,pct:Math.round(count/total*1000)/10};
+    }).sort((a,b)=>{
+      const order={High:0,Low:1,Similar:2};
+      if(order[a.type]!==order[b.type])return order[a.type]-order[b.type];
+      return b.count-a.count;
+    });
+    const typeGroups={};
+    filtered.forEach(d=>{typeGroups[d.type]=(typeGroups[d.type]||0)+1;});
+    const pie=Object.entries(typeGroups).map(([name,value])=>({name,value,color:LABEL_COLORS[name]}));
+    return{pie,table,total};
+  },[filtered]);
+
+  const sorted=useMemo(()=>[...filtered].sort((a,b)=>{
+    const av=a[sortCol]??0,bv=b[sortCol]??0;
+    return typeof av==='string'?av.localeCompare(bv)*sortDir:(bv-av)*sortDir;
+  }),[filtered,sortCol,sortDir]);
+
+  function toggleSort(col){if(sortCol===col)setSortDir(d=>-d);else{setSortCol(col);setSortDir(-1);}}
+  function sortIcon(col){if(sortCol!==col)return' ↕';return sortDir===-1?' ↓':' ↑';}
+
+  if(!allData)return <div className="loading"><div className="spin"/><span>Chargement…</span></div>;
+
+  return(
+    <div className="content">
+
+      {/* ── FILTRES ── */}
+      <div style={{display:'flex',alignItems:'center',gap:8,marginBottom:24,flexWrap:'wrap'}}>
+        <select className={`fsel${selType!=='all'?' fon':''}`} value={selType} onChange={e=>setSelType(e.target.value)}>
+          <option value="all">Label Type</option>
+          <option value="High">High</option>
+          <option value="Low">Low</option>
+          <option value="Similar">Similar</option>
+        </select>
+        <select className={`fsel${selCat!=='all'?' fon':''}`} value={selCat} onChange={e=>setSelCat(e.target.value)}>
+          <option value="all">Univers</option>
+          {cats.map(c=><option key={c} value={c}>{c}</option>)}
+        </select>
+        <select className={`fsel${selBrand!=='all'?' fon':''}`} value={selBrand} onChange={e=>setSelBrand(e.target.value)}>
+          <option value="all">Brand</option>
+          {brands.map(b=><option key={b} value={b}>{b}</option>)}
+        </select>
+      </div>
+
+      {/* ── OVERVIEW ── */}
+      <div className="sec">
+        <div className="stit">Overview</div>
+        <div className="card">
+          <div className="ct">Distribution by number of products in your catalog</div>
+          <div style={{display:'flex',gap:24,alignItems:'flex-start',flexWrap:'wrap'}}>
+
+            {/* Pie */}
+            <div style={{minWidth:220,flex:'0 0 220px'}}>
+              <ResponsiveContainer width="100%" height={200}>
+                <PieChart>
+                  <Pie data={overview.pie} cx="50%" cy="50%" outerRadius={85} dataKey="value" strokeWidth={2} stroke="#fff">
+                    {overview.pie.map((e,i)=><Cell key={i} fill={e.color}/>)}
+                  </Pie>
+                  <Tooltip content={({active,payload})=>!active||!payload?.length?null:
+                    <div className="ctt"><div className="ttl">{payload[0].name}</div><b>{payload[0].value} produits</b> — {Math.round(payload[0].value/overview.total*1000)/10}%</div>}/>
+                </PieChart>
+              </ResponsiveContainer>
+              <div style={{display:'flex',gap:12,justifyContent:'center',flexWrap:'wrap',marginTop:4}}>
+                {overview.pie.map(e=>(
+                  <div key={e.name} style={{display:'flex',alignItems:'center',gap:4,fontSize:11,color:'var(--t2)'}}>
+                    <div style={{width:8,height:8,borderRadius:2,background:e.color}}/>
+                    <span>{e.name}</span>
+                    <b style={{color:e.color}}>{Math.round(e.value/overview.total*1000)/10}%</b>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Table */}
+            <div style={{flex:1,minWidth:260}}>
+              <table className="tbl">
+                <thead>
+                  <tr>
+                    <th>Label</th>
+                    <th style={{textAlign:'right'}}>Nb produits</th>
+                    <th style={{textAlign:'right'}}>% produits</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {overview.table.map(row=>(
+                    <tr key={row.label} style={{background:ROW_BG[row.type]+'80'}}>
+                      <td><LabelBadge type={row.type} intKey={row.label.split('/')[1]}/></td>
+                      <td style={{textAlign:'right',fontWeight:600}}>{row.count}</td>
+                      <td style={{textAlign:'right',color:'var(--t3)'}}>{row.pct} %</td>
+                    </tr>
+                  ))}
+                  <tr style={{borderTop:'2px solid var(--border)'}}>
+                    <td style={{fontWeight:700}}>Total</td>
+                    <td style={{textAlign:'right',fontWeight:700}}>{overview.total}</td>
+                    <td style={{textAlign:'right',fontWeight:700}}>100 %</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            {/* Legend */}
+            <div style={{flex:'0 0 260px',minWidth:220}} className="legend-box">
+              <div>Le label <b>High</b> correspond aux produits vendus à un prix <b>plus élevé</b> que le benchmark concurrentiel.</div>
+              <div style={{marginTop:8}}>Le label <b>Low</b> correspond aux produits vendus à un prix <b>plus bas</b> que le benchmark.</div>
+              <div style={{marginTop:8}}>Le label <b>Similar</b> correspond aux produits vendus à un prix <b>similaire</b> au benchmark.</div>
+              <div style={{marginTop:12,paddingTop:10,borderTop:'1px solid #FECACA'}}>
+                <div style={{fontWeight:600,marginBottom:4}}>Intensité de l'écart :</div>
+                <div><b>++++</b> &gt; Écart de plus de 50%</div>
+                <div><b>+++</b> &nbsp;→ Écart de 30% à 50%</div>
+                <div><b>++</b> &nbsp;&nbsp;→ Écart de 15% à 30%</div>
+                <div><b>+</b> &nbsp;&nbsp;&nbsp;→ Écart de moins de 15%</div>
+              </div>
+              <div className="legend-hl" style={{marginTop:10}}>
+                Les produits <b>Low/++ et Low/+++</b> sont labélisés dans le flux produit.
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      {/* ── DETAILED VIEW ── */}
+      <div className="sec">
+        <div className="stit">Detailed view</div>
+        <div className="card" style={{padding:0,overflow:'hidden'}}>
+          <div style={{overflowX:'auto'}}>
+            <table className="tbl">
+              <thead>
+                <tr style={{background:'#0D1B4B'}}>
+                  <th style={{color:'rgba(255,255,255,.7)'}} className="sort" onClick={()=>toggleSort('id')}>ID{sortIcon('id')}</th>
+                  <th style={{color:'rgba(255,255,255,.7)'}}>Titre produit</th>
+                  <th style={{color:'rgba(255,255,255,.7)'}} className="sort" onClick={()=>toggleSort('label')}>Label{sortIcon('label')}</th>
+                  <th style={{color:'rgba(255,255,255,.7)',textAlign:'right'}} className="sort" onClick={()=>toggleSort('price')}>Prix{sortIcon('price')}</th>
+                  <th style={{color:'rgba(255,255,255,.7)',textAlign:'right'}} className="sort" onClick={()=>toggleSort('bench')}>Prix benchmark{sortIcon('bench')}</th>
+                  <th style={{color:'rgba(255,255,255,.7)',textAlign:'right'}} className="sort" onClick={()=>toggleSort('diffPct')}>Écart{sortIcon('diffPct')}</th>
+                  <th style={{color:'rgba(255,255,255,.7)',textAlign:'right'}} className="sort" onClick={()=>toggleSort('impressions')}>Impressions{sortIcon('impressions')}</th>
+                </tr>
+              </thead>
+              <tbody>
+                {sorted.map((row,i)=>(
+                  <tr key={row.id} style={{background:i%2===0?ROW_BG[row.type]+'60':ROW_BG[row.type]+'30'}}>
+                    <td style={{fontFamily:'monospace',fontSize:11,color:'var(--t3)'}}>{row.id}</td>
+                    <td style={{maxWidth:280,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',color:'var(--t1)',fontWeight:500}}>{row.title}</td>
+                    <td><LabelBadge type={row.type} intKey={row.intKey}/></td>
+                    <td style={{textAlign:'right',fontWeight:600}}>{fmt(row.price)}</td>
+                    <td style={{textAlign:'right',color:'var(--t2)'}}>{fmt(row.bench)}</td>
+                    <td style={{textAlign:'right',fontWeight:700,color:LABEL_COLORS[row.type]}}>
+                      {row.type==='Similar'?'≈':(row.type==='High'?'+':'-')}{Math.abs(row.diffPct)}%
+                    </td>
+                    <td style={{textAlign:'right',color:'var(--t2)'}}>{fmtK(row.impressions)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+          <div style={{padding:'10px 16px',fontSize:11,color:'var(--t3)',borderTop:'1px solid var(--border)',background:'#FAFBFC'}}>
+            {sorted.length} produit{sorted.length>1?'s':''} — cliquer sur un en-tête pour trier
+          </div>
+        </div>
+      </div>
+
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

@@ -1,0 +1,220 @@
+:root {
+  --bg: #EEF1F6;
+  --card: #FFFFFF;
+  --header-bg: #0D1B4B;
+  --primary: #006AB3;
+  --primary-light: #E8F3FB;
+  --yellow: #F5D800;
+  --yellow-dark: #D4BB00;
+  --success: #22C55E;
+  --warning: #F97316;
+  --purple: #8B5CF6;
+  --teal: #14B8A6;
+  --red: #EF4444;
+  --text-1: #0F1B35;
+  --text-2: #4B5675;
+  --text-3: #9CA3AF;
+  --border: #E5E7EB;
+  --radius: 10px;
+  --radius-sm: 6px;
+  --shadow: 0 1px 4px rgba(13,27,75,.07), 0 2px 10px rgba(13,27,75,.04);
+  --shadow-md: 0 4px 16px rgba(13,27,75,.10);
+
+  /* chart palette */
+  --c-blue:   #3B82F6;
+  --c-green:  #22C55E;
+  --c-orange: #F97316;
+  --c-purple: #8B5CF6;
+  --c-teal:   #14B8A6;
+  --c-amber:  #F59E0B;
+  --c-pink:   #EC4899;
+  --c-slate:  #64748B;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text-1);
+  font-size: 13px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* ── Layout ── */
+.page-wrapper { min-height: 100vh; display: flex; flex-direction: column; }
+.content { padding: 16px 20px 32px; max-width: 1440px; margin: 0 auto; width: 100%; }
+.section { margin-bottom: 16px; }
+
+/* ── Cards ── */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px;
+}
+.card-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-2);
+  text-transform: uppercase;
+  letter-spacing: .04em;
+  margin-bottom: 12px;
+}
+
+/* ── Grid helpers ── */
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; }
+.grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+.flex { display: flex; }
+.flex-col { flex-direction: column; }
+.items-center { align-items: center; }
+.justify-between { justify-content: space-between; }
+.gap-2 { gap: 8px; }
+.gap-3 { gap: 12px; }
+.gap-4 { gap: 16px; }
+.flex-1 { flex: 1; }
+.w-full { width: 100%; }
+
+/* ── Buttons / Tabs ── */
+.tab-group { display: flex; gap: 4px; flex-wrap: wrap; }
+.tab {
+  padding: 5px 12px;
+  border-radius: 20px;
+  border: 1px solid var(--border);
+  background: var(--card);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-2);
+  cursor: pointer;
+  transition: all .15s;
+  white-space: nowrap;
+}
+.tab:hover { border-color: var(--primary); color: var(--primary); }
+.tab.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: #fff;
+}
+.tab.active-yellow {
+  background: var(--yellow);
+  border-color: var(--yellow-dark);
+  color: var(--text-1);
+  font-weight: 600;
+}
+
+/* ── KPI chip (orange tags in Bilan global) ── */
+.kpi-chip {
+  display: flex;
+  flex-direction: column;
+  padding: 6px 12px;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: opacity .15s;
+  min-width: 72px;
+}
+.kpi-chip:hover { opacity: .85; }
+.kpi-chip .chip-label { font-size: 10px; font-weight: 600; opacity: .75; }
+.kpi-chip .chip-value { font-size: 13px; font-weight: 700; }
+
+/* ── Big numbers ── */
+.big-num { font-size: 42px; font-weight: 800; line-height: 1; }
+.big-num-sub { font-size: 12px; color: var(--text-2); margin-top: 4px; }
+
+/* ── Donut center label ── */
+.donut-wrap { position: relative; display: inline-flex; align-items: center; justify-content: center; }
+.donut-label {
+  position: absolute;
+  text-align: center;
+  pointer-events: none;
+}
+.donut-label .dl-pct { font-size: 18px; font-weight: 700; line-height: 1; }
+.donut-label .dl-tag { font-size: 10px; color: var(--text-2); }
+
+/* ── Section header ── */
+.section-title { font-size: 15px; font-weight: 700; color: var(--text-1); margin-bottom: 12px; }
+
+/* ── Trend metric selector ── */
+.metric-btn {
+  padding: 5px 14px;
+  border-radius: var(--radius-sm);
+  border: none;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all .15s;
+}
+.metric-btn.active { box-shadow: var(--shadow-md); }
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar { width: 5px; height: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 4px; }
+
+/* ── Header specific ── */
+.header-bar {
+  background: var(--header-bg);
+  padding: 0 20px;
+  height: 52px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 2px 12px rgba(0,0,0,.25);
+}
+.header-logo-zone { display: flex; align-items: center; gap: 16px; }
+.header-logo-divider { width: 1px; height: 28px; background: rgba(255,255,255,.2); }
+.header-logo img { height: 22px; display: block; }
+.header-logo-placeholder {
+  height: 22px;
+  display: flex;
+  align-items: center;
+  font-size: 13px;
+  font-weight: 700;
+  color: #fff;
+  letter-spacing: .03em;
+}
+.header-title { font-size: 14px; font-weight: 600; color: rgba(255,255,255,.9); }
+.header-date { font-size: 12px; color: rgba(255,255,255,.6); padding: 4px 10px; border: 1px solid rgba(255,255,255,.2); border-radius: 6px; cursor: pointer; }
+
+.filter-bar {
+  background: var(--card);
+  padding: 10px 20px;
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  border-bottom: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+.filter-group { display: flex; align-items: center; gap: 6px; }
+.filter-sep { width: 1px; height: 24px; background: var(--border); }
+
+/* ── Tooltip override ── */
+.recharts-tooltip-wrapper { font-size: 11px !important; }
+.custom-tooltip {
+  background: rgba(15,27,53,.92);
+  border-radius: 6px;
+  padding: 8px 12px;
+  color: #fff;
+  font-size: 11px;
+  line-height: 1.7;
+  backdrop-filter: blur(4px);
+}
+.custom-tooltip .tt-label { font-weight: 600; margin-bottom: 4px; color: #94A3B8; }
+
+/* ── Delta badge ── */
+.delta {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 6px;
+  border-radius: 4px;
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+}
+.delta.pos { background: #DCFCE7; color: #16A34A; }
+.delta.neg { background: #FEE2E2; color: #DC2626; }
+.delta.neu { background: #F1F5F9; color: var(--text-2); }

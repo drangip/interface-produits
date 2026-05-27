@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Audit de flux — Castorama | WPP Media</title>
+<script src="lib/react.min.js"></script>
+<script src="lib/react-dom.min.js"></script>
+<script src="lib/prop-types.min.js"></script>
+<script src="lib/recharts.js"></script>
+<script src="lib/babel.min.js"></script>
+<style>
+:root{--bg:#EEF1F6;--card:#fff;--nav:#0D1B4B;--primary:#006AB3;--t1:#0F1B35;--t2:#4B5675;--t3:#9CA3AF;--border:#E5E7EB;--r:10px;--rs:6px;--sh:0 1px 4px rgba(13,27,75,.07),0 2px 10px rgba(13,27,75,.04);--green:#22C55E;--red:#EF4444;--orange:#F97316}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;color:var(--t1)}
+.content{padding:104px 20px 48px;max-width:1440px;margin:0 auto}
+.sec{margin-bottom:28px}
+.stit{font-size:20px;font-weight:700;color:var(--t1);margin-bottom:14px;padding-bottom:8px;border-bottom:2px solid var(--primary)}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:16px}
+.ct{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-bottom:8px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px}
+.g5{display:grid;grid-template-columns:repeat(5,1fr);gap:12px}
+.loading{display:flex;align-items:center;justify-content:center;height:100vh;gap:12px;font-size:14px;color:var(--t2)}
+.spin{width:20px;height:20px;border:2px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin 1s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.ctt{background:#fff;border:1px solid var(--border);border-radius:6px;padding:8px 12px;font-size:12px;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.ttl{font-weight:700;margin-bottom:3px;color:var(--t1);font-size:11px}
+.feat-wrap{display:flex;align-items:center;gap:8px;margin-bottom:7px;font-size:12px}
+.feat-track{flex:1;height:8px;background:#F1F5F9;border-radius:4px;overflow:hidden}
+.feat-fill{height:100%;border-radius:4px}
+.cl-card{background:#F8FAFC;border-radius:var(--r);padding:14px;display:flex;flex-direction:column;gap:7px;border:1px solid var(--border)}
+.attr-empty{display:flex;align-items:center;justify-content:center;height:90px;background:#F8FAFC;border-radius:var(--rs);color:var(--t3);font-style:italic;font-size:13px;margin-bottom:8px}
+.stat-note{font-size:10px;color:var(--t3);line-height:1.6;margin-top:6px}
+</style>
+</head>
+<body>
+<nav id="main-nav" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0D1B4B;height:42px;display:flex;align-items:center;padding:0 20px;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif">
+  <a href="dashboard.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Suivi Produits</a>
+  <a href="audit_flux.html" style="padding:4px 14px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Audit de flux</a>
+  <a href="competitivite_prix.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Compétitivité prix</a>
+  <a href="mesure_efficacite.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
+</nav>
+<div id="subbar" style="position:fixed;top:42px;left:0;right:0;height:46px;background:#fff;border-bottom:1px solid #E5E7EB;z-index:100;display:flex;align-items:center;justify-content:flex-end;padding:0 20px;">
+  <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style="height:28px" onerror="this.style.display='none'">
+</div>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useMemo}=React;
+const {
+  RadarChart,Radar,PolarGrid,PolarAngleAxis,PolarRadiusAxis,
+  BarChart,Bar,XAxis,YAxis,CartesianGrid,Tooltip,Cell,
+  PieChart,Pie,ResponsiveContainer,Legend
+}=Recharts;
+
+function seededRand(seed){let s=seed;return()=>{s=(s*16807+0)%2147483647;return(s-1)/2147483646;};}
+
+function inText(val,text){
+  if(!val||!text)return false;
+  return text.toLowerCase().includes(String(val).toLowerCase());
+}
+
+function bucketLengths(arr,size){
+  if(!arr.length)return[];
+  const max=Math.max(...arr);
+  const n=Math.ceil((max+1)/size);
+  const b=Array.from({length:n},(_,i)=>({range:`${i*size+1}-${(i+1)*size}`,count:0}));
+  arr.forEach(l=>{const i=Math.floor(l/size);if(b[i])b[i].count++;});
+  return b.filter(x=>x.count>0);
+}
+
+/* ── NAV ── */
+
+
+/* ── SCORE CARD ── */
+function ScoreCard({label,value,color}){
+  return(
+    <div style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'20px 28px',borderRadius:'var(--r)',background:color+'15',border:`2px solid ${color}30`}}>
+      <div style={{fontSize:40,fontWeight:800,color,lineHeight:1}}>{value}</div>
+      <div style={{fontSize:11,fontWeight:600,color:'var(--t3)',marginTop:5,textAlign:'center'}}>{label}</div>
+    </div>
+  );
+}
+
+/* ── FEAT BARS ── */
+function FeatBars({items}){
+  return(<div>{items.map(f=>(
+    <div key={f.name} className="feat-wrap">
+      <span style={{minWidth:80,fontSize:12,color:'var(--t2)',fontWeight:500}}>{f.name}</span>
+      <div className="feat-track"><div className="feat-fill" style={{width:`${Math.min(100,f.pct)}%`,background:f.pct>75?'#22C55E':f.pct>40?'#F59E0B':'#EF4444'}}/></div>
+      <span style={{minWidth:38,textAlign:'right',fontSize:12,fontWeight:700,color:'var(--t1)'}}>{Math.round(f.pct)}%</span>
+    </div>
+  ))}</div>);
+}
+
+/* ── HISTOGRAM ── */
+function Histo({data,color}){
+  return(
+    <ResponsiveContainer width="100%" height={150}>
+      <BarChart data={data} margin={{top:4,right:4,left:0,bottom:0}} barCategoryGap="8%">
+        <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false}/>
+        <XAxis dataKey="range" tick={{fontSize:8,fill:'#94A3B8'}} tickLine={false} axisLine={false}/>
+        <YAxis tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} width={28}/>
+        <Tooltip content={({active,payload})=>!active||!payload?.length?null:<div className="ctt"><div className="ttl">{payload[0].payload.range} car.</div><b>{payload[0].value} produits</b></div>}/>
+        <Bar dataKey="count" fill={color} radius={[2,2,0,0]} opacity={.85}/>
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+/* ── CTR BY LENGTH ── */
+function CTRByLen({data,color}){
+  return(
+    <ResponsiveContainer width="100%" height={150}>
+      <BarChart data={data} layout="vertical" margin={{top:4,right:44,left:0,bottom:0}} barCategoryGap="20%">
+        <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false}/>
+        <XAxis type="number" tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} tickFormatter={v=>`${v}%`}/>
+        <YAxis dataKey="range" type="category" tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} width={70}/>
+        <Tooltip content={({active,payload})=>!active||!payload?.length?null:<div className="ctt"><div className="ttl">{payload[0].payload.range}</div>CTR moy. : <b>{payload[0].value}%</b></div>}/>
+        <Bar dataKey="ctr" fill={color} radius={[0,2,2,0]} label={{position:'right',fontSize:9,fill:'var(--t2)',formatter:v=>`${v}%`}}/>
+      </BarChart>
+    </ResponsiveContainer>
+  );
+}
+
+/* ── DOUBLON PIE ── */
+function DoublonPie({pctDup}){
+  const d=[{name:'Uniques',value:100-pctDup,color:'#3B82F6'},{name:'Doublons',value:pctDup,color:'#EF4444'}];
+  return(
+    <div style={{display:'flex',flexDirection:'column',alignItems:'center'}}>
+      <div className="ct">Doublon — Répartition par invest.</div>
+      <ResponsiveContainer width="100%" height={130}>
+        <PieChart>
+          <Pie data={d} cx="50%" cy="55%" innerRadius={36} outerRadius={54} dataKey="value" strokeWidth={0}>
+            {d.map((e,i)=><Cell key={i} fill={e.color}/>)}
+          </Pie>
+          <Tooltip content={({active,payload})=>!active||!payload?.length?null:<div className="ctt"><b>{payload[0].name}</b> : {payload[0].value}%</div>}/>
+        </PieChart>
+      </ResponsiveContainer>
+      <div style={{display:'flex',gap:16}}>
+        {d.map(x=><div key={x.name} style={{display:'flex',alignItems:'center',gap:4,fontSize:10,color:'var(--t2)'}}>
+          <div style={{width:8,height:8,borderRadius:2,background:x.color}}/>
+          {x.name} <b style={{color:'var(--t1)',marginLeft:2}}>{x.value}%</b>
+        </div>)}
+      </div>
+    </div>
+  );
+}
+
+/* ── CUSTOM LABEL CARD ── */
+function CLCard({label,badge,badgeColor,desc,rows}){
+  return(
+    <div className="cl-card">
+      <div style={{fontSize:10,fontWeight:700,color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.04em'}}>{label}</div>
+      <div style={{display:'inline-flex',alignItems:'center',padding:'3px 10px',borderRadius:20,background:badgeColor+'20',color:badgeColor,fontSize:11,fontWeight:700,width:'fit-content'}}>{badge}</div>
+      <div style={{fontSize:11,color:'var(--t2)',lineHeight:1.4}}>{desc}</div>
+      <div style={{marginTop:4}}>
+        {rows.map(r=>(
+          <div key={r.label} style={{display:'flex',alignItems:'center',gap:6,marginBottom:4}}>
+            <div style={{width:8,height:8,borderRadius:2,background:r.color,flexShrink:0}}/>
+            <span style={{fontSize:11,color:'var(--t2)',flex:1,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.label}</span>
+            <span style={{fontSize:11,fontWeight:700,color:r.color,minWidth:32,textAlign:'right'}}>{r.pct}%</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+/* ── ATTRIBUTE CARD ── */
+function AttrCard({title,top5,missing,uniqueCount,total}){
+  const isEmpty=!top5||top5.length===0;
+  const missingPct=isEmpty?0:(Math.round(missing/total*10000)/100);
+  return(
+    <div className="card">
+      <div className="ct">[{title}]</div>
+      {isEmpty
+        ?<div className="attr-empty">vide</div>
+        :<ResponsiveContainer width="100%" height={100}>
+          <BarChart data={top5} layout="vertical" margin={{top:0,right:0,left:0,bottom:0}} barCategoryGap="20%">
+            <XAxis type="number" hide/>
+            <YAxis dataKey="name" type="category" tick={{fontSize:8,fill:'#94A3B8'}} tickLine={false} axisLine={false} width={65}/>
+            <Tooltip content={({active,payload})=>!active||!payload?.length?null:<div className="ctt">{payload[0].payload.name} : <b>{payload[0].value}</b></div>}/>
+            <Bar dataKey="count" fill="#3B82F6" radius={[0,2,2,0]} opacity={.8}/>
+          </BarChart>
+        </ResponsiveContainer>}
+      {isEmpty
+        ?<div className="stat-note">• Aucune valeur</div>
+        :<div className="stat-note">
+          <div>• <b>{uniqueCount}</b> valeur{uniqueCount>1?'s':''} différente{uniqueCount>1?'s':''}</div>
+          <div>• <b>{missing} ({missingPct}%)</b> valeur{missing>1?'s':''} manquante{missing>1?'s':''}</div>
+        </div>}
+    </div>
+  );
+}
+
+/* ── APP ── */
+function App(){
+  const [prods,setProds]=useState(null);
+  useEffect(()=>{fetch('./data/products.json').then(r=>r.json()).then(setProds).catch(()=>setProds([]));},[]);
+
+  const S=useMemo(()=>{
+    if(!prods||!prods.length)return null;
+    const n=prods.length;
+
+    // Title
+    const tLens=prods.map(p=>p.title.length);
+    const tHist=bucketLengths(tLens,10);
+    const tAvg=Math.round(tLens.reduce((a,b)=>a+b,0)/n);
+    const tMin=Math.min(...tLens),tMax=Math.max(...tLens);
+
+    // Description
+    const dLens=prods.map(p=>(p.description||'').length);
+    const dHist=bucketLengths(dLens,40);
+    const dAvg=Math.round(dLens.reduce((a,b)=>a+b,0)/n);
+
+    // CTR by title length
+    const tGroups=[{min:0,max:25,l:'< 25 car.'},{min:25,max:40,l:'25-40 car.'},{min:40,max:55,l:'40-55 car.'},{min:55,max:70,l:'55-70 car.'},{min:70,max:999,l:'> 70 car.'}];
+    const ctrByTitle=tGroups.map(g=>{const grp=prods.filter(p=>p.title.length>=g.min&&p.title.length<g.max);return{range:g.l,ctr:grp.length?Math.round(grp.reduce((s,p)=>s+(p.stats.ctr||0),0)/grp.length*10)/10:0};}).filter(x=>x.ctr>0);
+
+    // CTR by desc length
+    const dGroups=[{min:0,max:100,l:'< 100 car.'},{min:100,max:160,l:'100-160 car.'},{min:160,max:220,l:'160-220 car.'},{min:220,max:280,l:'220-280 car.'},{min:280,max:9999,l:'> 280 car.'}];
+    const ctrByDesc=dGroups.map(g=>{const grp=prods.filter(p=>(p.description||'').length>=g.min&&(p.description||'').length<g.max);return{range:g.l,ctr:grp.length?Math.round(grp.reduce((s,p)=>s+(p.stats.ctr||0),0)/grp.length*10)/10:0};}).filter(x=>x.ctr>0);
+
+    // Feature presence in title / description
+    const fields=[{k:'brand',l:'Marque'},{k:'color',l:'Couleur'},{k:'size',l:'Taille'},{k:'material',l:'Matière'},{k:'gender',l:'Genre'}];
+    const tFeats=fields.map(f=>({name:f.l,pct:prods.filter(p=>inText(p[f.k],p.title)).length/n*100}));
+    const dFeats=fields.map(f=>({name:f.l,pct:prods.filter(p=>inText(p[f.k],p.description)).length/n*100}));
+
+    // Categories
+    const cats=[...new Set(prods.map(p=>p.category))].sort();
+    const catCounts=cats.map(c=>({name:c,count:prods.filter(p=>p.category===c).length})).sort((a,b)=>b.count-a.count);
+
+    // Hierarchy depth distribution (simulated, seeded)
+    const rHier=seededRand(55);
+    const hierDist=[{level:'2 niveaux',count:6},{level:'3 niveaux',count:17},{level:'4 niveaux',count:47},{level:'5 niveaux',count:22},{level:'6 niveaux',count:8}];
+
+    // CL distributions
+    const pct=(obj,k,tot)=>Math.round((obj[k]||0)/tot*100);
+    const cl0=prods.reduce((a,p)=>{const k=p.cl0||'null';a[k]=(a[k]||0)+1;return a},{});
+    const cl1=prods.reduce((a,p)=>{const k=p.cl1||'null';a[k]=(a[k]||0)+1;return a},{});
+    const cl2=prods.reduce((a,p)=>{const k=String(p.cl2||'null');a[k]=(a[k]||0)+1;return a},{});
+    const rCL4=seededRand(77);
+    const cl4Shopping=Math.round(n*0.22);
+
+    const cl0Rows=[{label:'push',color:'#22C55E',pct:pct(cl0,'push',n)},{label:'mid',color:'#3B82F6',pct:pct(cl0,'mid',n)},{label:'low',color:'#F59E0B',pct:pct(cl0,'low',n)},{label:'zombie',color:'#EF4444',pct:pct(cl0,'zombie',n)}];
+    const cl1Rows=[{label:'promo',color:'#F97316',pct:pct(cl1,'promo',n)},{label:'null',color:'#94A3B8',pct:pct(cl1,'null',n)}];
+    const cl2Rows=['1','2','3','4','5'].map((v,i)=>({label:`Niveau ${v}`,color:['#0EA5E9','#38BDF8','#7DD3FC','#BAE6FD','#93C5FD'][i],pct:pct(cl2,v,n)}));
+    const cl3Rows=catCounts.slice(0,5).map((c,i)=>({label:c.name,color:['#6366F1','#818CF8','#A5B4FC','#C7D2FE','#E0E7FF'][i],pct:Math.round(c.count/n*100)}));
+    const cl4Rows=[{label:'shopping_ads',color:'#EC4899',pct:Math.round(cl4Shopping/n*100)},{label:'null',color:'#94A3B8',pct:Math.round((n-cl4Shopping)/n*100)}];
+
+    // Attributes
+    function attrTop(key){
+      const m=prods.reduce((a,p)=>{if(p[key]){a[p[key]]=(a[p[key]]||0)+1;}return a},{});
+      return Object.entries(m).map(([name,count])=>({name,count})).sort((a,b)=>b.count-a.count);
+    }
+    const colors=attrTop('color'),sizes=attrTop('size'),mats=attrTop('material'),genders=attrTop('gender');
+    const colorMiss=prods.filter(p=>!p.color).length;
+    const sizeMiss=prods.filter(p=>!p.size).length;
+    const matMiss=prods.filter(p=>!p.material).length;
+    const genMiss=prods.filter(p=>!p.gender).length;
+
+    // Radar scores
+    const couv=Math.round(prods.filter(p=>p.title&&p.description&&p.brand&&p.category).length/n*100);
+    const titQ=Math.min(100,Math.round(tAvg/60*100));
+    const ptQ=Math.round(prods.filter(p=>p.category).length/n*100);
+    const etQ=Math.round((pct(cl0,'push',n)+pct(cl0,'mid',n))*0.8+pct(cl1,'promo',n)*0.2);
+    const caQ=Math.round([(colors.length>0?100:0),(sizes.length>0?100:0),(mats.length>0?100:0)].reduce((a,b)=>a+b)/3);
+    const radar=[{s:'Couverture',v:couv},{s:'Titre',v:titQ},{s:'Product type',v:ptQ},{s:'Étiquettes',v:Math.min(100,etQ)},{s:'Caractéristiques',v:caQ}];
+    const noteE=Math.round([couv,titQ,ptQ,etQ,caQ].reduce((a,b)=>a+b)/5/10*2)/2;
+    const noteP=Math.round([titQ,etQ].reduce((a,b)=>a+b)/2/10*2)/2;
+
+    return{n,tHist,tAvg,tMin,tMax,dHist,dAvg,ctrByTitle,ctrByDesc,tFeats,dFeats,catCounts,hierDist,cl0Rows,cl1Rows,cl2Rows,cl3Rows,cl4Rows,colors,sizes,mats,genders,colorMiss,sizeMiss,matMiss,genMiss,radar,noteE,noteP};
+  },[prods]);
+
+  if(!prods||!S)return(<div className="loading"><div className="spin"/><span>Chargement…</span></div>);
+  const {n}=S;
+
+  return(<>
+    <div className="content">
+
+      {/* ── DIAGNOSTIQUE ── */}
+      <div className="sec">
+        <div className="stit">Diagnostique produit</div>
+        <div className="card" style={{display:'flex',alignItems:'center',gap:32}}>
+          <div style={{display:'flex',gap:24,flexShrink:0}}>
+            <ScoreCard label="Note Ensemble" value={S.noteE} color="#3B82F6"/>
+            <ScoreCard label="Note Personnalisée" value={S.noteP} color="#F97316"/>
+          </div>
+          <div style={{flex:1}}>
+            <div className="ct">Score par dimension (/100)</div>
+            <ResponsiveContainer width="100%" height={210}>
+              <RadarChart data={S.radar} cx="50%" cy="50%" outerRadius={75}>
+                <PolarGrid stroke="#E5E7EB"/>
+                <PolarAngleAxis dataKey="s" tick={{fontSize:10,fill:'var(--t2)',fontFamily:'inherit'}}/>
+                <PolarRadiusAxis domain={[0,100]} tick={false} axisLine={false}/>
+                <Radar dataKey="v" stroke="#006AB3" fill="#006AB3" fillOpacity={.2} strokeWidth={2}
+                  dot={{r:3,fill:'#006AB3',strokeWidth:0}}/>
+                <Tooltip content={({active,payload})=>!active||!payload?.length?null:<div className="ctt"><div className="ttl">{payload[0].payload.s}</div><b>{payload[0].value}/100</b></div>}/>
+              </RadarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      </div>
+
+      {/* ── TITRE ── */}
+      <div className="sec">
+        <div className="stit">Titre</div>
+        <div className="g2" style={{marginBottom:14}}>
+          <div className="card">
+            <div className="ct">Distribution du nombre de caractères par titres</div>
+            <div style={{fontSize:10,color:'var(--t3)',marginBottom:6}}>Moyenne : <b style={{color:'var(--t1)'}}>{S.tAvg} car.</b> &nbsp;•&nbsp; Min : <b style={{color:'var(--t1)'}}>{S.tMin}</b> &nbsp;•&nbsp; Max : <b style={{color:'var(--t1)'}}>{S.tMax}</b></div>
+            <Histo data={S.tHist} color="#3B82F6"/>
+          </div>
+          <div className="card">
+            <div className="ct">CTR moyen selon la longueur des titres</div>
+            <CTRByLen data={S.ctrByTitle} color="#14B8A6"/>
+          </div>
+        </div>
+        <div className="g2">
+          <div className="card"><DoublonPie pctDup={4}/></div>
+          <div className="card">
+            <div className="ct">Présence des caractéristiques dans le titre</div>
+            <FeatBars items={S.tFeats}/>
+          </div>
+        </div>
+      </div>
+
+      {/* ── DESCRIPTION ── */}
+      <div className="sec">
+        <div className="stit">Description</div>
+        <div className="g2" style={{marginBottom:14}}>
+          <div className="card">
+            <div className="ct">Distribution du nombre de caractères par descriptions</div>
+            <div style={{fontSize:10,color:'var(--t3)',marginBottom:6}}>Moyenne : <b style={{color:'var(--t1)'}}>{S.dAvg} car.</b></div>
+            <Histo data={S.dHist} color="#8B5CF6"/>
+          </div>
+          <div className="card">
+            <div className="ct">CTR moyen selon la longueur des descriptions</div>
+            <CTRByLen data={S.ctrByDesc} color="#EC4899"/>
+          </div>
+        </div>
+        <div className="g2">
+          <div className="card"><DoublonPie pctDup={6}/></div>
+          <div className="card">
+            <div className="ct">Présence des caractéristiques dans la description</div>
+            <FeatBars items={S.dFeats}/>
+          </div>
+        </div>
+      </div>
+
+      {/* ── PRODUCT TYPE ── */}
+      <div className="sec">
+        <div className="stit">Product Type</div>
+        <div className="g2" style={{marginBottom:14}}>
+          <div className="card">
+            <div className="ct">Répartition des produits par catégorie</div>
+            <ResponsiveContainer width="100%" height={240}>
+              <BarChart data={S.catCounts} layout="vertical" margin={{top:4,right:36,left:0,bottom:0}} barCategoryGap="20%">
+                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" horizontal={false}/>
+                <XAxis type="number" tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false}/>
+                <YAxis dataKey="name" type="category" tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} width={150}/>
+                <Tooltip content={({active,payload})=>!active||!payload?.length?null:<div className="ctt"><div className="ttl">{payload[0].payload.name}</div><b>{payload[0].value} produits</b></div>}/>
+                <Bar dataKey="count" fill="#006AB3" radius={[0,2,2,0]} opacity={.85} label={{position:'right',fontSize:9,fill:'var(--t2)'}}/>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+          <div className="card">
+            <div className="ct">Profondeur de la hiérarchie (product_type)</div>
+            <div style={{display:'grid',gridTemplateColumns:'1fr auto',gap:'5px 10px',alignItems:'center',marginBottom:14,fontSize:12}}>
+              {[['Nb moyen de niveaux','4'],['Nb médian de niveaux','4'],['Nb minimum de niveaux','2'],['Nb maximum de niveaux','6']].map(([l,v])=>(
+                <React.Fragment key={l}>
+                  <span style={{color:'var(--t2)'}}>{l}</span>
+                  <span style={{background:'#EEF2FF',color:'#6366F1',fontWeight:700,padding:'2px 10px',borderRadius:4,textAlign:'center'}}>{v}</span>
+                </React.Fragment>
+              ))}
+            </div>
+            <ResponsiveContainer width="100%" height={130}>
+              <BarChart data={S.hierDist} margin={{top:4,right:8,left:0,bottom:0}} barCategoryGap="25%">
+                <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false}/>
+                <XAxis dataKey="level" tick={{fontSize:8,fill:'#94A3B8'}} tickLine={false} axisLine={false}/>
+                <YAxis tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} width={24}/>
+                <Tooltip content={({active,payload})=>!active||!payload?.length?null:<div className="ctt"><div className="ttl">{payload[0].payload.level}</div><b>{payload[0].value} produits</b></div>}/>
+                <Bar dataKey="count" fill="#6366F1" radius={[2,2,0,0]} opacity={.85}/>
+              </BarChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+        <div className="stit" style={{marginTop:24}}>Custom Labels</div>
+        <div className="g5">
+          <CLCard label="custom_label_0" badge="Performance" badgeColor="#8B5CF6" desc="Labélisation du niveau de performance produit (push, mid, low, zombie)" rows={S.cl0Rows}/>
+          <CLCard label="custom_label_1" badge="Promotionnel" badgeColor="#F97316" desc="Statut promotionnel du produit (promo ou non)" rows={S.cl1Rows}/>
+          <CLCard label="custom_label_2" badge="Catégorie" badgeColor="#14B8A6" desc="Niveau de catégorie produit de 1 à 5" rows={S.cl2Rows}/>
+          <CLCard label="custom_label_3" badge="Famille" badgeColor="#6366F1" desc="Famille de produits — basée sur la catégorie principale" rows={S.cl3Rows}/>
+          <CLCard label="custom_label_4" badge="Shopping" badgeColor="#EC4899" desc="Identification des produits éligibles Shopping Ads" rows={S.cl4Rows}/>
+        </div>
+      </div>
+
+      {/* ── CARACTÉRISTIQUES ── */}
+      <div className="sec">
+        <div className="stit">Caractéristiques produits</div>
+        <div className="g3" style={{marginBottom:14}}>
+          <AttrCard title="Color" top5={S.colors.slice(0,5)} missing={S.colorMiss} uniqueCount={S.colors.length} total={n}/>
+          <AttrCard title="Size" top5={S.sizes.slice(0,5)} missing={S.sizeMiss} uniqueCount={S.sizes.length} total={n}/>
+          <AttrCard title="Material" top5={S.mats.slice(0,5)} missing={S.matMiss} uniqueCount={S.mats.length} total={n}/>
+        </div>
+        <div className="g3">
+          <AttrCard title="Pattern" top5={[]} missing={0} uniqueCount={0} total={n}/>
+          <AttrCard title="Age_group" top5={[]} missing={0} uniqueCount={0} total={n}/>
+          <AttrCard title="Gender" top5={S.genders.slice(0,5)} missing={S.genMiss} uniqueCount={S.genders.length} total={n}/>
+        </div>
+      </div>
+
+    </div>
+  </>);
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>

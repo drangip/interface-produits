@@ -1,0 +1,98 @@
+[
+  {
+    "id": "COMP001",
+    "name": "Leroy Merlin",
+    "color": "#00AA55",
+    "stats": {
+      "impressions": 24800000,
+      "clicks": 621000,
+      "ctr": 2.50,
+      "cpc": 0.78,
+      "investment": 484380,
+      "conversions": 17388,
+      "cvr": 2.80,
+      "revenue": 1889650,
+      "roi": 290.1
+    }
+  },
+  {
+    "id": "COMP002",
+    "name": "Brico Dépôt",
+    "color": "#E84830",
+    "stats": {
+      "impressions": 9200000,
+      "clicks": 230000,
+      "ctr": 2.50,
+      "cpc": 0.52,
+      "investment": 119600,
+      "conversions": 6440,
+      "cvr": 2.80,
+      "revenue": 498100,
+      "roi": 316.5
+    }
+  },
+  {
+    "id": "COMP003",
+    "name": "Castorama",
+    "color": "#006AB3",
+    "stats": {
+      "impressions": 12150000,
+      "clicks": 305000,
+      "ctr": 2.51,
+      "cpc": 0.48,
+      "investment": 146400,
+      "conversions": 9150,
+      "cvr": 3.00,
+      "revenue": 572500,
+      "roi": 290.8
+    }
+  },
+  {
+    "id": "COMP004",
+    "name": "Mr. Bricolage",
+    "color": "#F97316",
+    "stats": {
+      "impressions": 5400000,
+      "clicks": 121500,
+      "ctr": 2.25,
+      "cpc": 0.44,
+      "investment": 53460,
+      "conversions": 3040,
+      "cvr": 2.50,
+      "revenue": 178000,
+      "roi": 233.0
+    }
+  },
+  {
+    "id": "COMP005",
+    "name": "Bricomarché",
+    "color": "#8B5CF6",
+    "stats": {
+      "impressions": 3800000,
+      "clicks": 79800,
+      "ctr": 2.10,
+      "cpc": 0.41,
+      "investment": 32718,
+      "conversions": 1835,
+      "cvr": 2.30,
+      "revenue": 96390,
+      "roi": 194.6
+    }
+  },
+  {
+    "id": "COMP006",
+    "name": "Brico Leclerc",
+    "color": "#F59E0B",
+    "stats": {
+      "impressions": 2900000,
+      "clicks": 55100,
+      "ctr": 1.90,
+      "cpc": 0.38,
+      "investment": 20938,
+      "conversions": 1157,
+      "cvr": 2.10,
+      "revenue": 57100,
+      "roi": 172.7
+    }
+  }
+]

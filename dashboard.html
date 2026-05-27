@@ -1,0 +1,662 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Suivi Produits — Castorama | WPP Media</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#EEF1F6;--card:#fff;--nav:#0D1B4B;--primary:#006AB3;--pl:#E8F3FB;--yellow:#F5D800;--yd:#D4BB00;--green:#22C55E;--orange:#F97316;--purple:#8B5CF6;--teal:#14B8A6;--red:#EF4444;--t1:#0F1B35;--t2:#4B5675;--t3:#9CA3AF;--border:#E5E7EB;--r:10px;--rs:6px;--sh:0 1px 4px rgba(13,27,75,.07),0 2px 10px rgba(13,27,75,.04);--shm:0 4px 16px rgba(13,27,75,.10)}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:var(--bg);color:var(--t1);font-size:13px;line-height:1.5;min-height:100vh;padding-top:42px}
+.pw{min-height:100vh;display:flex;flex-direction:column}
+.content{padding:16px 20px 40px;max-width:1440px;margin:0 auto;width:100%}
+.sec{margin-bottom:16px}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:16px}
+.ct{font-size:11px;font-weight:600;color:var(--t2);text-transform:uppercase;letter-spacing:.04em;margin-bottom:10px}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.fx{display:flex}.fxc{flex-direction:column}.aic{align-items:center}.jb{justify-content:space-between}.g1{gap:4px}.g2g{gap:8px}.g3{gap:12px}.g4g{gap:16px}.f1{flex:1}.wf{width:100%}
+/* header */
+.hbar{display:none}
+.hlz{display:flex;align-items:center;gap:16px}
+.hld{width:1px;height:28px;background:rgba(255,255,255,.2)}
+.hli img{height:22px;display:block}
+.hlp{height:22px;display:flex;align-items:center;font-size:13px;font-weight:700;color:#fff;letter-spacing:.02em}
+.ht{font-size:14px;font-weight:600;color:rgba(255,255,255,.9);letter-spacing:.01em}
+.hdate{font-size:11px;color:var(--t2);padding:4px 10px;border:1px solid var(--border);border-radius:6px;cursor:pointer}
+/* filter bar */
+.fbar{background:var(--card);padding:0 20px;height:46px;display:flex;align-items:center;gap:20px;border-bottom:1px solid var(--border);flex-wrap:wrap;position:sticky;top:42px;z-index:100;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.fsep{width:1px;height:22px;background:var(--border)}
+.tg{display:flex;gap:4px;flex-wrap:wrap}
+.tab{padding:4px 11px;border-radius:20px;border:1px solid var(--border);background:var(--card);font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;transition:all .15s;white-space:nowrap;font-family:inherit}
+.tab:hover{border-color:var(--primary);color:var(--primary)}
+.tab.act{background:var(--primary);border-color:var(--primary);color:#fff}
+.tab.acty{background:var(--yellow);border-color:var(--yd);color:var(--t1);font-weight:600}
+/* big number */
+.bn{font-size:40px;font-weight:800;line-height:1}
+.bns{font-size:11px;color:var(--t2);margin-top:4px}
+/* delta */
+.dlt{font-size:11px;font-weight:600;padding:2px 6px;border-radius:4px;display:inline-flex;align-items:center;gap:2px}
+.pos{background:#DCFCE7;color:#16A34A}.neg{background:#FEE2E2;color:#DC2626}.neu{background:#F1F5F9;color:var(--t2)}
+/* kpi chip */
+.chip{display:flex;flex-direction:column;align-items:center;padding:8px 11px;border-radius:var(--rs);cursor:pointer;transition:opacity .15s;flex:1;border:1.5px solid transparent}
+.chip:hover{opacity:.85}
+.chipl{font-size:11px;font-weight:600;opacity:.75}
+.chipv{font-size:15px;font-weight:700}
+/* metric btn */
+.mbtn{padding:4px 12px;border-radius:var(--rs);border:none;font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;font-family:inherit}
+/* section title */
+.stit{font-size:15px;font-weight:700;color:var(--t1);margin-bottom:12px}
+/* tooltip */
+.ctt{background:rgba(15,27,53,.92);border-radius:6px;padding:8px 12px;color:#fff;font-size:11px;line-height:1.7;min-width:120px}
+.ttl{font-weight:600;margin-bottom:4px;color:#94A3B8;font-size:10px}
+::-webkit-scrollbar{width:5px;height:5px}::-webkit-scrollbar-track{background:transparent}::-webkit-scrollbar-thumb{background:#CBD5E1;border-radius:4px}
+/* loading */
+.loading{display:flex;flex-direction:column;align-items:center;justify-content:center;height:80vh;gap:16px;color:var(--t2)}
+.spin{width:40px;height:40px;border:3px solid var(--border);border-top-color:var(--primary);border-radius:50%;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+/* concurrence */
+.comp-bar-wrap{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.comp-bar-label{font-size:11px;font-weight:600;min-width:110px;color:var(--t1)}
+.comp-bar-track{flex:1;height:10px;background:#F1F5F9;border-radius:5px;overflow:hidden}
+.comp-bar-fill{height:100%;border-radius:5px;transition:width .6s ease}
+.comp-bar-val{font-size:11px;color:var(--t2);min-width:50px;text-align:right}
+/* date picker */
+.dp-day{text-align:center;font-size:12px;padding:5px 3px;border-radius:4px;cursor:pointer;transition:background .1s;line-height:1.4}
+.dp-day:hover{background:var(--pl);color:var(--primary)}
+.dp-day.dp-s{background:var(--primary)!important;color:#fff!important;border-radius:50%;font-weight:700}
+.dp-day.dp-e{background:var(--primary)!important;color:#fff!important;border-radius:50%;font-weight:700}
+.dp-day.dp-mid{background:var(--pl);color:var(--primary);border-radius:0}
+.dp-day.dp-today{font-weight:700;color:var(--primary)}
+.dp-nav{border:none;background:none;cursor:pointer;padding:2px 7px;border-radius:4px;font-size:16px;color:var(--t2);font-family:inherit}
+.dp-nav:hover{background:var(--pl)}
+/* filter dropdowns */
+.fsel{padding:4px 24px 4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--card);font-size:12px;font-weight:500;color:var(--t2);cursor:pointer;font-family:inherit;outline:none;appearance:none;-webkit-appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%234B5675'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 8px center;transition:all .15s;min-width:90px}
+.fsel:hover{border-color:var(--primary);color:var(--primary)}
+.fsel.fon{background-color:var(--pl);border-color:var(--primary);color:var(--primary);background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23006AB3'/%3E%3C/svg%3E")}
+</style>
+</head>
+<body>
+<nav id="main-nav" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0D1B4B;height:42px;display:flex;align-items:center;padding:0 20px;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif">
+  <a href="dashboard.html" style="padding:4px 14px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Suivi Produits</a>
+  <a href="audit_flux.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Audit de flux</a>
+  <a href="competitivite_prix.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Compétitivité prix</a>
+  <a href="mesure_efficacite.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
+</nav>
+<div id="root"><div class="loading"><div class="spin"></div><span>Chargement du dashboard…</span></div></div>
+
+<script src="lib/react.min.js"></script>
+<script src="lib/react-dom.min.js"></script>
+<script src="lib/prop-types.min.js"></script>
+<script src="lib/recharts.js"></script>
+<script src="lib/babel.min.js"></script>
+
+<script>
+// Diagnostic — s'affiche si React ne démarre pas dans les 5 secondes
+setTimeout(function() {
+  var root = document.getElementById('root');
+  if (!root || !root.querySelector('.spin')) return;
+  var ok = function(v) { return typeof v !== 'undefined' ? '✅' : '❌'; };
+  var rc = (typeof Recharts !== 'undefined') ? Object.keys(Recharts).slice(0,4).join(', ') : 'absent';
+  root.innerHTML =
+    '<div style="background:#fff;padding:24px;max-width:480px;margin:40px auto;border-radius:10px;font-family:monospace;font-size:13px;box-shadow:0 4px 20px rgba(0,0,0,.15)">' +
+    '<b style="font-size:15px;color:#DC2626">⚠️ Le dashboard ne démarre pas</b><br><br>' +
+    ok(window.React)    + ' React : '    + (typeof window.React    !== 'undefined' ? 'chargé' : 'ABSENT') + '<br>' +
+    ok(window.ReactDOM) + ' ReactDOM : ' + (typeof window.ReactDOM !== 'undefined' ? 'chargé' : 'ABSENT') + '<br>' +
+    ok(window.Recharts) + ' Recharts : ' + rc + '<br>' +
+    ok(window.Babel)    + ' Babel : '    + (typeof window.Babel    !== 'undefined' ? 'chargé' : 'ABSENT') + '<br><br>' +
+    '<b>Ouvrez F12 → onglet "Console" et copiez l\'erreur rouge ici.</b>' +
+    '</div>';
+}, 5000);
+</script>
+
+<script type="text/babel" data-presets="react">
+const { useState, useMemo, useEffect } = React;
+const {
+  ComposedChart, BarChart, LineChart, AreaChart, PieChart,
+  Bar, Line, Area, Pie, Cell,
+  XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend
+} = Recharts;
+
+/* ───────── UTILS ───────── */
+const CAT_COLORS = {
+  'Peinture':'#F97316','Outillage électroportatif':'#3B82F6',
+  'Carrelage et sols':'#8B5CF6','Plomberie et sanitaire':'#14B8A6',
+  'Électricité et éclairage':'#F59E0B','Jardin et terrasse':'#22C55E',
+  'Cuisine et rangement':'#EC4899','Quincaillerie':'#6366F1',
+  'Isolation et cloisons':'#84CC16','Chauffage':'#EF4444'
+};
+function seededRand(seed){let s=seed;return()=>{s=(s*1664525+1013904223)&0xFFFFFFFF;return(s>>>0)/0xFFFFFFFF}}
+function filterProds(prods,filters){
+  let f=[...prods];
+  if(filters.cat&&filters.cat!=='all')f=f.filter(p=>p.category===filters.cat);
+  if(filters.brand&&filters.brand!=='all')f=f.filter(p=>p.brand===filters.brand);
+  if(filters.cl0&&filters.cl0!=='all')f=f.filter(p=>p.cl0===filters.cl0);
+  if(filters.cl1&&filters.cl1!=='all')f=f.filter(p=>p.cl1===filters.cl1);
+  if(filters.cl2&&filters.cl2!=='all')f=f.filter(p=>String(p.cl2)===String(filters.cl2));
+  return f;
+}
+function sumStats(prods){return prods.reduce((a,p)=>({impressions:a.impressions+p.stats.impressions,clicks:a.clicks+p.stats.clicks,investment:a.investment+p.stats.investment,conversions:a.conversions+p.stats.conversions,revenue:a.revenue+p.stats.revenue}),{impressions:0,clicks:0,investment:0,conversions:0,revenue:0})}
+function deriveStats(s){return{...s,ctr:s.impressions>0?s.clicks/s.impressions*100:0,cpc:s.clicks>0?s.investment/s.clicks:0,cvr:s.clicks>0?s.conversions/s.clicks*100:0,roi:s.investment>0?s.revenue/s.investment:0}}
+function prodStatus(prods){const t=prods.length,a=prods.filter(p=>p.availability==='in_stock').length,r=prods.filter(p=>p.availability==='out_of_stock').length;return{total:t,active:a,refused:r,pctA:t>0?Math.round(a/t*100):0,pctR:t>0?Math.round(r/t*100):0}}
+function countBy(prods,key){const d={};prods.forEach(p=>{const v=p[key];if(v!=null)d[v]=(d[v]||0)+1});return d}
+function catStats(prods){const m={};prods.forEach(p=>{if(!m[p.category])m[p.category]={name:p.category,color:CAT_COLORS[p.category]||'#6B7280',impressions:0,clicks:0,investment:0,conversions:0,revenue:0,count:0};const c=m[p.category];c.impressions+=p.stats.impressions;c.clicks+=p.stats.clicks;c.investment+=p.stats.investment;c.conversions+=p.stats.conversions;c.revenue+=p.stats.revenue;c.count++});return Object.values(m).map(c=>({...c,marge:c.revenue-c.investment,roi:c.investment>0?(c.revenue-c.investment)/c.investment*100:0})).sort((a,b)=>b.investment-a.investment)}
+function genTS(prods,days=30){const s=sumStats(prods),rnd=seededRand(42),start=new Date(2026,3,22),wts=[];for(let i=0;i<days;i++){const d=new Date(start);d.setDate(d.getDate()+i);const dow=d.getDay(),g=.82+(i/days)*.36,n=.88+rnd()*.24,wf=(dow===0||dow===6)?.68:1.18;wts.push(g*n*wf)}const tot=wts.reduce((a,b)=>a+b,0),norm=wts.map(w=>w/tot);const MO=['jan','fév','mars','avr','mai','juin','juil','août','sep','oct','nov','déc'];return Array.from({length:days},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i);const w=norm[i],cl=Math.round(s.clicks*w),im=Math.round(s.impressions*w),inv=Math.round(s.investment*w*100)/100,cv=Math.round(s.conversions*w),rv=Math.round(s.revenue*w*100)/100,mg=Math.round((rv-inv)*100)/100;return{date:`${d.getDate()} ${MO[d.getMonth()]}`,impressions:im,clicks:cl,investment:inv,conversions:cv,revenue:rv,ctr:im>0?Math.round(cl/im*10000)/100:0,cpc:cl>0?Math.round(inv/cl*100)/100:0,cvr:cl>0?Math.round(cv/cl*10000)/100:0,roi:inv>0?Math.round(rv/inv*100)/100:0}})}
+function genCatTS(prods,days=30){const cs=catStats(prods),rnd=seededRand(99),start=new Date(2026,3,22),wts=[];for(let i=0;i<days;i++){const d=new Date(start);d.setDate(d.getDate()+i);const dow=d.getDay(),g=.82+(i/days)*.36,n=.88+rnd()*.24,wf=(dow===0||dow===6)?.68:1.18;wts.push(g*n*wf)}const tot=wts.reduce((a,b)=>a+b,0),norm=wts.map(w=>w/tot);const MO=['jan','fév','mars','avr','mai','juin','juil','août','sep','oct','nov','déc'];return Array.from({length:days},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i);const e={date:`${d.getDate()} ${MO[d.getMonth()]}`};cs.forEach(c=>{const cr=seededRand(c.name.charCodeAt(0)*7+i*13),ns=.82+cr()*.36;e[c.name]=Math.round(c.investment*norm[i]*ns);e[c.name+'_m']=Math.round(c.marge*norm[i]*ns)});return e})}
+function genEvo(n=14){const r=seededRand(77);return Array.from({length:n},(_,i)=>({day:i+1,v:Math.round(88+r()*6)}))}
+
+const fmt={
+  n:v=>new Intl.NumberFormat('fr-FR').format(Math.round(v||0)),
+  e:v=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v||0),
+  p:(v,d=1)=>`${(v||0).toFixed(d)}%`,
+  k:v=>{if(v>=1e6)return`${(v/1e6).toFixed(1)}M`;if(v>=1e3)return`${(v/1e3).toFixed(0)}k`;return Math.round(v||0).toString()}
+};
+
+/* ───────── SHARED ───────── */
+function Tooltip2({active,payload,label,rows}){if(!active||!payload?.length)return null;return(<div className="ctt"><div className="ttl">{label}</div>{rows(payload)}</div>)}
+
+/* ───────── DATE PICKER ───────── */
+const D_TODAY=new Date(2026,4,26);
+const MOS_FULL=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'];
+const MOS_SHORT=['jan','fév','mars','avr','mai','juin','juil','août','sep','oct','nov','déc'];
+const JOURS=['L','M','M','J','V','S','D'];
+
+function DateRangePicker({start,end,onApply}){
+  const [open,setOpen]=useState(false);
+  const [tS,setTS]=useState(start);
+  const [tE,setTE]=useState(end);
+  const [hov,setHov]=useState(null);
+  const [picking,setPicking]=useState(false);
+  const [leftM,setLeftM]=useState({y:2026,m:3});
+
+  const rightM=useMemo(()=>{const m=leftM.m+1;return m>11?{y:leftM.y+1,m:0}:{y:leftM.y,m};},[leftM]);
+  const fmtD=d=>d?`${d.getDate()} ${MOS_SHORT[d.getMonth()]} ${d.getFullYear()}`:'';
+  const label=`${fmtD(start)} – ${fmtD(end)}`;
+
+  const PRESETS=[
+    {l:'7 derniers jours',fn:()=>{const e=new Date(D_TODAY),s=new Date(D_TODAY);s.setDate(s.getDate()-6);return[s,e]}},
+    {l:'28 derniers jours',fn:()=>{const e=new Date(D_TODAY),s=new Date(D_TODAY);s.setDate(s.getDate()-27);return[s,e]}},
+    {l:'30 derniers jours',fn:()=>{const e=new Date(D_TODAY),s=new Date(D_TODAY);s.setDate(s.getDate()-29);return[s,e]}},
+    {l:'Ce mois-ci',fn:()=>[new Date(D_TODAY.getFullYear(),D_TODAY.getMonth(),1),new Date(D_TODAY)]},
+    {l:'Mois dernier',fn:()=>[new Date(D_TODAY.getFullYear(),D_TODAY.getMonth()-1,1),new Date(D_TODAY.getFullYear(),D_TODAY.getMonth(),0)]},
+  ];
+
+  function clickDay(d){
+    if(!picking){setTS(d);setTE(null);setPicking(true);}
+    else{const[s,e]=d<tS?[d,tS]:[tS,d];setTS(s);setTE(e);setPicking(false);}
+  }
+  function dispEnd(){if(tE)return tE;if(picking&&hov)return hov>tS?hov:tS;return null;}
+  function dayClass(d){
+    const de=dispEnd();
+    const same=(a,b)=>a&&b&&a.getTime()===b.getTime();
+    if(same(d,tS))return'dp-day dp-s';
+    if(de&&same(d,de))return'dp-day dp-e';
+    if(tS&&de){const[lo,hi]=tS<=de?[tS,de]:[de,tS];if(d>lo&&d<hi)return'dp-day dp-mid';}
+    if(same(d,D_TODAY))return'dp-day dp-today';
+    return'dp-day';
+  }
+
+  function CalMonth({ym,showPrev,showNext}){
+    const{y,m}=ym;
+    const first=new Date(y,m,1).getDay();
+    const off=first===0?6:first-1;
+    const days=new Date(y,m+1,0).getDate();
+    const cells=[...Array(off).fill(null),...Array.from({length:days},(_,i)=>new Date(y,m,i+1))];
+    return(
+      <div style={{width:210}}>
+        <div style={{display:'flex',alignItems:'center',justifyContent:'space-between',marginBottom:8}}>
+          {showPrev?<button className="dp-nav" onClick={()=>setLeftM(p=>{const nm=p.m-1<0?11:p.m-1;return{y:p.m-1<0?p.y-1:p.y,m:nm}})}>‹</button>:<span style={{width:24}}/>}
+          <span style={{fontWeight:700,fontSize:12,color:'var(--t1)',letterSpacing:'.02em'}}>{MOS_FULL[m].toUpperCase().slice(0,4)} {y}</span>
+          {showNext?<button className="dp-nav" onClick={()=>setLeftM(p=>{const nm=p.m+1>11?0:p.m+1;return{y:p.m+1>11?p.y+1:p.y,m:nm}})}>›</button>:<span style={{width:24}}/>}
+        </div>
+        <div style={{display:'grid',gridTemplateColumns:'repeat(7,1fr)',gap:1}}>
+          {JOURS.map((d,i)=><div key={i} style={{textAlign:'center',fontSize:10,fontWeight:600,color:'var(--t3)',paddingBottom:4}}>{d}</div>)}
+          {cells.map((d,i)=>!d?<div key={`e${i}`}/>:
+            <div key={i} className={dayClass(d)} onClick={()=>clickDay(d)} onMouseEnter={()=>{if(picking)setHov(d)}} onMouseLeave={()=>setHov(null)}>{d.getDate()}</div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  function apply(){if(tS&&tE){onApply(tS,tE);setOpen(false);}}
+  function cancel(){setTS(start);setTE(end);setPicking(false);setOpen(false);}
+
+  return(
+    <div style={{position:'relative'}}>
+      <button className="hdate" style={{cursor:'pointer',background:'none',border:'1px solid var(--border)',fontFamily:'inherit'}} onClick={()=>{if(!open){setTS(start);setTE(end);}setOpen(!open)}}>
+        📅 {label} ▾
+      </button>
+      {open&&<>
+        <div style={{position:'fixed',inset:0,zIndex:199}} onClick={cancel}/>
+        <div style={{position:'absolute',right:0,top:'calc(100% + 8px)',zIndex:200,background:'#fff',borderRadius:10,boxShadow:'0 8px 32px rgba(0,0,0,.18)',padding:16,display:'flex',gap:0,minWidth:540}}>
+          <div style={{display:'flex',flexDirection:'column',gap:2,minWidth:128,borderRight:'1px solid var(--border)',paddingRight:12,marginRight:12}}>
+            <div style={{fontSize:10,fontWeight:700,color:'var(--t3)',marginBottom:6,textTransform:'uppercase',letterSpacing:'.05em'}}>Période</div>
+            {PRESETS.map(p=>{
+              const[ps,pe]=p.fn();
+              const act=tS&&tE&&tS.getTime()===ps.getTime()&&tE.getTime()===pe.getTime();
+              return(<button key={p.l} onClick={()=>{setTS(ps);setTE(pe);setPicking(false);}} style={{textAlign:'left',padding:'6px 8px',border:'none',borderRadius:6,fontSize:12,cursor:'pointer',background:act?'var(--pl)':'none',color:act?'var(--primary)':'var(--t2)',fontWeight:act?600:400,fontFamily:'inherit'}}>{p.l}</button>);
+            })}
+          </div>
+          <div style={{flex:1}}>
+            <div style={{display:'flex',gap:12,marginBottom:12}}>
+              <CalMonth ym={leftM} showPrev={true} showNext={false}/>
+              <div style={{width:1,background:'var(--border)'}}/>
+              <CalMonth ym={rightM} showPrev={false} showNext={true}/>
+            </div>
+            <div style={{display:'flex',alignItems:'center',justifyContent:'flex-end',gap:8,borderTop:'1px solid var(--border)',paddingTop:10}}>
+              <span style={{fontSize:11,color:'var(--t3)',marginRight:'auto'}}>{tS&&tE?`${fmtD(tS)} → ${fmtD(tE)}`:'Sélectionnez une plage'}</span>
+              <button className="mbtn" style={{background:'#F1F5F9',color:'var(--t2)',fontFamily:'inherit'}} onClick={cancel}>Annuler</button>
+              <button className="mbtn" style={{background:tS&&tE?'var(--nav)':'#CBD5E1',color:'#fff',fontFamily:'inherit',cursor:tS&&tE?'pointer':'default'}} onClick={apply}>Appliquer</button>
+            </div>
+          </div>
+        </div>
+      </>}
+    </div>
+  );
+}
+
+/* ───────── HEADER ───────── */
+function Header({dateRange,setDateRange,selCat,setCat,selBrand,setBrand,selCL0,setCL0,selCL1,setCL1,selCL2,setCL2,cats,brands,cl0cnt,cl1cnt,cl2cnt}){
+  return(<>
+    <div className="fbar">
+      <div className="tg">
+        <select className={`fsel${selCat!=='all'?' fon':''}`} value={selCat} onChange={e=>setCat(e.target.value)}>
+          <option value="all">Univers</option>
+          {cats.map(c=><option key={c} value={c}>{c}</option>)}
+        </select>
+        <select className={`fsel${selBrand!=='all'?' fon':''}`} value={selBrand} onChange={e=>setBrand(e.target.value)}>
+          <option value="all">Marque</option>
+          {brands.map(b=><option key={b} value={b}>{b}</option>)}
+        </select>
+      </div>
+      <div className="fsep"/>
+      <div className="tg">
+        <select className={`fsel${selCL0!=='all'?' fon':''}`} value={selCL0} onChange={e=>setCL0(e.target.value)}>
+          <option value="all">CL0</option>
+          {['push','mid','low','zombie'].map(v=><option key={v} value={v}>{v} ({cl0cnt[v]||0})</option>)}
+        </select>
+        <select className={`fsel${selCL1!=='all'?' fon':''}`} value={selCL1} onChange={e=>setCL1(e.target.value)}>
+          <option value="all">CL1</option>
+          <option value="promo">promo ({cl1cnt['promo']||0})</option>
+        </select>
+        <select className={`fsel${selCL2!=='all'?' fon':''}`} value={selCL2} onChange={e=>setCL2(e.target.value)}>
+          <option value="all">CL2</option>
+          {[1,2,3,4,5].map(v=><option key={v} value={v}>{v} ({cl2cnt[v]||0})</option>)}
+        </select>
+      </div>
+      <div style={{marginLeft:'auto',display:'flex',alignItems:'center',gap:12}}>
+        <DateRangePicker start={dateRange.start} end={dateRange.end} onApply={(s,e)=>setDateRange({start:s,end:e})}/>
+        <div style={{width:1,height:22,background:'var(--border)'}}/>
+        <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style={{height:22}} onError={e=>e.target.style.display='none'}/>
+      </div>
+    </div>
+  </>);
+}
+
+/* ───────── KPI ROW ───────── */
+function KPIRow({status,evo}){
+  const da=status.pctA-(status.pctA-0.8);
+  return(<div className="sec"><div className="fx g3 aic" style={{alignItems:'stretch'}}>
+    <div className="card" style={{minWidth:140,display:'flex',flexDirection:'column',justifyContent:'center'}}>
+      <div className="ct">Produits actifs</div>
+      <div className="bn" style={{color:'var(--primary)'}}>{status.pctA}%</div>
+      <div className="fx aic g2g" style={{marginTop:8}}><span className="dlt pos">+0.8pp vs hier</span></div>
+      <div className="bns">{fmt.n(status.active)} produits</div>
+    </div>
+    <div className="card" style={{minWidth:140,display:'flex',flexDirection:'column',justifyContent:'center'}}>
+      <div className="ct">Produits refusés</div>
+      <div className="bn" style={{color:'var(--orange)'}}>{status.pctR}%</div>
+      <div className="fx aic g2g" style={{marginTop:8}}><span className="dlt neg">-0.5pp vs hier</span></div>
+      <div className="bns">{fmt.n(status.refused)} produits</div>
+    </div>
+    <div className="card f1">
+      <div className="ct">Évolution des produits actifs (14 jours)</div>
+      <ResponsiveContainer width="100%" height={72}>
+        <AreaChart data={evo} margin={{top:2,right:0,left:0,bottom:0}}>
+          <defs>
+            <linearGradient id="evoGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="5%" stopColor="var(--primary)" stopOpacity={0.3}/>
+              <stop offset="95%" stopColor="var(--primary)" stopOpacity={0.02}/>
+            </linearGradient>
+          </defs>
+          <XAxis dataKey="day" hide /><YAxis domain={[80,100]} hide />
+          <Tooltip content={({active,payload})=>active&&payload?.length?<div className="ctt">J-{14-payload[0].payload.day} : <b>{payload[0].value}%</b></div>:null}/>
+          <Area type="monotone" dataKey="v" stroke="var(--primary)" strokeWidth={2} fill="url(#evoGrad)" dot={false}/>
+        </AreaChart>
+      </ResponsiveContainer>
+      <div style={{display:'flex',justifyContent:'space-between',fontSize:10,color:'var(--t3)',marginTop:2}}><span>J-14</span><span>Aujourd'hui</span></div>
+    </div>
+  </div></div>);
+}
+
+/* ───────── DONUT ───────── */
+
+
+/* ───────── BILAN GLOBAL ───────── */
+const CHIPS=[
+  {k:'impressions',l:'Impressions',c:'#8B5CF6',bg:'#F5F3FF',f:v=>fmt.k(v)},
+  {k:'clicks',     l:'Clics',      c:'#3B82F6',bg:'#EFF6FF',f:v=>fmt.k(v)},
+  {k:'ctr',        l:'CTR',        c:'#14B8A6',bg:'#F0FDFA',f:v=>fmt.p(v)},
+  {k:'cpc',        l:'CPC',        c:'#F59E0B',bg:'#FFFBEB',f:v=>fmt.e(v)},
+  {k:'investment', l:'Invest.',    c:'#F97316',bg:'#FFF7ED',f:v=>fmt.e(v)},
+  {k:'conversions',l:'Convers.',   c:'#22C55E',bg:'#F0FDF4',f:v=>fmt.k(v)},
+  {k:'cvr',        l:'CVR',        c:'#EC4899',bg:'#FDF2F8',f:v=>fmt.p(v)},
+  {k:'revenue',    l:'CA',         c:'#0EA5E9',bg:'#F0F9FF',f:v=>fmt.e(v)},
+  {k:'roi',        l:'ROI',        c:'#6366F1',bg:'#EEF2FF',f:v=>Math.round(v*100)/100},
+];
+const CHARTS=[
+  {t:'Impressions & CTR',   bk:'impressions',bc:'#8B5CF6',bl:'Impressions',lk:'ctr', lc:'#14B8A6',ll:'CTR',  bf:v=>fmt.k(v),lf:v=>fmt.p(v)},
+  {t:'Clics & CVR',         bk:'clicks',     bc:'#3B82F6',bl:'Clics',      lk:'cvr', lc:'#EC4899',ll:'CVR',  bf:v=>fmt.k(v),lf:v=>fmt.p(v)},
+  {t:'Invest. & CPC',       bk:'investment', bc:'#F97316',bl:'Invest.',    lk:'cpc', lc:'#F59E0B',ll:'CPC',  bf:v=>fmt.e(v),lf:v=>fmt.e(v)},
+  {t:'CA & ROI',            bk:'revenue',    bc:'#0EA5E9',bl:'CA',         lk:'roi', lc:'#6366F1',ll:'ROI',  bf:v=>fmt.e(v),lf:v=>Math.round(v*100)/100},
+];
+function DChart({def,data}){
+  return(<div className="card">
+    <div className="ct">{def.t}</div>
+    <ResponsiveContainer width="100%" height={162}>
+      <ComposedChart data={data} margin={{top:4,right:32,left:0,bottom:0}}>
+        <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false}/>
+        <XAxis dataKey="date" tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} interval={4}/>
+        <YAxis yAxisId="l" tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} tickFormatter={v=>fmt.k(v)} width={34}/>
+        <YAxis yAxisId="r" orientation="right" tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} tickFormatter={v=>v?.toFixed(1)} width={28}/>
+        <Tooltip content={({active,payload,label})=>!active||!payload?.length?null:<div className="ctt"><div className="ttl">{label}</div>{payload.map((p,i)=><div key={i} style={{color:p.color}}>{p.name}: <b>{p.dataKey===def.bk?def.bf(p.value):def.lf(p.value)}</b></div>)}</div>}/>
+        <Bar yAxisId="l" dataKey={def.bk} name={def.bl} fill={def.bc} radius={[2,2,0,0]} maxBarSize={13} opacity={.85}/>
+        <Line yAxisId="r" dataKey={def.lk} name={def.ll} stroke={def.lc} dot={false} strokeWidth={2}/>
+      </ComposedChart>
+    </ResponsiveContainer>
+  </div>);
+}
+function BilanGlobal({stats,ts}){
+  const [active,setActive]=useState('investment');
+  return(<div className="sec">
+    <div className="stit">Bilan global</div>
+    <div style={{display:'flex',gap:8,marginBottom:14}}>
+      {CHIPS.map(c=><button key={c.k} className="chip" style={{background:active===c.k?c.c:c.bg,color:active===c.k?'#fff':c.c,borderColor:active===c.k?c.c:'transparent'}} onClick={()=>setActive(c.k)}>
+        <span className="chipl">{c.l}</span><span className="chipv">{c.f(stats[c.k]??0)}</span>
+      </button>)}
+    </div>
+    <div className="g2">{CHARTS.map(d=><DChart key={d.t} def={d} data={ts}/>)}</div>
+  </div>);
+}
+
+/* ───────── TREND ───────── */
+const METRICS=[
+  {k:'investment',l:'Invest.',c:'#22C55E',f:v=>fmt.e(v)},
+  {k:'revenue',l:'CA',c:'#14B8A6',f:v=>fmt.e(v)},
+  {k:'clicks',l:'Clics',c:'#3B82F6',f:v=>fmt.k(v)},
+  {k:'conversions',l:'Convers.',c:'#F97316',f:v=>fmt.k(v)},
+  {k:'marge',l:'Marge',c:'#8B5CF6',f:v=>fmt.e(v)},
+];
+function TrendSection({ts}){
+  const [am,setAm]=useState('investment');
+  const m=METRICS.find(x=>x.k===am)||METRICS[0];
+  const {chartData,projected,total}=useMemo(()=>{
+    const mayTs=ts.filter(d=>d.date&&d.date.endsWith('mai'));
+    let s=0;
+    const cum=mayTs.map(d=>{s+=d[am]||0;return{...d,cum:Math.round(s*100)/100};});
+    const n=cum.length;
+    const tot=n>0?cum[n-1].cum:0;
+    const dailyRate=n>0?tot/n:0;
+    const proj=Math.round(dailyRate*31*100)/100;
+    const withTrend=cum.map((d,i)=>({...d,trend:Math.round(dailyRate*(i+1)*100)/100}));
+    const extra=[];
+    for(let day=n+1;day<=31;day++) extra.push({date:`${day} mai`,cum:null,trend:Math.round(dailyRate*day*100)/100});
+    return{chartData:[...withTrend,...extra],projected:proj,total:tot};
+  },[ts,am]);
+  return(<div className="sec">
+    <div className="stit">Trend</div>
+    <div className="card">
+      <div className="fx aic g3" style={{marginBottom:12,flexWrap:'wrap'}}>
+        <div className="fx g2g" style={{flexWrap:'wrap'}}>
+          {METRICS.map(x=><button key={x.k} className="mbtn" style={{background:am===x.k?x.c:'#F1F5F9',color:am===x.k?'#fff':'var(--t2)'}} onClick={()=>setAm(x.k)}>{x.l}</button>)}
+        </div>
+        <div style={{marginLeft:'auto',display:'flex',gap:24,alignItems:'flex-end'}}>
+          <div style={{textAlign:'right'}}>
+            <div style={{fontSize:10,color:'var(--t3)',marginBottom:2}}>Total mai</div>
+            <div style={{fontSize:22,fontWeight:800,color:m.c}}>{m.f(total)}</div>
+          </div>
+          <div style={{textAlign:'right'}}>
+            <div style={{fontSize:10,color:'var(--t3)',marginBottom:2}}>Projection J31</div>
+            <div style={{fontSize:22,fontWeight:800,color:'#94A3B8'}}>{m.f(projected)}</div>
+          </div>
+        </div>
+      </div>
+      <ResponsiveContainer width="100%" height={140}>
+        <LineChart data={chartData} margin={{top:4,right:16,left:0,bottom:0}}>
+          <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false}/>
+          <XAxis dataKey="date" tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} interval={4}/>
+          <YAxis tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} tickFormatter={v=>fmt.k(v)} width={40}/>
+          <Tooltip content={({active,payload,label})=>!active||!payload?.length?null:
+            <div className="ctt"><div className="ttl">{label}</div>
+              {payload.filter(p=>p.value!=null).map(p=>p.dataKey==='cum'
+                ?<div key="c" style={{color:m.c}}>Cumulé : <b>{m.f(p.value)}</b></div>
+                :<div key="t" style={{color:'#94A3B8'}}>Tendance : <b>{m.f(p.value)}</b></div>)}
+            </div>}/>
+          <Line type="monotone" dataKey="cum" stroke={m.c} dot={false} strokeWidth={2.5} connectNulls={false}/>
+          <Line type="monotone" dataKey="trend" stroke="#94A3B8" dot={false} strokeWidth={1.5} strokeDasharray="6 3"/>
+        </LineChart>
+      </ResponsiveContainer>
+    </div>
+  </div>);
+}
+
+/* ───────── CATEGORIES ───────── */
+function CatPie({data,vk,fmt2}){
+  const pd=data.map(d=>({name:d.name,value:d[vk],color:d.color}));
+  return(<ResponsiveContainer width="100%" height={200}>
+    <PieChart>
+      <Pie data={pd} cx="50%" cy="50%" innerRadius={55} outerRadius={85} dataKey="value" strokeWidth={1} stroke="#fff">
+        {pd.map((e,i)=><Cell key={i} fill={e.color}/>)}
+      </Pie>
+      <Tooltip content={({active,payload})=>!active||!payload?.length?null:<div className="ctt"><div className="ttl">{payload[0].name}</div><b style={{color:payload[0].payload.color}}>{fmt2(payload[0].value)}</b></div>}/>
+    </PieChart>
+  </ResponsiveContainer>);
+}
+function CatLegend({data,vk,fmt2}){
+  const tot=data.reduce((s,d)=>s+(d[vk]||0),0);
+  return(<div style={{fontSize:11,display:'flex',flexDirection:'column',gap:5,marginTop:4}}>
+    {data.slice(0,7).map(d=><div key={d.name} className="fx aic g2g">
+      <div style={{width:8,height:8,borderRadius:2,background:d.color,flexShrink:0}}/>
+      <span style={{color:'var(--t2)',flex:1,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap',fontSize:10}}>{d.name}</span>
+      <span style={{fontWeight:600,color:'var(--t1)',fontSize:11}}>{fmt2(d[vk])}</span>
+      <span style={{color:'var(--t3)',minWidth:28,fontSize:10}}>{tot>0?`${(d[vk]/tot*100).toFixed(0)}%`:'–'}</span>
+    </div>)}
+  </div>);
+}
+function CategorySection({cs,cts}){
+  return(<div className="sec">
+    <div className="stit">Bilan par catégorie de produits</div>
+    <div className="card" style={{marginBottom:12}}>
+      <div className="ct">Investissements</div>
+      <div className="fx g4g">
+        <div style={{width:200,flexShrink:0}}><CatPie data={cs} vk="investment" fmt2={fmt.e}/><CatLegend data={cs} vk="investment" fmt2={fmt.e}/></div>
+        <div className="f1">
+          <div style={{fontSize:10,color:'var(--t3)',marginBottom:6}}>Évolution investissement par catégorie</div>
+          <ResponsiveContainer width="100%" height={190}>
+            <AreaChart data={cts} margin={{top:4,right:8,left:0,bottom:0}}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false}/>
+              <XAxis dataKey="date" tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} interval={4}/>
+              <YAxis tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} tickFormatter={v=>fmt.k(v)} width={36}/>
+              <Tooltip content={({active,payload,label})=>!active||!payload?.length?null:<div className="ctt" style={{maxHeight:160,overflowY:'auto'}}><div className="ttl">{label}</div>{payload.slice(0,5).map((p,i)=><div key={i} style={{color:p.color}}>{p.name}: <b>{fmt.k(p.value)}</b></div>)}</div>}/>
+              {cs.map(c=><Area key={c.name} type="monotone" dataKey={c.name} name={c.name} stackId="1" fill={c.color} stroke={c.color} strokeWidth={.5} fillOpacity={.8}/>)}
+            </AreaChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+    <div className="card">
+      <div className="ct">Marge</div>
+      <div className="fx g4g">
+        <div style={{width:200,flexShrink:0}}><CatPie data={cs} vk="marge" fmt2={fmt.e}/><CatLegend data={cs} vk="marge" fmt2={fmt.e}/></div>
+        <div className="f1">
+          <div style={{fontSize:10,color:'var(--t3)',marginBottom:6}}>Évolution marge par catégorie</div>
+          <ResponsiveContainer width="100%" height={190}>
+            <LineChart data={cts} margin={{top:4,right:8,left:0,bottom:0}}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false}/>
+              <XAxis dataKey="date" tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} interval={4}/>
+              <YAxis tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} tickFormatter={v=>fmt.k(v)} width={36}/>
+              <Tooltip content={({active,payload,label})=>!active||!payload?.length?null:<div className="ctt" style={{maxHeight:160,overflowY:'auto'}}><div className="ttl">{label}</div>{payload.slice(0,5).map((p,i)=><div key={i} style={{color:p.color}}>{p.name.replace('_m','')}: <b>{fmt.k(p.value)}</b></div>)}</div>}/>
+              {cs.map(c=><Line key={c.name} type="monotone" dataKey={c.name+'_m'} name={c.name+'_m'} stroke={c.color} dot={false} strokeWidth={1.5}/>)}
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+  </div>);
+}
+
+/* ───────── CONCURRENCE ───────── */
+const COMPS_IS=[
+  {name:'Castorama',    color:'#F97316',avg:75},
+  {name:'Leroy Merlin', color:'#22C55E',avg:72},
+  {name:'Brico Dépôt',  color:'#EF4444',avg:50},
+  {name:'Amazon',       color:'#232F3E',avg:20},
+];
+const compISData=(()=>{
+  const rnd=seededRand(99);
+  const MO=['jan','fév','mars','avr','mai','juin','juil','août','sep','oct','nov','déc'];
+  return Array.from({length:30},(_,i)=>{
+    const d=new Date(2026,3,22);d.setDate(d.getDate()+i);
+    const entry={date:`${d.getDate()} ${MO[d.getMonth()]}`};
+    COMPS_IS.forEach(c=>{entry[c.name]=Math.min(99,Math.max(10,Math.round(c.avg+(rnd()-.5)*14)));});
+    return entry;
+  });
+})();
+function ConcurrenceSection(){
+  return(<div className="sec">
+    <div className="stit">Concurrence</div>
+    <div className="card">
+      <div className="ct" style={{marginBottom:12}}>Part d'impressions par jour (%)</div>
+      <div style={{display:'flex',gap:20,marginBottom:14,flexWrap:'wrap'}}>
+        {COMPS_IS.map(c=><div key={c.name} style={{display:'flex',alignItems:'center',gap:6}}>
+          <div style={{width:10,height:10,borderRadius:2,background:c.color,flexShrink:0}}/>
+          <span style={{fontSize:11,color:'var(--t2)'}}>{c.name}</span>
+          <span style={{fontSize:11,fontWeight:700,color:c.color,marginLeft:2}}>{c.avg}%</span>
+        </div>)}
+      </div>
+      <ResponsiveContainer width="100%" height={300}>
+        <BarChart data={compISData} margin={{top:4,right:8,left:0,bottom:0}} barCategoryGap="30%">
+          <CartesianGrid strokeDasharray="3 3" stroke="#F1F5F9" vertical={false}/>
+          <XAxis dataKey="date" tick={{fontSize:8,fill:'#94A3B8'}} tickLine={false} axisLine={false} interval={2}/>
+          <YAxis tick={{fontSize:9,fill:'#94A3B8'}} tickLine={false} axisLine={false} tickFormatter={v=>`${v}%`} width={36} domain={[0,'auto']}/>
+          <Tooltip content={({active,payload,label})=>!active||!payload?.length?null:
+            <div className="ctt"><div className="ttl">{label}</div>
+              {[...payload].reverse().map(p=><div key={p.dataKey} style={{color:p.fill}}>{p.dataKey} : <b>{p.value}%</b></div>)}
+            </div>}/>
+          <Legend verticalAlign="top" height={0} wrapperStyle={{display:'none'}}/>
+          {COMPS_IS.map((c,i)=><Bar key={c.name} dataKey={c.name} stackId="a" fill={c.color} opacity={.9} radius={i===COMPS_IS.length-1?[2,2,0,0]:[0,0,0,0]}/>)}
+        </BarChart>
+      </ResponsiveContainer>
+    </div>
+  </div>);
+}
+
+/* ───────── BILAN PRODUITS ───────── */
+function genProd7Stats(prods){
+  return prods.map((p,i)=>{
+    const r1=seededRand(1000+i),r2=seededRand(2000+i);
+    const f1=0.20+r1()*0.16,f2=0.16+r2()*0.14;
+    const inv7=Math.round(p.stats.investment*f1*100)/100;
+    const rev7=Math.round(p.stats.revenue*f1*(0.85+r1()*0.30)*100)/100;
+    const roi7=inv7>0?Math.round(rev7/inv7*100)/100:0;
+    const invP=Math.round(p.stats.investment*f2*100)/100;
+    const prog=invP>0?Math.round((inv7-invP)/invP*1000)/10:0;
+    return{id:p.id,name:p.name,inv7,rev7,roi7,invP,prog};
+  });
+}
+function ProdTable({title,rows,color,showProg}){
+  const th={textAlign:'left',padding:'6px 8px',fontSize:10,fontWeight:600,color:'var(--t3)',textTransform:'uppercase',borderBottom:'1px solid var(--border)',whiteSpace:'nowrap'};
+  const td={padding:'7px 8px',borderBottom:'1px solid #F8FAFC',verticalAlign:'middle',fontSize:12};
+  return(<div className="card" style={{flex:1,minWidth:280}}>
+    <div className="ct" style={{marginBottom:10,color:color||'var(--t1)'}}>{title}</div>
+    <table style={{width:'100%',borderCollapse:'collapse'}}>
+      <thead><tr>
+        <th style={th}>ID</th>
+        <th style={th}>Produit</th>
+        <th style={{...th,textAlign:'right'}}>Invest. 7j</th>
+        <th style={{...th,textAlign:'right'}}>{showProg?'Progression':'ROI'}</th>
+      </tr></thead>
+      <tbody>{rows.map((r,i)=><tr key={r.id} style={{background:i%2?'#FAFBFC':'transparent'}}>
+        <td style={{...td,color:'var(--t3)',fontFamily:'monospace',fontSize:10}}>{r.id}</td>
+        <td style={{...td,color:'var(--t1)',fontWeight:500,maxWidth:150,overflow:'hidden',textOverflow:'ellipsis',whiteSpace:'nowrap'}}>{r.name}</td>
+        <td style={{...td,textAlign:'right',fontWeight:600}}>{fmt.e(r.inv7)}</td>
+        <td style={{...td,textAlign:'right',fontWeight:700,color:showProg?(r.prog>=0?'var(--green)':'var(--red)'):color}}>
+          {showProg?(r.prog>=0?'+':'')+r.prog+'%':Math.round(r.roi7*100)/100}
+        </td>
+      </tr>)}</tbody>
+    </table>
+  </div>);
+}
+function BilanProduits({prods}){
+  const data=useMemo(()=>genProd7Stats(prods),[prods]);
+  const withInvest=data.filter(d=>d.inv7>0);
+  const bestROI=[...withInvest].sort((a,b)=>b.roi7-a.roi7).slice(0,5).sort((a,b)=>b.inv7-a.inv7);
+  const worstROI=[...withInvest].sort((a,b)=>a.roi7-b.roi7).slice(0,5).sort((a,b)=>b.inv7-a.inv7);
+  const bestProg=[...withInvest].sort((a,b)=>b.prog-a.prog).slice(0,5).sort((a,b)=>b.inv7-a.inv7);
+  return(<div className="sec">
+    <div className="stit">Bilan produits</div>
+    <div style={{display:'flex',gap:16,alignItems:'flex-start',flexWrap:'wrap'}}>
+      <ProdTable title="Meilleur ROI — 7 derniers jours" rows={bestROI} color="var(--green)"/>
+      <ProdTable title="Moins bon ROI — 7 derniers jours" rows={worstROI} color="var(--red)"/>
+      <ProdTable title="Meilleure progression 7j vs 7j préc." rows={bestProg} color="var(--primary)" showProg/>
+    </div>
+  </div>);
+}
+
+/* ───────── APP ───────── */
+function App(){
+  const [products,setProducts]=useState(null);
+  const [competitors,setCompetitors]=useState(null);
+  const [dateRange,setDateRange]=useState({start:new Date(2026,3,22),end:new Date(2026,4,21)});
+  const [selCat,setSelCat]=useState('all');
+  const [selBrand,setSelBrand]=useState('all');
+  const [selCL0,setSelCL0]=useState('all');
+  const [selCL1,setSelCL1]=useState('all');
+  const [selCL2,setSelCL2]=useState('all');
+
+  useEffect(()=>{
+    Promise.all([
+      fetch('./data/products.json').then(r=>r.json()),
+      fetch('./data/competitors.json').then(r=>r.json()),
+    ]).then(([p,c])=>{setProducts(p);setCompetitors(c)})
+     .catch(()=>{});
+  },[]);
+
+  const cats=useMemo(()=>products?[...new Set(products.map(p=>p.category))].sort():[],[products]);
+  const brands=useMemo(()=>products?[...new Set(products.map(p=>p.brand))].sort():[],[products]);
+  const cl0cnt=useMemo(()=>products?countBy(products,'cl0'):{},[products]);
+  const cl1cnt=useMemo(()=>products?countBy(products,'cl1'):{},[products]);
+  const cl2cnt=useMemo(()=>products?countBy(products,'cl2'):{},[products]);
+  const prods=useMemo(()=>products?filterProds(products,{cat:selCat,brand:selBrand,cl0:selCL0,cl1:selCL1,cl2:selCL2}):[],[products,selCat,selBrand,selCL0,selCL1,selCL2]);
+  const stats=useMemo(()=>deriveStats(sumStats(prods)),[prods]);
+  const status=useMemo(()=>prodStatus(prods),[prods]);
+  const cs=useMemo(()=>catStats(prods),[prods]);
+  const ts=useMemo(()=>genTS(prods),[prods]);
+  const cts=useMemo(()=>genCatTS(prods),[prods]);
+  const evo=useMemo(()=>genEvo(),[]);
+  const D_BASE=new Date(2026,3,22);
+  const tsF=useMemo(()=>ts.filter((_,i)=>{const d=new Date(D_BASE);d.setDate(d.getDate()+i);return d>=dateRange.start&&d<=dateRange.end;}),[ts,dateRange]);
+  const ctsF=useMemo(()=>cts.filter((_,i)=>{const d=new Date(D_BASE);d.setDate(d.getDate()+i);return d>=dateRange.start&&d<=dateRange.end;}),[cts,dateRange]);
+
+  if(!products||!competitors)return(<div className="loading"><div className="spin"/><span>Chargement…</span><small style={{color:'var(--t3)'}}>Assurez-vous de lancer serve.bat</small></div>);
+
+  return(<div className="pw">
+    <Header dateRange={dateRange} setDateRange={setDateRange} selCat={selCat} setCat={setSelCat} selBrand={selBrand} setBrand={setSelBrand} selCL0={selCL0} setCL0={setSelCL0} selCL1={selCL1} setCL1={setSelCL1} selCL2={selCL2} setCL2={setSelCL2} cats={cats} brands={brands} cl0cnt={cl0cnt} cl1cnt={cl1cnt} cl2cnt={cl2cnt}/>
+    <main className="content">
+      <KPIRow status={status} evo={evo}/>
+      <BilanGlobal stats={stats} ts={tsF}/>
+      <TrendSection ts={ts}/>
+      <CategorySection cs={cs} cts={ctsF}/>
+      <ConcurrenceSection/>
+      <BilanProduits prods={prods}/>
+    </main>
+  </div>);
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<App/>);
+</script>
+</body>
+</html>
