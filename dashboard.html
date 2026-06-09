@@ -564,7 +564,7 @@ function genProd7Stats(prods){
     const roi7=inv7>0?Math.round(rev7/inv7*100)/100:0;
     const invP=Math.round(p.stats.investment*f2*100)/100;
     const prog=invP>0?Math.round((inv7-invP)/invP*1000)/10:0;
-    return{id:p.id,name:p.name,inv7,rev7,roi7,invP,prog};
+    return{id:p.id,name:p.title,inv7,rev7,roi7,invP,prog};
   });
 }
 function ProdTable({title,rows,color,showProg}){
@@ -575,7 +575,7 @@ function ProdTable({title,rows,color,showProg}){
     <table style={{width:'100%',borderCollapse:'collapse'}}>
       <thead><tr>
         <th style={th}>ID</th>
-        <th style={th}>Produit</th>
+        <th style={th}>Titre du produit</th>
         <th style={{...th,textAlign:'right'}}>Invest. 7j</th>
         <th style={{...th,textAlign:'right'}}>{showProg?'Progression':'ROI'}</th>
       </tr></thead>
