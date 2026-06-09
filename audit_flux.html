@@ -330,23 +330,24 @@ function App(){
       {/* ── DIAGNOSTIQUE ── */}
       <div className="sec">
         <div className="stit">Diagnostique produit</div>
-        <div className="card" style={{display:'flex',alignItems:'center',gap:32}}>
-          <div style={{display:'flex',gap:24,flexShrink:0}}>
+        <div className="card" style={{display:'flex',alignItems:'stretch',gap:0}}>
+          <div style={{display:'flex',gap:16,flexShrink:0,alignItems:'center',paddingRight:24}}>
             <ScoreCard label="Note Ensemble" value={S.noteE} color="#3B82F6"/>
             <ScoreCard label="Note Personnalisée" value={S.noteP} color="#F97316"/>
           </div>
-          <div style={{flex:1}}>
-            <div className="ct">Score par dimension (/100)</div>
-            <ResponsiveContainer width="100%" height={210}>
-              <RadarChart data={S.radar} cx="50%" cy="50%" outerRadius={75}>
-                <PolarGrid stroke="#E5E7EB"/>
-                <PolarAngleAxis dataKey="s" tick={{fontSize:10,fill:'var(--t2)',fontFamily:'inherit'}}/>
-                <PolarRadiusAxis domain={[0,100]} tick={false} axisLine={false}/>
-                <Radar dataKey="v" stroke="#006AB3" fill="#006AB3" fillOpacity={.2} strokeWidth={2}
-                  dot={{r:3,fill:'#006AB3',strokeWidth:0}}/>
-                <Tooltip content={({active,payload})=>!active||!payload?.length?null:<div className="ctt"><div className="ttl">{payload[0].payload.s}</div><b>{payload[0].value}/100</b></div>}/>
-              </RadarChart>
-            </ResponsiveContainer>
+          <div style={{width:1,background:'var(--border)',flexShrink:0,margin:'8px 0'}}/>
+          <div style={{display:'flex',flex:1,alignItems:'center',paddingLeft:24,gap:12}}>
+            {S.radar.map(r=>{
+              const pct=r.v;
+              const col=pct>=80?'#22C55E':pct>=60?'#006AB3':'#F97316';
+              return(<div key={r.s} style={{flex:1,display:'flex',flexDirection:'column',alignItems:'center',gap:6,minWidth:0}}>
+                <div style={{fontSize:22,fontWeight:800,color:col,lineHeight:1}}>{r.v}</div>
+                <div style={{fontSize:9,fontWeight:700,color:'var(--t3)',textTransform:'uppercase',letterSpacing:'.04em',textAlign:'center',whiteSpace:'nowrap'}}>{r.s}</div>
+                <div style={{width:'100%',height:4,background:'#F1F5F9',borderRadius:2}}>
+                  <div style={{width:`${pct}%`,height:'100%',background:col,borderRadius:2,transition:'width .4s'}}/>
+                </div>
+              </div>);
+            })}
           </div>
         </div>
       </div>
