@@ -14,15 +14,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 #map{flex:0 0 44%;height:100%}
 #panel{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
 
-/* Header */
 .lhdr{background:#fff;border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .lhdr-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
 .lhdr-logo{width:42px;height:42px;background:#0072CE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#fff;flex-shrink:0}
 .lhdr-logo span{color:#FFD700}
 .lhdr-name{font-size:14px;font-weight:800;color:#0D1B4B;margin-bottom:2px}
 .lhdr-addr{font-size:10px;color:#555;line-height:1.55}
-.lhdr-link{color:#0072CE;text-decoration:none}
-.lhdr-link:hover{text-decoration:underline}
+.lhdr-link{color:#0072CE;text-decoration:none}.lhdr-link:hover{text-decoration:underline}
 .lhdr-right{flex-shrink:0;text-align:right}
 .lhdr-badge{display:inline-flex;align-items:center;gap:4px;border:1.5px solid #0072CE;color:#0072CE;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;margin-bottom:3px}
 .lhdr-meta{font-size:9.5px;color:#888;margin-bottom:5px}
@@ -30,12 +28,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 .lbtn:hover{opacity:.8}
 .lbtn-out{background:#fff;border:1.5px solid #0072CE;color:#0072CE}
 .lbtn-fill{background:#0072CE;border:1.5px solid #0072CE;color:#fff}
-
-/* Section header */
 .lsec{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#4B5675;display:flex;align-items:center;gap:4px;padding:2px 0}
 .lsec-bar{width:3px;height:12px;background:#0072CE;border-radius:2px;flex-shrink:0}
-
-/* KPI cards */
 .lkpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .lkpi-card{background:#fff;border-radius:10px;padding:12px 11px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .lkpi-top{display:flex;align-items:center;gap:5px;margin-bottom:6px}
@@ -45,23 +39,17 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 .lkpi-sub{font-size:8.5px;color:#9CA3AF;margin-bottom:8px}
 .lkpi-sep{height:1px;background:#E5E7EB;margin-bottom:7px}
 .lkpi-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-.lkpi-rl{font-size:9px;color:#6B7280}
-.lkpi-rv{font-size:9px;font-weight:700;color:#374151}
+.lkpi-rl{font-size:9px;color:#6B7280}.lkpi-rv{font-size:9px;font-weight:700;color:#374151}
 .delta{font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px}
-.pos{background:#DCFCE7;color:#15803D}
-.neg{background:#FEE2E2;color:#DC2626}
-
-/* Chart cards */
+.pos{background:#DCFCE7;color:#15803D}.neg{background:#FEE2E2;color:#DC2626}
 .lchart-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .lchart-card{background:#fff;border-radius:10px;padding:10px 11px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.lchart-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0}
+.lchart-top{display:flex;justify-content:space-between;align-items:flex-start}
 .lchart-label{font-size:10px;font-weight:700;color:#374151}
 .lchart-lv{font-size:18px;font-weight:800;color:#0072CE;line-height:1}
 .lchart-sub{font-size:7.5px;color:#9CA3AF;margin-bottom:2px}
 .lchart-legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
 .leg{font-size:7.5px;color:#9CA3AF;display:inline-flex;align-items:center;gap:2px}
-
-/* Cluster */
 .casto-cluster{background:rgba(0,114,206,.22);border-radius:50%;display:flex;align-items:center;justify-content:center}
 .casto-cluster-inner{background:#0072CE;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 </style>
@@ -92,10 +80,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 // ── UTILS ──
 function seededRand(seed){let s=seed;return()=>{s=(s*16807+0)%2147483647;return(s-1)/2147483646;};}
 const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v||0));
-const delta=(last,ref)=>+((last-ref)/ref*100).toFixed(1);
 const avg=a=>+(a.reduce((s,v)=>s+v,0)/a.length).toFixed(1);
+const delta=(last,ref)=>+((last-ref)/ref*100).toFixed(1);
+const RANK_COLORS=['#F59E0B','#F97316','#22C55E','#8B5CF6','#EF4444'];
 
-// ── CHART SVG ──
+// ── SPARKLINE SVG (store-specific evolution charts) ──
 function chartSVG(data,gid){
   const W=220,H=88,pL=26,pR=4,pT=6,pB=16;
   const iw=W-pL-pR,ih=H-pT-pB;
@@ -105,18 +94,11 @@ function chartSVG(data,gid){
   const y=v=>pT+(1-(v-mn)/rng)*ih;
   const pts=data.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
   const ya=y(av);
-  const ap=`M${x(0).toFixed(1)},${y(data[0]).toFixed(1)} `+
-    data.slice(1).map((v,i)=>`L${x(i+1).toFixed(1)},${y(v).toFixed(1)}`).join(' ')+
-    ` L${x(21).toFixed(1)},${(pT+ih).toFixed(1)} L${pL},${(pT+ih).toFixed(1)} Z`;
+  const ap=`M${x(0).toFixed(1)},${y(data[0]).toFixed(1)} `+data.slice(1).map((v,i)=>`L${x(i+1).toFixed(1)},${y(v).toFixed(1)}`).join(' ')+` L${x(21).toFixed(1)},${(pT+ih).toFixed(1)} L${pL},${(pT+ih).toFixed(1)} Z`;
   const xlbls=[{i:0,t:'Déc'},{i:4,t:'Jan'},{i:8,t:'Fév'},{i:12,t:'Mar'},{i:16,t:'Avr'},{i:21,t:'Mai'}];
   const ymax=pT+5,yavg=Math.max(pT+10,Math.min(ya,pT+ih-4));
   return`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <defs>
-      <linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#1A73E8" stop-opacity=".28"/>
-        <stop offset="100%" stop-color="#1A73E8" stop-opacity=".01"/>
-      </linearGradient>
-    </defs>
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1A73E8" stop-opacity=".28"/><stop offset="100%" stop-color="#1A73E8" stop-opacity=".01"/></linearGradient></defs>
     <path d="${ap}" fill="url(#${gid})"/>
     <polyline points="${pts}" fill="none" stroke="#1A73E8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <line x1="${pL}" y1="${ya.toFixed(1)}" x2="${W-pR}" y2="${ya.toFixed(1)}" stroke="#F59E0B" stroke-width="1" stroke-dasharray="4,3" opacity=".85"/>
@@ -125,8 +107,7 @@ function chartSVG(data,gid){
     <text x="${pL-2}" y="${(yavg+3).toFixed(1)}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(av)}</text>
     <text x="${pL-2}" y="${(pT+ih+2).toFixed(1)}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(mn)}</text>
     ${xlbls.map(l=>`<text x="${x(l.i).toFixed(1)}" y="${H-2}" text-anchor="middle" font-size="7.5" fill="#9CA3AF">${l.t}</text>`).join('')}
-  </svg>`;
-}
+  </svg>`;}
 
 // ── STORES DATA ──
 const stores=[
@@ -225,7 +206,7 @@ const stores=[
   {n:"Castorama Gonesse",cp:"95700",c:"Roissy CDG",a:"Z.i. de Paris Nord II",lat:48.990,lng:2.456}
 ];
 
-// ── DATA GENERATION ──
+// ── PER-STORE DATA ──
 function getStoreData(idx){
   const rBase=seededRand(idx*17+3);
   const vBase=Math.round(280+rBase()*320);
@@ -239,7 +220,93 @@ function getStoreData(idx){
   const lastV=visits[21],prevV=visits[20],lastC=calls[21],prevC=calls[20],lastR=routes[21],prevR=routes[20];
   return{visits,calls,routes,lastV,prevV,avgV,vsMoyV:delta(lastV,avgV),vsPrevV:delta(lastV,prevV),
     lastC,prevC,avgC,vsMoyC:delta(lastC,avgC),vsPrevC:delta(lastC,prevC),
-    lastR,prevR,avgR,vsMoyR:delta(lastR,avgR),vsPrevR:delta(lastR,prevR)};
+    lastR,prevR,avgR,vsMoyR:delta(lastR,avgR),vsPrevR:delta(lastR,prevR)};}
+
+// ── PRE-COMPUTE ALL STORES (runs once at page load) ──
+const allStores=stores.map((s,i)=>({...getStoreData(i),s,idx:i}));
+const byVisits=[...allStores].sort((a,b)=>b.lastV-a.lastV);
+const byProg=[...allStores].sort((a,b)=>b.vsPrevV-a.vsPrevV);
+
+// ── WEEK DATE LABELS ──
+const WEEK_DATES=(()=>{
+  const ms=['jan','fév','mar','avr','mai','jun'];
+  const start=new Date(2025,11,29);
+  return Array.from({length:22},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i*7);return`${d.getDate()} ${ms[d.getMonth()]||'?'}`;});
+})();
+
+// ── CANVAS CHART: multi-store evolution ──
+function setupEvoChart(top5){
+  const canvas=document.getElementById('evo-canvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const W=canvas.width,H=canvas.height;
+  const pL=34,pR=8,pT=10,pB=26;
+  const iw=W-pL-pR,ih=H-pT-pB;
+  const allVals=top5.flatMap(t=>t.visits);
+  const maxV=Math.ceil(Math.max(...allVals)*1.08/50)*50;
+  const x=i=>pL+i/21*iw;
+  const y=v=>pT+(1-v/maxV)*ih;
+
+  function draw(hw){
+    ctx.clearRect(0,0,W,H);
+    // Grid
+    [0,.25,.5,.75,1].forEach(t=>{
+      const val=Math.round(maxV*t);
+      const yv=y(val);
+      ctx.strokeStyle='#E9ECF0';ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(pL,yv);ctx.lineTo(W-pR,yv);ctx.stroke();
+      ctx.fillStyle='#9CA3AF';ctx.font='9px -apple-system,Arial,sans-serif';
+      ctx.textAlign='right';ctx.fillText(val,pL-4,yv+3.5);
+    });
+    // X labels
+    [{i:0,t:'29 déc'},{i:4,t:'26 jan'},{i:8,t:'23 fév'},{i:12,t:'23 mar'},{i:16,t:'20 avr'},{i:21,t:'25 mai'}].forEach(({i,t})=>{
+      ctx.fillStyle='#9CA3AF';ctx.font='8.5px -apple-system,Arial,sans-serif';
+      ctx.textAlign='center';ctx.fillText(t,x(i),H-4);
+    });
+    // Hover line
+    if(hw!==null){
+      ctx.strokeStyle='rgba(0,0,0,.12)';ctx.lineWidth=1;
+      ctx.setLineDash([4,3]);
+      ctx.beginPath();ctx.moveTo(x(hw),pT);ctx.lineTo(x(hw),pT+ih);ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    // Lines + dots
+    top5.forEach((t,ci)=>{
+      const col=RANK_COLORS[ci];
+      ctx.strokeStyle=col;ctx.lineWidth=2;ctx.lineJoin='round';
+      ctx.beginPath();
+      t.visits.forEach((v,i)=>{if(i===0)ctx.moveTo(x(i),y(v));else ctx.lineTo(x(i),y(v));});
+      ctx.stroke();
+      if(hw!==null){
+        ctx.fillStyle=col;ctx.beginPath();ctx.arc(x(hw),y(t.visits[hw]),4.5,0,Math.PI*2);ctx.fill();
+        ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(x(hw),y(t.visits[hw]),2,0,Math.PI*2);ctx.fill();
+      }
+    });
+  }
+  draw(null);
+
+  // Tooltip
+  let tip=document.getElementById('evo-tip');
+  if(!tip){tip=document.createElement('div');tip.id='evo-tip';
+    tip.style.cssText='position:fixed;display:none;background:rgba(15,27,53,.92);color:#fff;border-radius:8px;padding:8px 11px;font-size:9.5px;pointer-events:none;z-index:9999;min-width:145px;box-shadow:0 4px 14px rgba(0,0,0,.35);line-height:1.7';
+    document.body.appendChild(tip);}
+
+  canvas.addEventListener('mousemove',e=>{
+    const rect=canvas.getBoundingClientRect();
+    const rawX=(e.clientX-rect.left)*W/rect.width;
+    const wi=Math.max(0,Math.min(21,Math.round((rawX-pL)/iw*21)));
+    draw(wi);
+    let h=`<div style="font-weight:700;font-size:10px;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:3px;margin-bottom:4px">${WEEK_DATES[wi]}</div>`;
+    top5.forEach((t,ci)=>{
+      const name=t.s.n.replace('Castorama ','').replace('Casto ','');
+      h+=`<div style="display:flex;justify-content:space-between;gap:10px"><span><span style="color:${RANK_COLORS[ci]}">●</span> ${name}</span><span style="font-weight:700">${nf(t.visits[wi])}</span></div>`;
+    });
+    tip.innerHTML=h;tip.style.display='block';
+    const tx=e.clientX+14,ty=e.clientY-20;
+    tip.style.left=(tx+tip.offsetWidth>window.innerWidth?tx-tip.offsetWidth-28:tx)+'px';
+    tip.style.top=ty+'px';
+  });
+  canvas.addEventListener('mouseleave',()=>{draw(null);tip.style.display='none';});
 }
 
 // ── RENDER PANEL ──
@@ -248,32 +315,71 @@ function renderPanel(store,idx){
   const dc=v=>v>=0?'pos':'neg';
   const ds=v=>`${v>=0?'+':''}${v.toFixed(1)} %`;
   const snum=1000+idx*7+134;
+  const shortN=t=>t.s.n.replace('Castorama ','').replace('Casto ','');
 
-  function kpiCard(ico,lbl,val,prev,av,vsMoy,vsPrev){
-    return`<div class="lkpi-card">
-      <div class="lkpi-top"><span class="lkpi-ico">${ico}</span><span class="lkpi-lbl">${lbl}</span></div>
-      <div class="lkpi-val">${nf(val)}</div>
-      <div class="lkpi-sub">Semaine du 25 mai 2026</div>
-      <div class="lkpi-sep"></div>
-      <div class="lkpi-row"><span class="lkpi-rl">Moyenne sur 22 sem.</span><span class="lkpi-rv">${nf(av)}</span></div>
-      <div class="lkpi-row"><span class="lkpi-rl">vs Moyenne</span><span class="delta ${dc(vsMoy)}">${ds(vsMoy)}</span></div>
-      <div class="lkpi-row"><span class="lkpi-rl">vs Sem. préc. (${nf(prev)})</span><span class="delta ${dc(vsPrev)}">${ds(vsPrev)}</span></div>
+  function kpiCard(ico,lbl,val,prev,av,vsMoy,vsPrev){return`<div class="lkpi-card">
+    <div class="lkpi-top"><span class="lkpi-ico">${ico}</span><span class="lkpi-lbl">${lbl}</span></div>
+    <div class="lkpi-val">${nf(val)}</div><div class="lkpi-sub">Semaine du 25 mai 2026</div>
+    <div class="lkpi-sep"></div>
+    <div class="lkpi-row"><span class="lkpi-rl">Moyenne sur 22 sem.</span><span class="lkpi-rv">${nf(av)}</span></div>
+    <div class="lkpi-row"><span class="lkpi-rl">vs Moyenne</span><span class="delta ${dc(vsMoy)}">${ds(vsMoy)}</span></div>
+    <div class="lkpi-row"><span class="lkpi-rl">vs Sem. préc. (${nf(prev)})</span><span class="delta ${dc(vsPrev)}">${ds(vsPrev)}</span></div>
+  </div>`;}
+
+  function chartCard(ico,lbl,data,gid,lv,av){return`<div class="lchart-card">
+    <div class="lchart-top"><div style="display:flex;align-items:center;gap:4px"><span class="lkpi-ico">${ico}</span><span class="lchart-label">${lbl}</span></div><span class="lchart-lv">${nf(lv)}</span></div>
+    <div class="lchart-sub">Déc 2025 → Mai 2026 &nbsp;·&nbsp; Moy. ${nf(av)}</div>
+    ${chartSVG(data,gid)}
+    <div class="lchart-legend">
+      <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#1A73E8" stroke-width="1.5"/></svg>Données semaine</span>
+      <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#F59E0B" stroke-width="1" stroke-dasharray="3,3"/></svg>Moyenne</span>
+      <span class="leg"><svg width="10" height="10"><circle cx="5" cy="5" r="3.5" fill="#F59E0B"/></svg>Dernière sem.</span>
+    </div>
+  </div>`;}
+
+  // Global data
+  const top5=byVisits.slice(0,5);
+  const maxV5=top5[0].lastV;
+  const mostV=byVisits[0],leastV=byVisits[byVisits.length-1];
+  const bestP=byProg[0],worstP=byProg[byProg.length-1];
+
+  function hCard(bg,ico,tag,t,bigVal,sub1,sub2){
+    return`<div style="background:${bg};border-radius:10px;padding:11px 12px;color:white;position:relative;overflow:hidden;min-height:126px">
+      <div style="font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:rgba(0,0,0,.18);display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;margin-bottom:5px">${ico} ${tag}</div>
+      <div style="font-size:12px;font-weight:800;margin-bottom:2px">${shortN(t)}</div>
+      <div style="display:inline-flex;align-items:center;background:rgba(0,0,0,.15);border-radius:4px;padding:1px 5px;font-size:8px;margin-bottom:5px">📍 ${t.s.cp}</div>
+      <div style="font-size:26px;font-weight:900;line-height:1.05;margin-bottom:2px">${bigVal}</div>
+      <div style="font-size:8.5px;opacity:.9">${sub1}</div>
+      <div style="font-size:8px;opacity:.7;margin-top:2px">${sub2}</div>
     </div>`;}
 
-  function chartCard(ico,lbl,data,gid,lastVal,av){
-    return`<div class="lchart-card">
-      <div class="lchart-top">
-        <div style="display:flex;align-items:center;gap:4px"><span class="lkpi-ico">${ico}</span><span class="lchart-label">${lbl}</span></div>
-        <span class="lchart-lv">${nf(lastVal)}</span>
+  function rankRow(rank,t,color,first){
+    const vspS=t.vsPrevV>=0,vmS=t.vsMoyV>=0;
+    return`<div style="display:flex;align-items:center;gap:6px;padding:7px 6px;${first?'':'border-top:1px solid #F3F4F6'}">
+      <div style="width:22px;height:22px;border-radius:50%;background:#F1F5F9;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#6B7280;flex-shrink:0">${rank}</div>
+      <div style="width:9px;height:9px;border-radius:50%;background:${color};flex-shrink:0"></div>
+      <div style="flex:1;min-width:0">
+        <div style="font-size:11px;font-weight:700;color:#0F1B35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${shortN(t)}</div>
+        <div style="font-size:8px;color:#9CA3AF">📍 ${t.s.cp}</div>
       </div>
-      <div class="lchart-sub">Déc 2025 → Mai 2026 &nbsp;·&nbsp; Moy. ${nf(av)}</div>
-      ${chartSVG(data,gid)}
-      <div class="lchart-legend">
-        <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#1A73E8" stroke-width="1.5"/></svg>Données semaine</span>
-        <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#F59E0B" stroke-width="1" stroke-dasharray="3,3"/></svg>Moyenne</span>
-        <span class="leg"><svg width="10" height="10"><circle cx="5" cy="5" r="3.5" fill="#F59E0B"/></svg>Dernière sem.</span>
-      </div>
+      <div style="width:80px;flex-shrink:0"><div style="height:6px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="height:100%;width:${Math.round(t.lastV/maxV5*100)}%;background:${color};border-radius:3px"></div></div></div>
+      <div style="font-size:14px;font-weight:800;color:#0072CE;width:36px;text-align:right;flex-shrink:0">${nf(t.lastV)}</div>
+      <span style="background:${vspS?'#DCFCE7':'#FEE2E2'};color:${vspS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;white-space:nowrap;flex-shrink:0">${vspS?'↑':'↓'}${Math.abs(t.vsPrevV).toFixed(1)} %</span>
+      <span style="font-size:8.5px;color:#6B7280;white-space:nowrap;flex-shrink:0">vs moy.&nbsp;<span style="color:${vmS?'#15803D':'#DC2626'};font-weight:700">${vmS?'+':''}${t.vsMoyV.toFixed(1)} %</span></span>
     </div>`;}
+
+  function tableRow(t,i){
+    const vspS=t.vsPrevV>=0,vmS=t.vsMoyV>=0;
+    const isSel=t.idx===idx;
+    return`<tr style="background:${isSel?'#FFFBEB':i%2===0?'#fff':'#FAFAFA'}">
+      <td style="padding:7px 10px"><div style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:${RANK_COLORS[i]};display:inline-block;flex-shrink:0"></span><span style="font-size:10.5px;font-weight:${isSel?700:500};color:#0F1B35">${shortN(t)}</span></div></td>
+      <td style="padding:7px 8px;font-size:9.5px;color:#6B7280;text-align:center">${t.s.cp}</td>
+      <td style="padding:7px 8px;font-size:12px;font-weight:800;color:#0072CE;text-align:right">${nf(t.lastV)}</td>
+      <td style="padding:7px 8px;font-size:10px;color:#374151;text-align:right">${nf(t.prevV)}</td>
+      <td style="padding:7px 8px;text-align:center"><span style="background:${vspS?'#DCFCE7':'#FEE2E2'};color:${vspS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px">${vspS?'↑':'↓'}${Math.abs(t.vsPrevV).toFixed(1)} %</span></td>
+      <td style="padding:7px 8px;font-size:10px;color:#374151;text-align:right">${nf(t.avgV)}</td>
+      <td style="padding:7px 8px;text-align:center"><span style="background:${vmS?'#DCFCE7':'#FEE2E2'};color:${vmS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px">${vmS?'+':''}${t.vsMoyV.toFixed(1)} %</span></td>
+    </tr>`;}
 
   document.getElementById('panel-content').innerHTML=`
     <div class="lhdr">
@@ -307,7 +413,54 @@ function renderPanel(store,idx){
       ${chartCard('🏠','Visites en magasin',d.visits,'gv'+idx,d.lastV,d.avgV)}
       ${chartCard('📞','Clics d\'appel',d.calls,'gc'+idx,d.lastC,d.avgC)}
       ${chartCard('🗺','Demandes d\'itinéraire',d.routes,'gr'+idx,d.lastR,d.avgR)}
-    </div>`;}
+    </div>
+
+    <div style="border-top:2px solid #E5E7EB;margin-top:4px;padding-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <!-- LEFT -->
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="lsec"><div class="lsec-bar"></div>FAITS MARQUANTS — SEMAINE DU 25 MAI 2026</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
+          ${hCard('#F59E0B','🏆','PLUS DE VISITES',mostV,nf(mostV.lastV),'visites en magasin',`Sem. préc. : ${nf(mostV.prevV)} · Moy. : ${nf(mostV.avgV)}`)}
+          ${hCard('#22C55E','🚀','MEILLEURE PROGRESSION',bestP,(bestP.vsPrevV>=0?'+':'')+bestP.vsPrevV.toFixed(1)+' %',`${nf(bestP.prevV)} → ${nf(bestP.lastV)} visites`,`Moy. ${nf(bestP.avgV)} · vs moy. ${bestP.vsMoyV>=0?'+':''}${bestP.vsMoyV.toFixed(1)} %`)}
+          ${hCard('#F97316','👁','MOINS DE VISITES',leastV,nf(leastV.lastV),'visites en magasin',`Sem. préc. : ${nf(leastV.prevV)} · Moy. : ${nf(leastV.avgV)}`)}
+          ${hCard('#EF4444','📉','PLUS BASSE PROGRESSION',worstP,(worstP.vsPrevV>=0?'+':'')+worstP.vsPrevV.toFixed(1)+' %',`${nf(worstP.prevV)} → ${nf(worstP.lastV)} visites`,`Moy. ${nf(worstP.avgV)} · vs moy. ${worstP.vsMoyV>=0?'+':''}${worstP.vsMoyV.toFixed(1)} %`)}
+        </div>
+        <div class="lsec"><div class="lsec-bar"></div>ÉVOLUTION HEBDOMADAIRE — 22 SEMAINES</div>
+        <div class="lchart-card" style="padding:12px">
+          <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:1px">Visites en magasin — Top 5 magasins</div>
+          <div style="font-size:8.5px;color:#9CA3AF;margin-bottom:6px">29 déc. 2025 → 25 mai 2026</div>
+          <canvas id="evo-canvas" width="500" height="185" style="width:100%;height:auto;cursor:crosshair;display:block"></canvas>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
+            ${top5.map((t,i)=>`<span style="display:inline-flex;align-items:center;gap:3px;font-size:8.5px;color:#6B7280"><svg width="18" height="8"><line x1="0" y1="4" x2="18" y2="4" stroke="${RANK_COLORS[i]}" stroke-width="2"/></svg>${shortN(t)} (${t.s.cp})</span>`).join('')}
+          </div>
+        </div>
+      </div>
+      <!-- RIGHT -->
+      <div style="display:flex;flex-direction:column;gap:8px">
+        <div class="lsec"><div class="lsec-bar"></div>CLASSEMENT DES VISITES — SEMAINE DU 25 MAI 2026</div>
+        <div class="lchart-card" style="padding:4px 6px">
+          ${top5.map((t,i)=>rankRow(i+1,t,RANK_COLORS[i],i===0)).join('')}
+        </div>
+        <div class="lsec"><div class="lsec-bar"></div>TABLEAU RÉCAPITULATIF</div>
+        <div class="lchart-card" style="padding:0;overflow:hidden">
+          <table style="width:100%;border-collapse:collapse">
+            <thead><tr style="background:#0072CE">
+              <th style="padding:8px 10px;text-align:left;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Magasin</th>
+              <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">CP</th>
+              <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Sem. 25 mai</th>
+              <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Sem. 18 mai</th>
+              <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">Prog. S/S</th>
+              <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Moy. 22 sem.</th>
+              <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">vs Moy.</th>
+            </tr></thead>
+            <tbody>${top5.map((t,i)=>tableRow(t,i)).join('')}</tbody>
+          </table>
+        </div>
+      </div>
+    </div>`;
+
+  setupEvoChart(top5);
+}
 
 // ── MAP ──
 const PIN=`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="44" viewBox="0 0 40 54">
