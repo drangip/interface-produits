@@ -360,7 +360,7 @@ const CHIPS=[
   {k:'impressions',l:'Impressions',c:'#8B5CF6',bg:'#F5F3FF',f:v=>fmt.k(v)},
   {k:'clicks',     l:'Clics',      c:'#3B82F6',bg:'#EFF6FF',f:v=>fmt.k(v)},
   {k:'ctr',        l:'CTR',        c:'#14B8A6',bg:'#F0FDFA',f:v=>fmt.p(v)},
-  {k:'cpc',        l:'CPC',        c:'#F59E0B',bg:'#FFFBEB',f:v=>fmt.e(v)},
+  {k:'cpc',        l:'CPC',        c:'#F59E0B',bg:'#FFFBEB',f:v=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',minimumFractionDigits:2,maximumFractionDigits:2}).format(v||0)},
   {k:'investment', l:'Invest.',    c:'#F97316',bg:'#FFF7ED',f:v=>fmt.e(v)},
   {k:'conversions',l:'Convers.',   c:'#22C55E',bg:'#F0FDF4',f:v=>fmt.k(v)},
   {k:'cvr',        l:'CVR',        c:'#EC4899',bg:'#FDF2F8',f:v=>fmt.p(v)},
@@ -370,7 +370,7 @@ const CHIPS=[
 const CHARTS=[
   {t:'Impressions & CTR',   bk:'impressions',bc:'#8B5CF6',bl:'Impressions',lk:'ctr', lc:'#14B8A6',ll:'CTR',  bf:v=>fmt.k(v),lf:v=>fmt.p(v)},
   {t:'Clics & CVR',         bk:'clicks',     bc:'#3B82F6',bl:'Clics',      lk:'cvr', lc:'#EC4899',ll:'CVR',  bf:v=>fmt.k(v),lf:v=>fmt.p(v)},
-  {t:'Invest. & CPC',       bk:'investment', bc:'#F97316',bl:'Invest.',    lk:'cpc', lc:'#F59E0B',ll:'CPC',  bf:v=>fmt.e(v),lf:v=>fmt.e(v)},
+  {t:'Invest. & CPC',       bk:'investment', bc:'#F97316',bl:'Invest.',    lk:'cpc', lc:'#F59E0B',ll:'CPC',  bf:v=>fmt.e(v),lf:v=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',minimumFractionDigits:2,maximumFractionDigits:2}).format(v||0)},
   {t:'CA & ROI',            bk:'revenue',    bc:'#0EA5E9',bl:'CA',         lk:'roi', lc:'#6366F1',ll:'ROI',  bf:v=>fmt.e(v),lf:v=>Math.round(v*100)/100},
 ];
 function DChart({def,data}){
