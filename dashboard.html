@@ -372,6 +372,11 @@ function DChart({def,data}){
 function BilanGlobal({stats,ts}){
   return(<div className="sec">
     <div className="stit">Bilan global</div>
+    <div style={{display:'flex',gap:8,marginBottom:14}}>
+      {CHIPS.map(c=><div key={c.k} className="chip" style={{background:c.bg,color:c.c,borderColor:'transparent',cursor:'default'}}>
+        <span className="chipl">{c.l}</span><span className="chipv">{c.f(stats[c.k]??0)}</span>
+      </div>)}
+    </div>
     <div className="g2">{CHARTS.map(d=><DChart key={d.t} def={d} data={ts}/>)}</div>
   </div>);
 }
