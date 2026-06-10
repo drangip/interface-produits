@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Local Castorama | WPP Media</title>
+<title>Local Brico Dépôt | WPP Media</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
@@ -14,8 +14,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 #map-col{flex:0 0 44%;overflow:hidden}
 #map{width:100%;height:400px}
 #panel{flex:1;padding:12px 12px 2px;display:flex;flex-direction:column;gap:8px}
-.casto-cluster{background:rgba(0,114,206,.22);border-radius:50%;display:flex;align-items:center;justify-content:center}
-.casto-cluster-inner{background:#0072CE;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.bd-cluster{background:rgba(227,6,19,.18);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.bd-cluster-inner{background:#E30613;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 #global-section{display:flex;flex-direction:column;gap:8px;padding:0 12px 20px}
 
 .lhdr{background:#fff;border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
@@ -23,22 +23,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 .lhdr-logo{flex-shrink:0;display:flex;align-items:center}
 .lhdr-name{font-size:14px;font-weight:800;color:#0D1B4B;margin-bottom:2px}
 .lhdr-addr{font-size:10px;color:#555;line-height:1.55}
-.lhdr-link{color:#0072CE;text-decoration:none}.lhdr-link:hover{text-decoration:underline}
 .lhdr-right{flex-shrink:0;text-align:right}
-.lhdr-badge{display:inline-flex;align-items:center;gap:4px;border:1.5px solid #0072CE;color:#0072CE;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;margin-bottom:3px}
+.lhdr-badge{display:inline-flex;align-items:center;gap:4px;border:1.5px solid #E30613;color:#E30613;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;margin-bottom:3px}
 .lhdr-meta{font-size:9.5px;color:#888;margin-bottom:5px}
 .lbtn{border-radius:6px;padding:5px 10px;font-size:10px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px;transition:opacity .15s}
 .lbtn:hover{opacity:.8}
-.lbtn-out{background:#fff;border:1.5px solid #0072CE;color:#0072CE}
-.lbtn-fill{background:#0072CE;border:1.5px solid #0072CE;color:#fff}
+.lbtn-out{background:#fff;border:1.5px solid #E30613;color:#E30613}
+.lbtn-fill{background:#E30613;border:1.5px solid #E30613;color:#fff}
 .lsec{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#4B5675;display:flex;align-items:center;gap:4px;padding:2px 0}
-.lsec-bar{width:3px;height:12px;background:#0072CE;border-radius:2px;flex-shrink:0}
+.lsec-bar{width:3px;height:12px;background:#E30613;border-radius:2px;flex-shrink:0}
 .lkpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .lkpi-card{background:#fff;border-radius:10px;padding:12px 11px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .lkpi-top{display:flex;align-items:center;gap:5px;margin-bottom:6px}
 .lkpi-ico{font-size:13px;line-height:1}
 .lkpi-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#4B5675;line-height:1.2}
-.lkpi-val{font-size:26px;font-weight:800;color:#0072CE;line-height:1.05;margin-bottom:2px}
+.lkpi-val{font-size:26px;font-weight:800;color:#E30613;line-height:1.05;margin-bottom:2px}
 .lkpi-sub{font-size:8.5px;color:#9CA3AF;margin-bottom:8px}
 .lkpi-sep{height:1px;background:#E5E7EB;margin-bottom:7px}
 .lkpi-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
@@ -49,7 +48,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 .lchart-card{background:#fff;border-radius:10px;padding:10px 11px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .lchart-top{display:flex;justify-content:space-between;align-items:flex-start}
 .lchart-label{font-size:10px;font-weight:700;color:#374151}
-.lchart-lv{font-size:18px;font-weight:800;color:#0072CE;line-height:1}
+.lchart-lv{font-size:18px;font-weight:800;color:#E30613;line-height:1}
 .lchart-sub{font-size:7.5px;color:#9CA3AF;margin-bottom:2px}
 .lchart-legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
 .leg{font-size:7.5px;color:#9CA3AF;display:inline-flex;align-items:center;gap:2px}
@@ -61,8 +60,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
   <a href="dashboard.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Suivi Produits</a>
   <a href="audit_flux.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Audit de flux</a>
   <a href="competitivite_prix.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Compétitivité prix</a>
-  <a href="local_castorama.html" style="padding:4px 14px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Local Castorama</a>
-  <a href="local_bricodepot.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Brico Dépôt</a>
+  <a href="local_castorama.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Castorama</a>
+  <a href="local_bricodepot.html" style="padding:4px 14px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Local Brico Dépôt</a>
   <a href="mesure_efficacite.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
 </nav>
 <div id="subbar" style="position:fixed;top:42px;left:0;right:0;height:46px;background:#fff;border-bottom:1px solid #E5E7EB;z-index:100;display:flex;align-items:center;justify-content:flex-end;padding:0 20px;">
@@ -82,14 +81,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script>
-// ── UTILS ──
 function seededRand(seed){let s=seed;return()=>{s=(s*16807+0)%2147483647;return(s-1)/2147483646;};}
 const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v||0));
 const avg=a=>+(a.reduce((s,v)=>s+v,0)/a.length).toFixed(1);
 const delta=(last,ref)=>+((last-ref)/ref*100).toFixed(1);
 const RANK_COLORS=['#F59E0B','#F97316','#22C55E','#8B5CF6','#EF4444'];
 
-// ── SPARKLINE SVG (store-specific evolution charts) ──
 function chartSVG(data,gid){
   const W=220,H=88,pL=26,pR=4,pT=6,pB=16;
   const iw=W-pL-pR,ih=H-pT-pB;
@@ -103,9 +100,9 @@ function chartSVG(data,gid){
   const xlbls=[{i:0,t:'Déc'},{i:4,t:'Jan'},{i:8,t:'Fév'},{i:12,t:'Mar'},{i:16,t:'Avr'},{i:21,t:'Mai'}];
   const ymax=pT+5,yavg=Math.max(pT+10,Math.min(ya,pT+ih-4));
   return`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1A73E8" stop-opacity=".28"/><stop offset="100%" stop-color="#1A73E8" stop-opacity=".01"/></linearGradient></defs>
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#E30613" stop-opacity=".25"/><stop offset="100%" stop-color="#E30613" stop-opacity=".01"/></linearGradient></defs>
     <path d="${ap}" fill="url(#${gid})"/>
-    <polyline points="${pts}" fill="none" stroke="#1A73E8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="${pts}" fill="none" stroke="#E30613" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <line x1="${pL}" y1="${ya.toFixed(1)}" x2="${W-pR}" y2="${ya.toFixed(1)}" stroke="#F59E0B" stroke-width="1" stroke-dasharray="4,3" opacity=".85"/>
     <circle cx="${x(21).toFixed(1)}" cy="${y(data[21]).toFixed(1)}" r="4" fill="#F59E0B" stroke="white" stroke-width="1.5"/>
     <text x="${pL-2}" y="${ymax}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(mx)}</text>
@@ -114,104 +111,128 @@ function chartSVG(data,gid){
     ${xlbls.map(l=>`<text x="${x(l.i).toFixed(1)}" y="${H-2}" text-anchor="middle" font-size="7.5" fill="#9CA3AF">${l.t}</text>`).join('')}
   </svg>`;}
 
-// ── STORES DATA ──
 const stores=[
-  {n:"Castorama Bourg-en-Bresse",cp:"01440",c:"Bourg-en-Bresse",a:"128 b rue Lépine, Viriat",lat:46.195,lng:5.220},
-  {n:"Castorama Mandelieu",cp:"06210",c:"Mandelieu",a:"C.c. Géant route de Fréjus",lat:43.545,lng:6.937},
-  {n:"Castorama Antibes",cp:"06600",c:"Antibes",a:"C.d. 35 - Les Semboules",lat:43.590,lng:7.092},
-  {n:"Castorama Le Cannet",cp:"06110",c:"Le Cannet",a:"17 chemin du Carimäï",lat:43.577,lng:7.018},
-  {n:"Castorama Marseille St-Loup",cp:"13010",c:"Marseille",a:"3 rue d'André Bardon",lat:43.280,lng:5.407},
-  {n:"Castorama Vitrolles",cp:"13127",c:"Vitrolles",a:"Centre commercial Carrefour",lat:43.459,lng:5.248},
-  {n:"Castorama Plan de Campagne",cp:"13170",c:"Les Pennes Mirabeau",a:"C.c. Plan de Campagne",lat:43.422,lng:5.316},
-  {n:"Castorama Aix en Provence",cp:"13547",c:"Aix en Provence",a:"115 rue Beauvoisin",lat:43.510,lng:5.447},
-  {n:"Castorama Caen Fleury-sur-Orne",cp:"14123",c:"Fleury sur Orne",a:"Avenue d'Harcourt",lat:49.135,lng:-0.385},
-  {n:"Castorama Caen Hérouville",cp:"14200",c:"Hérouville St Clair",a:"Rue des Siettes",lat:49.205,lng:-0.335},
-  {n:"Castorama Angoulême",cp:"16000",c:"Angoulême",a:"Rond point de Girac route de Bordeaux",lat:45.648,lng:0.149},
-  {n:"Castorama La Rochelle",cp:"17440",c:"Aytré",a:"Z.a.c. de Belle Aire",lat:46.131,lng:-1.140},
-  {n:"Castorama Dijon",cp:"21160",c:"Marsannay-la-Côte",a:"Zone commerciale Acti Sud",lat:47.255,lng:5.022},
-  {n:"Castorama Besançon",cp:"25000",c:"Besançon",a:"Rue de l'If – Espace Valentin Sud",lat:47.258,lng:6.020},
-  {n:"Castorama St Marcel Les Valence",cp:"26320",c:"St Marcel Les Valence",a:"Quartier de la Laye",lat:44.922,lng:4.879},
-  {n:"Castorama Quimper",cp:"29000",c:"Quimper",a:"2 avenue Jacques Chaban Delmas",lat:47.986,lng:-4.083},
-  {n:"Castorama Brest",cp:"29200",c:"Brest",a:"ZI de Kergaradec 22 rue André Colin",lat:48.415,lng:-4.462},
-  {n:"Castorama Nîmes",cp:"30900",c:"Nîmes",a:"42 chemin du Capouchinè",lat:43.840,lng:4.365},
-  {n:"Castorama Portet sur Garonne",cp:"31128",c:"Portet sur Garonne",a:"2 route de Francazal",lat:43.519,lng:1.402},
-  {n:"Castorama Toulouse L'Union",cp:"31240",c:"L'Union",a:"3 avenue de Toulouse",lat:43.652,lng:1.497},
-  {n:"Castorama Toulouse St Orens",cp:"31650",c:"Saint-Orens",a:"2 rue du Commerce",lat:43.555,lng:1.510},
-  {n:"Castorama Toulouse Blagnac",cp:"31700",c:"Blagnac",a:"Rue Gustave Flaubert",lat:43.635,lng:1.390},
-  {n:"Castorama Villenave d'Ornon",cp:"33140",c:"Villenave d'Ornon",a:"1 rue André Bourvil",lat:44.774,lng:-0.566},
-  {n:"Castorama Bordeaux Lormont",cp:"33310",c:"Lormont",a:"ZI La Gardette Sud – Avenue de Paris",lat:44.882,lng:-0.518},
-  {n:"Castorama Mérignac",cp:"33700",c:"Mérignac",a:"29 avenue des Martyrs de la Libération",lat:44.836,lng:-0.637},
-  {n:"Castorama Béziers",cp:"34500",c:"Béziers",a:"Z.a.c de la Domitienne",lat:43.356,lng:3.228},
-  {n:"Castorama Lattes",cp:"34970",c:"Lattes",a:"Pae de Soriech",lat:43.568,lng:3.896},
-  {n:"Castorama St Clément",cp:"34980",c:"St Clément de Rivière",a:"C.c. Trifontaine rte de Ganges",lat:43.683,lng:3.870},
-  {n:"Castorama Rennes-St Jacques",cp:"35136",c:"St Jacques de la Lande",a:"140 rue du Temple de Blosne",lat:48.063,lng:-1.695},
-  {n:"Castorama Cap Malo",cp:"35520",c:"Melesse",a:"Avenue du Phare du Grand Jardin",lat:48.183,lng:-1.681},
-  {n:"Castorama Chambray-Lès-Tours",cp:"37170",c:"Chambray Les Tours",a:"RN10 ZAC de la Vrillonnerie",lat:47.337,lng:0.676},
-  {n:"Castorama Bourgoin-Jallieu",cp:"38300",c:"Bourgoin Jallieu",a:"Rue Denis Papin",lat:45.588,lng:5.278},
-  {n:"Castorama Grenoble",cp:"38400",c:"St Martin d'Hères",a:"Z.a.c. de Champ Roman",lat:45.165,lng:5.765},
-  {n:"Castorama Roanne",cp:"42300",c:"Mably",a:"Rue Jean de la Fontaine",lat:46.044,lng:4.076},
-  {n:"Castorama Nantes La Beaujoire",cp:"44300",c:"Nantes",a:"Boulevard de la Beaujoire",lat:47.239,lng:-1.537},
-  {n:"Castorama St Nazaire",cp:"44600",c:"St Nazaire",a:"Z.a.c. Océanis",lat:47.297,lng:-2.189},
-  {n:"Castorama Nantes Orvault",cp:"44700",c:"Orvault",a:"Le Forum 2 rue Hélène Boucher",lat:47.268,lng:-1.592},
-  {n:"Castorama Olivet",cp:"45160",c:"Olivet",a:"20 rue de Gascogne",lat:47.855,lng:1.905},
-  {n:"Castorama Agen",cp:"47000",c:"Agen",a:"Z.a.c. Agen Sud avenue de l'Atlantique",lat:44.199,lng:0.612},
-  {n:"Castorama Reims Thillois",cp:"51370",c:"Thillois",a:"RN 31 ZAC Nord Thillois",lat:49.270,lng:3.940},
-  {n:"Castorama Vandoeuvre",cp:"54504",c:"Vandoeuvre Les Nancy",a:"Espace Vandoeuvre Sud",lat:48.659,lng:6.163},
-  {n:"Castorama Vannes",cp:"56000",c:"Vannes",a:"Za de Pen Mené",lat:47.657,lng:-2.757},
-  {n:"Castorama Metz",cp:"57130",c:"Jouy aux Arches",a:"Zone Actisud 76 route de Metz",lat:49.064,lng:6.093},
-  {n:"Castorama Terville",cp:"57180",c:"Terville",a:"Avenue du 14 Juillet 1789",lat:49.372,lng:6.165},
-  {n:"Castorama Dunkerque",cp:"59140",c:"Dunkerque",a:"Rue de Rome",lat:51.024,lng:2.370},
-  {n:"Castorama Englos",cp:"59481",c:"Haubourdin",a:"Centre commercial",lat:50.634,lng:2.986},
-  {n:"Casto Solférino",cp:"59800",c:"Lille",a:"152 rue Solférino",lat:50.630,lng:3.066},
-  {n:"Castorama Bondues",cp:"59910",c:"Bondues",a:"422 avenue du Général de Gaulle",lat:50.704,lng:3.108},
-  {n:"Castorama Creil St Maximin",cp:"60740",c:"St Maximin",a:"ZAC les Longères des Haies",lat:49.280,lng:2.528},
-  {n:"Castorama Hénin-Beaumont",cp:"62110",c:"Hénin Beaumont",a:"Z.a.c. le Bord des Eaux",lat:50.420,lng:2.949},
-  {n:"Castorama Clermont-Ferrand",cp:"63170",c:"Aubière",a:"Centre commercial Cap Sud",lat:45.739,lng:3.126},
-  {n:"Castorama Pau – Lescar",cp:"64232",c:"Lescar",a:"Centre Lescar Soleil",lat:43.342,lng:-0.408},
-  {n:"Castorama Anglet",cp:"64600",c:"Anglet",a:"Zone de Jorlis bd du B.A.B.",lat:43.485,lng:-1.524},
-  {n:"Castorama Perpignan",cp:"66100",c:"Perpignan",a:"1270 avenue d'Espagne",lat:42.693,lng:2.891},
-  {n:"Castorama Strasbourg",cp:"67452",c:"Mundolsheim",a:"Route nationale 63",lat:48.619,lng:7.752},
-  {n:"Castorama Colmar",cp:"68027",c:"Colmar",a:"28 avenue de la Foire aux Vins",lat:48.083,lng:7.356},
-  {n:"Castorama Kingersheim",cp:"68264",c:"Kingersheim",a:"150 route de Richwiller",lat:47.795,lng:7.343},
-  {n:"Castorama Rillieux-La-Pape",cp:"69140",c:"Rillieux La Pape",a:"Le Champ du Roy",lat:45.823,lng:4.892},
-  {n:"Castorama Dardilly",cp:"69570",c:"Dardilly",a:"Parc d'affaires route du Paisy",lat:45.803,lng:4.758},
-  {n:"Castorama Bron",cp:"69675",c:"Bron",a:"Aéroport de Lyon Bron",lat:45.728,lng:4.934},
-  {n:"Castorama Givors",cp:"69700",c:"Givors",a:"Centre commercial Carrefour",lat:45.578,lng:4.773},
-  {n:"Castorama Chalon-sur-Saône",cp:"71100",c:"Chalon sur Saône",a:"Centre commercial Chalon Sud",lat:46.775,lng:4.855},
-  {n:"Castorama Le Mans",cp:"72021",c:"Le Mans",a:"Z.a. de l'Ardoise route d'Alençon",lat:47.998,lng:0.188},
-  {n:"Castorama Chambéry",cp:"73000",c:"Chambéry",a:"ZI Landiers Nord rue des Marais",lat:45.571,lng:5.918},
-  {n:"Castorama Metz Tessy (Annecy)",cp:"74370",c:"Metz-Tessy",a:"Zone de la Bouvarde",lat:45.924,lng:6.089},
-  {n:"Castorama Bir Hakeim",cp:"75015",c:"Paris 15e",a:"11 boulevard de Grenelle",lat:48.851,lng:2.292},
-  {n:"Castorama Place de Clichy",cp:"75018",c:"Paris 18e",a:"1/3 rue de Caulaincourt",lat:48.888,lng:2.326},
-  {n:"Castorama Nation",cp:"75020",c:"Paris 20e",a:"9/11 cours de Vincennes",lat:48.848,lng:2.395},
-  {n:"Castorama Barentin",cp:"76360",c:"Barentin",a:"Centre commercial La Carbonnière",lat:49.548,lng:0.957},
-  {n:"Castorama Melun",cp:"77000",c:"Melun",a:"Z.A.C du Champ de Foire",lat:48.540,lng:2.665},
-  {n:"Castorama Claye-Souilly",cp:"77410",c:"Claye Souilly",a:"Rue Jean Monnet ZAC des Sablons",lat:48.940,lng:2.686},
-  {n:"Castorama Vélizy",cp:"78140",c:"Vélizy Villacoublay",a:"Rue André Citroën ZA Vélizy",lat:48.779,lng:2.184},
-  {n:"Castorama Chambourcy",cp:"78240",c:"Chambourcy",a:"Les Vergers de la Plaine",lat:48.910,lng:1.933},
-  {n:"Castorama Coignières",cp:"78310",c:"Coignières",a:"76 route National 10",lat:48.739,lng:1.909},
-  {n:"Castorama Les-Clayes-Sous-Bois",cp:"78340",c:"Les Clayes Sous Bois",a:"90 avenue Henri Barbusse",lat:48.827,lng:1.985},
-  {n:"Castorama Niort",cp:"79043",c:"Niort",a:"10 rue Turgot",lat:46.323,lng:-0.466},
-  {n:"Castorama Toulon La Garde",cp:"83130",c:"La Garde",a:"Avenue de Draguignan ZI Toulon Est",lat:43.121,lng:5.983},
-  {n:"Castorama La Seyne sur Mer",cp:"83500",c:"La Seyne sur Mer",a:"168 avenue Robert Brun",lat:43.101,lng:5.881},
-  {n:"Castorama Fréjus",cp:"83600",c:"Fréjus",a:"Zone d'Activité Grand Esterel",lat:43.434,lng:6.729},
-  {n:"Castorama Avignon",cp:"84000",c:"Avignon",a:"600 rue du Bon Vent",lat:43.950,lng:4.810},
-  {n:"Castorama Poitiers",cp:"86000",c:"Poitiers",a:"137 avenue du 8 Mai 1945",lat:46.578,lng:0.340},
-  {n:"Castorama Limoges",cp:"87220",c:"Feytiat",a:"Avenue des Portes de Feytiat",lat:45.811,lng:1.375},
-  {n:"Castorama Villabé",cp:"91100",c:"Villabé",a:"C.cial Villabé A6",lat:48.560,lng:2.444},
-  {n:"Castorama Les Ulis",cp:"91940",c:"Les Ulis",a:"Z.a. Courtaboeuf",lat:48.677,lng:2.163},
-  {n:"Casto Levallois",cp:"92300",c:"Levallois Perret",a:"4 rue Henri Barbusse",lat:48.895,lng:2.286},
-  {n:"Castorama Villemomble",cp:"93250",c:"Villemomble",a:"43 allée du Plateau",lat:48.884,lng:2.523},
-  {n:"Casto Les Lilas",cp:"93260",c:"Les Lilas",a:"15 Boulevard de la Liberté",lat:48.879,lng:2.418},
-  {n:"Castorama Créteil",cp:"94034",c:"Créteil",a:"70 avenue du Maréchal Foch",lat:48.790,lng:2.460},
-  {n:"Castorama Fresnes",cp:"94260",c:"Fresnes",a:"R.n. 186 voie des Laitières",lat:48.756,lng:2.322},
-  {n:"Castorama Ormesson",cp:"94430",c:"Chennevières sur Marne",a:"C.c. Pince-Vent ZAC de l'Hippodrome",lat:48.782,lng:2.553},
-  {n:"Castorama Cormeilles-en-Parisis",cp:"95240",c:"Cormeilles-en-Parisis",a:"Boulevard Joffre RD 392",lat:48.980,lng:2.192},
-  {n:"Castorama Pierrelaye",cp:"95480",c:"Pierrelaye",a:"1 avenue du Général Leclerc",lat:49.022,lng:2.148},
-  {n:"Castorama Gonesse",cp:"95700",c:"Roissy CDG",a:"Z.i. de Paris Nord II",lat:48.990,lng:2.456}
+  {n:"Brico Dépôt Saint Quentin",cp:"02100",c:"Saint Quentin",a:"Rue du Guise - RD 300",lat:49.850,lng:3.290},
+  {n:"Brico Dépôt Moulins",cp:"03400",c:"Moulins",a:"254 Parc Logistique Allier",lat:46.560,lng:3.330},
+  {n:"Brico Dépôt Montlucon",cp:"03410",c:"Montlucon",a:"ZA de Châteaugay",lat:46.340,lng:2.600},
+  {n:"Brico Dépôt Sisteron",cp:"04200",c:"Sisteron",a:"Zone d'activité Parc du Val de Durance",lat:44.200,lng:5.940},
+  {n:"Brico Dépôt Nice",cp:"06200",c:"Nice",a:"ZAC Forum Lingostière - 15 Chemin Auda",lat:43.720,lng:7.220},
+  {n:"Brico Dépôt Charleville",cp:"08000",c:"Charleville",a:"16 route de Warnecourt",lat:49.770,lng:4.710},
+  {n:"Brico Dépôt Troyes",cp:"10600",c:"Troyes",a:"RN 19",lat:48.340,lng:4.080},
+  {n:"Brico Dépôt Carcassonne",cp:"11000",c:"Carcassonne",a:"Zone Alibert - RN 113",lat:43.210,lng:2.350},
+  {n:"Brico Dépôt Rodez",cp:"12740",c:"Rodez",a:"Pôle Cial le Comtal nord - Route d'Aurillac",lat:44.380,lng:2.580},
+  {n:"Brico Dépôt Marseille",cp:"13013",c:"Marseille",a:"79 avenue de la Rose",lat:43.320,lng:5.410},
+  {n:"Brico Dépôt Martigues",cp:"13500",c:"Martigues",a:"2 rue Jacques de Vaucanson",lat:43.410,lng:5.050},
+  {n:"Brico Dépôt Carpiquet",cp:"14650",c:"Carpiquet",a:"ZI Est - Rue Bellevue",lat:49.180,lng:-0.470},
+  {n:"Brico Dépôt Angouleme",cp:"16430",c:"Angouleme",a:"ZA des Montagnes - 385 rue de l'Entrait",lat:45.650,lng:0.150},
+  {n:"Brico Dépôt Andilly",cp:"17230",c:"Andilly",a:"Bel Air - Les Quatre Quartiers",lat:45.960,lng:-1.030},
+  {n:"Brico Dépôt Saintes",cp:"17810",c:"Saintes",a:"Le Moulin de la truie - Route de Rochefort",lat:45.740,lng:-0.640},
+  {n:"Brico Dépôt Bourges",cp:"18390",c:"Bourges",a:"Route de la Charité - RN 151",lat:47.090,lng:2.400},
+  {n:"Brico Dépôt Brive La Gaillarde",cp:"19100",c:"Brive La Gaillarde",a:"ZAC du Mazaud",lat:45.160,lng:1.540},
+  {n:"Brico Dépôt Chenove",cp:"21300",c:"Chenove",a:"Ccial des Grands Crus - 124 avenue Roland Carraz",lat:47.270,lng:5.000},
+  {n:"Brico Dépôt Saint Brieuc",cp:"22190",c:"Saint Brieuc",a:"Espace commercial du Chêne Vert - RN 12",lat:48.510,lng:-2.770},
+  {n:"Brico Dépôt Plouër",cp:"22490",c:"Plouër",a:'Lieu-dit "Le Grand Clos"',lat:48.540,lng:-2.010},
+  {n:"Brico Dépôt Perigueux",cp:"24750",c:"Perigueux",a:"205 avenue Michel Grandou",lat:45.190,lng:0.720},
+  {n:"Brico Dépôt Montbeliard",cp:"25200",c:"Montbeliard",a:"ZAC du Pied des Gouttes - Rue Briot",lat:47.510,lng:6.800},
+  {n:"Brico Dépôt Chalezeule",cp:"25220",c:"Chalezeule",a:"ZI Les Marnières - C. Cial Carrefour",lat:47.250,lng:6.070},
+  {n:"Brico Dépôt Montelimar",cp:"26270",c:"Montelimar",a:"ZA du Pave - RN 7",lat:44.510,lng:4.760},
+  {n:"Brico Dépôt Valence",cp:"26800",c:"Valence",a:"315 rue Les Bosses - RN7",lat:44.900,lng:4.930},
+  {n:"Brico Dépôt Carsix",cp:"27300",c:"Carsix",a:"Carrefour de Malbrouk - RN 13/RN138",lat:49.080,lng:0.580},
+  {n:"Brico Dépôt Dreux",cp:"28100",c:"Dreux",a:"ZAC des Fenôts",lat:48.740,lng:1.370},
+  {n:"Brico Dépôt Chartres",cp:"28600",c:"Chartres",a:"40 rue Jean Perrin",lat:48.440,lng:1.490},
+  {n:"Brico Dépôt Quimper",cp:"29000",c:"Quimper",a:"ZA de Gourvily - 39 route du Loch",lat:47.990,lng:-4.100},
+  {n:"Brico Dépôt Morlaix",cp:"29610",c:"Morlaix",a:"ZI de Kervanon",lat:48.570,lng:-3.830},
+  {n:"Brico Dépôt Nimes",cp:"30670",c:"Nimes",a:"RN 113",lat:43.690,lng:4.230},
+  {n:"Brico Dépôt Auch",cp:"32550",c:"Auch",a:"ZI du Sousson",lat:43.640,lng:0.600},
+  {n:"Brico Dépôt Artigues",cp:"33370",c:"Artigues",a:"Avenue du Peyrou",lat:44.830,lng:-0.490},
+  {n:"Brico Dépôt Biganos",cp:"33380",c:"Biganos",a:"ZAC Nord - Rue Gutenberg",lat:44.640,lng:-0.970},
+  {n:"Brico Dépôt Beziers",cp:"34440",c:"Beziers",a:"ZAE de Viargues - RN 113",lat:43.350,lng:3.190},
+  {n:"Brico Dépôt Montpellier",cp:"34970",c:"Montpellier",a:"Chemin du Grand Rondelet",lat:43.570,lng:3.910},
+  {n:"Brico Dépôt Cesson Sevigne",cp:"35510",c:"Cesson Sevigne",a:"52 rue de la Rigourdière",lat:48.110,lng:-1.590},
+  {n:"Brico Dépôt Rennes St Gregoire",cp:"35760",c:"Rennes St Gregoire",a:"Ccial Grand Quartier - Route de St Malo",lat:48.170,lng:-1.680},
+  {n:"Brico Dépôt Chateauroux",cp:"36000",c:"Chateauroux",a:"Route de Montluçon",lat:46.810,lng:1.690},
+  {n:"Brico Dépôt St Cyr",cp:"37540",c:"St Cyr",a:"Clos de la Lande - Rue du Mûrier",lat:47.410,lng:0.680},
+  {n:"Brico Dépôt Dax",cp:"40990",c:"Dax",a:"Route Ardy - RD 824",lat:43.690,lng:-0.990},
+  {n:"Brico Dépôt Saint Etienne",cp:"42000",c:"Saint Etienne",a:"154 rue Jean Rostand",lat:45.440,lng:4.390},
+  {n:"Brico Dépôt Roanne",cp:"42120",c:"Roanne",a:"RD 207 - Lieu dit Les Plaines",lat:45.980,lng:4.070},
+  {n:"Brico Dépôt La Ricamarie",cp:"42150",c:"La Ricamarie",a:"Ccial Géant - La Beraudière",lat:45.400,lng:4.370},
+  {n:"Brico Dépôt St Herblain",cp:"44800",c:"St Herblain",a:"Zone Atlantis - 5 Place Magellan",lat:47.240,lng:-1.620},
+  {n:"Brico Dépôt Saran",cp:"45770",c:"Saran",a:"ZA Cent Arpents - 160 rue B. Franklin",lat:47.940,lng:1.880},
+  {n:"Brico Dépôt Cahors",cp:"46000",c:"Cahors",a:"524 cote du Pape",lat:44.450,lng:1.440},
+  {n:"Brico Dépôt Angers Beaucouze",cp:"49070",c:"Angers Beaucouze",a:"ZI Angers-Beaucouzé - 18 rue du Pavillon",lat:47.470,lng:-0.620},
+  {n:"Brico Dépôt Cholet",cp:"49300",c:"Cholet",a:"Route des Sables",lat:47.060,lng:-0.880},
+  {n:"Brico Dépôt Saumur",cp:"49400",c:"Saumur",a:"Boulevard des Demoiselles - ZAC Ecoparc",lat:47.260,lng:-0.080},
+  {n:"Brico Dépôt Angers",cp:"49480",c:"Angers",a:"ZA de la Millardière - RD 323",lat:47.490,lng:-0.550},
+  {n:"Brico Dépôt Tourlaville",cp:"50110",c:"Tourlaville",a:"ZI de Sauxmarais",lat:49.640,lng:-1.560},
+  {n:"Brico Dépôt Haguenau",cp:"67590",c:"Haguenau",a:"ZI Secteur Sablière - 3 rue de la Sablière",lat:48.820,lng:7.790},
+  {n:"Brico Dépôt Reims",cp:"51100",c:"Reims",a:"3 bd Gustave Eiffel",lat:49.265,lng:4.035},
+  {n:"Brico Dépôt Reims-Murigny",cp:"51100",c:"Reims",a:"20 rue Edmond Rostand",lat:49.242,lng:4.022},
+  {n:"Brico Dépôt Chalons En Champagne",cp:"51470",c:"Chalons En Champagne",a:"ZA de Voiterelle",lat:48.950,lng:4.350},
+  {n:"Brico Dépôt St Dizier",cp:"52100",c:"St Dizier",a:"ZAC Le Chêne Saint Amand",lat:48.640,lng:4.950},
+  {n:"Brico Dépôt Laval",cp:"53000",c:"Laval",a:"Centre Cial Les Bozées - 11 rue de Londres",lat:48.070,lng:-0.770},
+  {n:"Brico Dépôt Essey",cp:"54270",c:"Essey",a:"ZAC de la Porte Verte",lat:48.700,lng:6.220},
+  {n:"Brico Dépôt Longwy",cp:"54720",c:"Longwy",a:"Centre commercial Lexy Park",lat:49.520,lng:5.760},
+  {n:"Brico Dépôt Lorient",cp:"56100",c:"Lorient",a:"Ccial K2 - Route du Colonel Muller",lat:47.750,lng:-3.370},
+  {n:"Brico Dépôt Pontivy",cp:"56300",c:"Pontivy",a:"41 rue Jean Moulin",lat:48.070,lng:-2.970},
+  {n:"Brico Dépôt Metz",cp:"57070",c:"Metz",a:"Actipôle Borny - 28 rue des Potiers d'Etain",lat:49.110,lng:6.220},
+  {n:"Brico Dépôt Sarrebourg",cp:"57400",c:"Sarrebourg",a:"ZA de la Bièvre - Rte de Niderviller",lat:48.730,lng:7.050},
+  {n:"Brico Dépôt Forbach",cp:"57600",c:"Forbach",a:"ZI Carrefour Europe - Lieu dit Langgraben",lat:49.190,lng:6.900},
+  {n:"Brico Dépôt Nevers",cp:"58640",c:"Nevers",a:"1 rue Louise Michel",lat:46.990,lng:3.160},
+  {n:"Brico Dépôt Leers",cp:"59115",c:"Leers",a:"30 avenue de l'Europe",lat:50.680,lng:3.250},
+  {n:"Brico Dépôt Faches",cp:"59155",c:"Faches",a:"83 rue du Maréchal Joffre",lat:50.600,lng:3.070},
+  {n:"Brico Dépôt Douai",cp:"59169",c:"Douai",a:"Route de Dechy - Croix de Cantin",lat:50.370,lng:3.080},
+  {n:"Brico Dépôt Tourcoing",cp:"59200",c:"Tourcoing",a:"Chaussée Fernand Forest",lat:50.720,lng:3.160},
+  {n:"Brico Dépôt Bailleul",cp:"59270",c:"Bailleul",a:"253 rue de Lille",lat:50.740,lng:2.740},
+  {n:"Brico Dépôt Aulnoy",cp:"59300",c:"Aulnoy",a:"CCial Carrefour - Avenue Henri Matisse",lat:50.370,lng:3.500},
+  {n:"Brico Dépôt Cambrai",cp:"59400",c:"Cambrai",a:"1909 avenue de Paris",lat:50.180,lng:3.240},
+  {n:"Brico Dépôt Petite Foret",cp:"59494",c:"Petite Foret",a:"Rue Yves Leleu - ZAC Auchan",lat:50.375,lng:3.520},
+  {n:"Brico Dépôt Maubeuge",cp:"59600",c:"Maubeuge",a:"121 avenue Jean Jaures",lat:50.280,lng:3.970},
+  {n:"Brico Dépôt Beauvais",cp:"60000",c:"Beauvais",a:"ZAC du Ther - Rue Pierre et Marie Curie",lat:49.440,lng:2.080},
+  {n:"Brico Dépôt Compiegne",cp:"60150",c:"Compiegne",a:"ZAC du Gros Grelot",lat:49.380,lng:2.810},
+  {n:"Brico Dépôt Boulogne",cp:"62200",c:"Boulogne",a:"ZAC du Mont Joie",lat:50.720,lng:1.610},
+  {n:"Brico Dépôt Arras Beaurains",cp:"62217",c:"Arras Beaurains",a:"ZI Les Longs Champs",lat:50.280,lng:2.780},
+  {n:"Brico Dépôt Bethune",cp:"62400",c:"Bethune",a:"ZAC de la Rotonde",lat:50.530,lng:2.640},
+  {n:"Brico Dépôt Bruay",cp:"62700",c:"Bruay",a:"Parc de la Porte Nord",lat:50.490,lng:2.540},
+  {n:"Brico Dépôt Lievin",cp:"62800",c:"Lievin",a:"Bd du Maréchal Leclerc",lat:50.420,lng:2.780},
+  {n:"Brico Dépôt Lempdes",cp:"63370",c:"Lempdes",a:"56 avenue de l'Europe",lat:45.770,lng:3.190},
+  {n:"Brico Dépôt Pau",cp:"64110",c:"Pau",a:"Avenue du Général de Gaulle",lat:43.300,lng:-0.380},
+  {n:"Brico Dépôt Tarbes",cp:"65310",c:"Tarbes",a:"Avenue de Lourdes - RD 921A",lat:43.230,lng:0.070},
+  {n:"Brico Dépôt Claira",cp:"66530",c:"Claira",a:"Ccial Carrefour - Lieu-dit St Jaumes du Crest",lat:42.720,lng:2.920},
+  {n:"Brico Dépôt Strasbourg",cp:"67118",c:"Strasbourg",a:"6 rue du Commerce",lat:48.540,lng:7.710},
+  {n:"Brico Dépôt Colmar",cp:"68000",c:"Colmar",a:"14 rue André Kiener",lat:48.080,lng:7.360},
+  {n:"Brico Dépôt Mulhouse",cp:"68790",c:"Mulhouse",a:"4 Rue Robert Schuman",lat:47.740,lng:7.320},
+  {n:"Brico Dépôt Saint Priest",cp:"69800",c:"Saint Priest",a:"198 Rte de Grenoble",lat:45.700,lng:4.940},
+  {n:"Brico Dépôt Montceau Les Mines",cp:"71300",c:"Montceau Les Mines",a:"ZA de Châtillon Rue de Sémur",lat:46.670,lng:4.370},
+  {n:"Brico Dépôt Macon",cp:"71680",c:"Macon",a:"ZAC des Bouchardes",lat:46.300,lng:4.830},
+  {n:"Brico Dépôt Alencon",cp:"72610",c:"Alencon",a:"ZI Le Coudray - Route du Mans",lat:48.430,lng:0.090},
+  {n:"Brico Dépôt Le Mans",cp:"72700",c:"Le Mans",a:"ZAC du Vivier II - Route de la Suze",lat:47.980,lng:0.190},
+  {n:"Brico Dépôt Albertville",cp:"73460",c:"Albertville",a:"Rue du Bois de l'Île - ZAC de Tournon",lat:45.670,lng:6.390},
+  {n:"Brico Dépôt Annemasse",cp:"74100",c:"Annemasse",a:"124 route de Taninges",lat:46.190,lng:6.240},
+  {n:"Brico Dépôt Rouen Riboudet",cp:"76000",c:"Rouen",a:"100 avenue du Mont Riboudet",lat:49.430,lng:1.090},
+  {n:"Brico Dépôt Dieppe",cp:"76200",c:"Dieppe",a:"ZAC du Belvédère",lat:49.920,lng:1.080},
+  {n:"Brico Dépôt Melun",cp:"77000",c:"Melun",a:"ZAC du Tertre de Cherisy - Route de Nangis",lat:48.540,lng:2.660},
+  {n:"Brico Dépôt Montereau",cp:"77130",c:"Montereau",a:"RN 6",lat:48.380,lng:3.000},
+  {n:"Brico Dépôt Pontault Combault",cp:"77340",c:"Pontault Combault",a:"ZAC DU PONTILLAULT",lat:48.790,lng:2.600},
+  {n:"Brico Dépôt Vaires Sur Marne",cp:"77360",c:"Vaires Sur Marne",a:"Chemin du Corps de Garde",lat:48.870,lng:2.650},
+  {n:"Brico Dépôt Sartrouville",cp:"78500",c:"Sartrouville",a:"Route de Pontoise",lat:48.940,lng:2.160},
+  {n:"Brico Dépôt Les Essarts Le Roi",cp:"78690",c:"Les Essarts Le Roi",a:"36 route nationale 10",lat:48.710,lng:1.890},
+  {n:"Brico Dépôt Amiens",cp:"80480",c:"Amiens",a:"CCial Amiens Sud",lat:49.850,lng:2.280},
+  {n:"Brico Dépôt Castres",cp:"81580",c:"Castres",a:"ZA de La Prade",lat:43.600,lng:2.240},
+  {n:"Brico Dépôt Gaillac",cp:"81600",c:"Gaillac",a:"Ccial Galacte",lat:43.900,lng:1.900},
+  {n:"Brico Dépôt Montauban",cp:"82000",c:"Montauban",a:"RN 20 - BP 812 Aussonne",lat:44.020,lng:1.350},
+  {n:"Brico Dépôt Toulon",cp:"83000",c:"Toulon",a:"Rue Sainte Claire Deville",lat:43.130,lng:5.930},
+  {n:"Brico Dépôt Avignon",cp:"84130",c:"Avignon",a:"227 avenue du Maréchal Leclerc",lat:43.970,lng:4.830},
+  {n:"Brico Dépôt La Roche Sur Yon",cp:"85000",c:"La Roche Sur Yon",a:"ZAC de Beaupuy - Route de Nantes",lat:46.670,lng:-1.430},
+  {n:"Brico Dépôt Dissay",cp:"86130",c:"Dissay",a:"Lieu dit Puy Grenier",lat:46.690,lng:0.410},
+  {n:"Brico Dépôt Epinal",cp:"88000",c:"Epinal",a:"ZAC des Terres Saint Jean",lat:48.180,lng:6.450},
+  {n:"Brico Dépôt Auxerre",cp:"89000",c:"Auxerre",a:"RN 66 - Lieu-Dit Les Chesnez",lat:47.800,lng:3.560},
+  {n:"Brico Dépôt Ballainvilliers",cp:"91160",c:"Ballainvilliers",a:"Lotissement les Berges du Rouillon",lat:48.640,lng:2.300},
+  {n:"Brico Dépôt Fleury Merogis",cp:"91700",c:"Fleury Merogis",a:"ZI des Ciroliers - Rue Clément Ader",lat:48.630,lng:2.380},
+  {n:"Brico Dépôt Nanterre",cp:"92000",c:"Nanterre",a:"61 avenue Joliot Curie",lat:48.890,lng:2.210},
+  {n:"Brico Dépôt Garges",cp:"95140",c:"Garges",a:"Ccial du Pont de Pierre - Avenue Stalingrad",lat:48.970,lng:2.400},
+  {n:"Brico Dépôt St Witz",cp:"95470",c:"St Witz",a:"13 rue de la Ferme Saint Ladre",lat:49.070,lng:2.570}
 ];
 
-// ── PER-STORE DATA ──
 function getStoreData(idx){
   const rBase=seededRand(idx*17+3);
   const vBase=Math.round(280+rBase()*320);
@@ -227,19 +248,16 @@ function getStoreData(idx){
     lastC,prevC,avgC,vsMoyC:delta(lastC,avgC),vsPrevC:delta(lastC,prevC),
     lastR,prevR,avgR,vsMoyR:delta(lastR,avgR),vsPrevR:delta(lastR,prevR)};}
 
-// ── PRE-COMPUTE ALL STORES (runs once at page load) ──
 const allStores=stores.map((s,i)=>({...getStoreData(i),s,idx:i}));
 const byVisits=[...allStores].sort((a,b)=>b.lastV-a.lastV);
 const byProg=[...allStores].sort((a,b)=>b.vsPrevV-a.vsPrevV);
 
-// ── WEEK DATE LABELS ──
 const WEEK_DATES=(()=>{
   const ms=['jan','fév','mar','avr','mai','jun'];
   const start=new Date(2025,11,29);
   return Array.from({length:22},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i*7);return`${d.getDate()} ${ms[d.getMonth()]||'?'}`;});
 })();
 
-// ── CANVAS CHART: multi-store evolution ──
 function setupEvoChart(top5){
   const canvas=document.getElementById('evo-canvas');
   if(!canvas)return;
@@ -254,7 +272,6 @@ function setupEvoChart(top5){
 
   function draw(hw){
     ctx.clearRect(0,0,W,H);
-    // Grid
     [0,.25,.5,.75,1].forEach(t=>{
       const val=Math.round(maxV*t);
       const yv=y(val);
@@ -263,19 +280,16 @@ function setupEvoChart(top5){
       ctx.fillStyle='#9CA3AF';ctx.font='9px -apple-system,Arial,sans-serif';
       ctx.textAlign='right';ctx.fillText(val,pL-4,yv+3.5);
     });
-    // X labels
     [{i:0,t:'29 déc'},{i:4,t:'26 jan'},{i:8,t:'23 fév'},{i:12,t:'23 mar'},{i:16,t:'20 avr'},{i:21,t:'25 mai'}].forEach(({i,t})=>{
       ctx.fillStyle='#9CA3AF';ctx.font='8.5px -apple-system,Arial,sans-serif';
       ctx.textAlign='center';ctx.fillText(t,x(i),H-4);
     });
-    // Hover line
     if(hw!==null){
       ctx.strokeStyle='rgba(0,0,0,.12)';ctx.lineWidth=1;
       ctx.setLineDash([4,3]);
       ctx.beginPath();ctx.moveTo(x(hw),pT);ctx.lineTo(x(hw),pT+ih);ctx.stroke();
       ctx.setLineDash([]);
     }
-    // Lines + dots
     top5.forEach((t,ci)=>{
       const col=RANK_COLORS[ci];
       ctx.strokeStyle=col;ctx.lineWidth=2;ctx.lineJoin='round';
@@ -290,7 +304,6 @@ function setupEvoChart(top5){
   }
   draw(null);
 
-  // Tooltip
   let tip=document.getElementById('evo-tip');
   if(!tip){tip=document.createElement('div');tip.id='evo-tip';
     tip.style.cssText='position:fixed;display:none;background:rgba(15,27,53,.92);color:#fff;border-radius:8px;padding:8px 11px;font-size:9.5px;pointer-events:none;z-index:9999;min-width:145px;box-shadow:0 4px 14px rgba(0,0,0,.35);line-height:1.7';
@@ -303,7 +316,7 @@ function setupEvoChart(top5){
     draw(wi);
     let h=`<div style="font-weight:700;font-size:10px;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:3px;margin-bottom:4px">${WEEK_DATES[wi]}</div>`;
     top5.forEach((t,ci)=>{
-      const name=t.s.n.replace('Castorama ','').replace('Casto ','');
+      const name=t.s.n.replace('Brico Dépôt ','');
       h+=`<div style="display:flex;justify-content:space-between;gap:10px"><span><span style="color:${RANK_COLORS[ci]}">●</span> ${name}</span><span style="font-weight:700">${nf(t.visits[wi])}</span></div>`;
     });
     tip.innerHTML=h;tip.style.display='block';
@@ -314,13 +327,19 @@ function setupEvoChart(top5){
   canvas.addEventListener('mouseleave',()=>{draw(null);tip.style.display='none';});
 }
 
-// ── RENDER PANEL ──
+const BD_LOGO=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 52 32" width="52" height="32">
+  <rect width="52" height="32" rx="3" fill="#E30613"/>
+  <rect y="17" width="52" height="15" rx="3" fill="#1A1A1A"/>
+  <rect y="17" width="52" height="4" fill="#1A1A1A"/>
+  <text x="26" y="13" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="9.5" font-weight="900" fill="#fff">BRICO</text>
+  <text x="26" y="28.5" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="9.5" font-weight="900" fill="#E30613">DÉPÔT</text>
+</svg>`;
+
 function renderPanel(store,idx){
   const d=getStoreData(idx);
   const dc=v=>v>=0?'pos':'neg';
   const ds=v=>`${v>=0?'+':''}${v.toFixed(1)} %`;
-  const snum=1000+idx*7+134;
-  const shortN=t=>t.s.n.replace('Castorama ','').replace('Casto ','');
+  const shortN=t=>t.s.n.replace('Brico Dépôt ','');
 
   function kpiCard(ico,lbl,val,prev,av,vsMoy,vsPrev){return`<div class="lkpi-card">
     <div class="lkpi-top"><span class="lkpi-ico">${ico}</span><span class="lkpi-lbl">${lbl}</span></div>
@@ -336,13 +355,12 @@ function renderPanel(store,idx){
     <div class="lchart-sub">Déc 2025 → Mai 2026 &nbsp;·&nbsp; Moy. ${nf(av)}</div>
     ${chartSVG(data,gid)}
     <div class="lchart-legend">
-      <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#1A73E8" stroke-width="1.5"/></svg>Données semaine</span>
+      <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#E30613" stroke-width="1.5"/></svg>Données semaine</span>
       <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#F59E0B" stroke-width="1" stroke-dasharray="3,3"/></svg>Moyenne</span>
       <span class="leg"><svg width="10" height="10"><circle cx="5" cy="5" r="3.5" fill="#F59E0B"/></svg>Dernière sem.</span>
     </div>
   </div>`;}
 
-  // Global data
   const top5=byVisits.slice(0,5);
   const maxV5=top5[0].lastV;
   const mostV=byVisits[0],leastV=byVisits[byVisits.length-1];
@@ -368,7 +386,7 @@ function renderPanel(store,idx){
         <div style="font-size:8px;color:#9CA3AF">📍 ${t.s.cp}</div>
       </div>
       <div style="width:80px;flex-shrink:0"><div style="height:6px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="height:100%;width:${Math.round(t.lastV/maxV5*100)}%;background:${color};border-radius:3px"></div></div></div>
-      <div style="font-size:14px;font-weight:800;color:#0072CE;width:36px;text-align:right;flex-shrink:0">${nf(t.lastV)}</div>
+      <div style="font-size:14px;font-weight:800;color:#E30613;width:36px;text-align:right;flex-shrink:0">${nf(t.lastV)}</div>
       <span style="background:${vspS?'#DCFCE7':'#FEE2E2'};color:${vspS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;white-space:nowrap;flex-shrink:0">${vspS?'↑':'↓'}${Math.abs(t.vsPrevV).toFixed(1)} %</span>
       <span style="font-size:8.5px;color:#6B7280;white-space:nowrap;flex-shrink:0">vs moy.&nbsp;<span style="color:${vmS?'#15803D':'#DC2626'};font-weight:700">${vmS?'+':''}${t.vsMoyV.toFixed(1)} %</span></span>
     </div>`;}
@@ -376,26 +394,25 @@ function renderPanel(store,idx){
   function tableRow(t,i){
     const vspS=t.vsPrevV>=0,vmS=t.vsMoyV>=0;
     const isSel=t.idx===idx;
-    return`<tr style="background:${isSel?'#FFFBEB':i%2===0?'#fff':'#FAFAFA'}">
+    return`<tr style="background:${isSel?'#FFF1F1':i%2===0?'#fff':'#FAFAFA'}">
       <td style="padding:7px 10px"><div style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:${RANK_COLORS[i]};display:inline-block;flex-shrink:0"></span><span style="font-size:10.5px;font-weight:${isSel?700:500};color:#0F1B35">${shortN(t)}</span></div></td>
       <td style="padding:7px 8px;font-size:9.5px;color:#6B7280;text-align:center">${t.s.cp}</td>
-      <td style="padding:7px 8px;font-size:12px;font-weight:800;color:#0072CE;text-align:right">${nf(t.lastV)}</td>
+      <td style="padding:7px 8px;font-size:12px;font-weight:800;color:#E30613;text-align:right">${nf(t.lastV)}</td>
       <td style="padding:7px 8px;font-size:10px;color:#374151;text-align:right">${nf(t.prevV)}</td>
       <td style="padding:7px 8px;text-align:center"><span style="background:${vspS?'#DCFCE7':'#FEE2E2'};color:${vspS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px">${vspS?'↑':'↓'}${Math.abs(t.vsPrevV).toFixed(1)} %</span></td>
       <td style="padding:7px 8px;font-size:10px;color:#374151;text-align:right">${nf(t.avgV)}</td>
       <td style="padding:7px 8px;text-align:center"><span style="background:${vmS?'#DCFCE7':'#FEE2E2'};color:${vmS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px">${vmS?'+':''}${t.vsMoyV.toFixed(1)} %</span></td>
     </tr>`;}
 
-  // ── Bloc 1 : store info dans le panel ──
   document.getElementById('panel-content').innerHTML=`
     <div id="store-section" style="display:flex;flex-direction:column;gap:8px;padding-bottom:8px">
     <div style="background:#0D1B4B;color:#fff;padding:9px 14px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px">
-      <div style="width:3px;height:14px;background:#FFD700;border-radius:2px"></div>
+      <div style="width:3px;height:14px;background:#E30613;border-radius:2px"></div>
       Performance par magasin
     </div>
     <div class="lhdr">
       <div class="lhdr-left">
-        <div class="lhdr-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-7 -7 78 54" width="46" height="32"><path d="M50 6 A22 22 0 1 0 50 34" stroke="#0072CE" stroke-width="12" fill="none" stroke-linecap="butt"/><rect x="42" y="13" width="22" height="14" rx="7" fill="#FFD700"/></svg></div>
+        <div class="lhdr-logo">${BD_LOGO}</div>
         <div>
           <div class="lhdr-name">${store.n}</div>
           <div class="lhdr-addr">📍 ${store.a} — ${store.cp} ${store.c}</div>
@@ -406,7 +423,7 @@ function renderPanel(store,idx){
         <div class="lhdr-meta">22 semaines · Mise à jour : 25 mai 2026</div>
         <div style="display:flex;gap:5px;justify-content:flex-end">
           <button class="lbtn lbtn-out" onclick="window.print()">🖨 Imprimer / PDF</button>
-          <button class="lbtn lbtn-fill" onclick="window.open('https://www.castorama.fr/store/${snum}','_blank')">🗺 Voir le magasin</button>
+          <button class="lbtn lbtn-fill" onclick="window.open('https://www.bricodepot.fr/','_blank')">🗺 Voir le magasin</button>
         </div>
       </div>
     </div>
@@ -424,14 +441,12 @@ function renderPanel(store,idx){
     </div>
     </div>`;
 
-  // ── Titre pleine largeur ──
   document.getElementById('global-title').innerHTML=`
     <div style="background:#0D1B4B;color:#fff;padding:9px 14px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px">
-      <div style="width:3px;height:14px;background:#FFD700;border-radius:2px"></div>
+      <div style="width:3px;height:14px;background:#E30613;border-radius:2px"></div>
       Performance globale des magasins
     </div>`;
 
-  // ── Rangée 1 : faits marquants (gauche) + classement (droite) ──
   document.getElementById('global-row1').innerHTML=`
     <div style="flex:0 0 44%;display:flex;flex-direction:column;gap:8px">
       <div class="lsec"><div class="lsec-bar"></div>FAITS MARQUANTS — SEMAINE DU 25 MAI 2026</div>
@@ -449,7 +464,6 @@ function renderPanel(store,idx){
       </div>
     </div>`;
 
-  // ── Rangée 2 : évolution (gauche) + tableau (droite) ──
   document.getElementById('global-row2').innerHTML=`
     <div style="flex:0 0 44%;display:flex;flex-direction:column;gap:8px">
       <div class="lsec"><div class="lsec-bar"></div>ÉVOLUTION HEBDOMADAIRE — 22 SEMAINES</div>
@@ -466,7 +480,7 @@ function renderPanel(store,idx){
       <div class="lsec"><div class="lsec-bar"></div>TABLEAU RÉCAPITULATIF</div>
       <div class="lchart-card" style="padding:0;overflow:hidden">
         <table style="width:100%;border-collapse:collapse">
-          <thead><tr style="background:#0072CE">
+          <thead><tr style="background:#E30613">
             <th style="padding:8px 10px;text-align:left;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Magasin</th>
             <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">CP</th>
             <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Sem. 25 mai</th>
@@ -491,23 +505,25 @@ function renderPanel(store,idx){
   });
 }
 
-// ── MAP ──
 const PIN=`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="44" viewBox="0 0 40 54">
   <ellipse cx="20" cy="52" rx="7" ry="2.8" fill="rgba(0,0,0,0.22)"/>
-  <path d="M20 2C10.06 2 2 10.06 2 20C2 33.8 20 52 20 52C20 52 38 33.8 38 20C38 10.06 29.94 2 20 2Z" fill="#0072CE"/>
+  <path d="M20 2C10.06 2 2 10.06 2 20C2 33.8 20 52 20 52C20 52 38 33.8 38 20C38 10.06 29.94 2 20 2Z" fill="#E30613"/>
   <path d="M12 7C9 10.5 7.5 15 7.5 20" stroke="rgba(255,255,255,0.32)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
   <circle cx="20" cy="20" r="13" fill="white"/>
-  <path d="M23 14 A8 8 0 1 0 23 26" stroke="#0072CE" stroke-width="5" fill="none" stroke-linecap="butt"/>
-  <rect x="21.5" y="12.5" width="3.8" height="15" fill="#0072CE"/>
-  <rect x="20.5" y="17" width="12" height="6" rx="3" fill="#FFD700"/>
+  <rect x="8" y="13" width="24" height="14" rx="3" fill="#E30613"/>
+  <rect x="8" y="18" width="24" height="9" rx="0" fill="#1A1A1A"/>
+  <text x="20" y="21" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="5.5" font-weight="900" fill="#fff">BRICO</text>
+  <text x="20" y="27.5" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="5" font-weight="900" fill="#E30613">DÉPÔT</text>
 </svg>`;
+
 const PIN_ACTIVE=`<svg xmlns="http://www.w3.org/2000/svg" width="36" height="50" viewBox="0 0 40 54">
   <ellipse cx="20" cy="52" rx="8" ry="3" fill="rgba(0,0,0,0.3)"/>
-  <path d="M20 2C10.06 2 2 10.06 2 20C2 33.8 20 52 20 52C20 52 38 33.8 38 20C38 10.06 29.94 2 20 2Z" fill="#FFD700"/>
+  <path d="M20 2C10.06 2 2 10.06 2 20C2 33.8 20 52 20 52C20 52 38 33.8 38 20C38 10.06 29.94 2 20 2Z" fill="#1A1A1A"/>
   <circle cx="20" cy="20" r="13" fill="white"/>
-  <path d="M23 14 A8 8 0 1 0 23 26" stroke="#0072CE" stroke-width="5" fill="none" stroke-linecap="butt"/>
-  <rect x="21.5" y="12.5" width="3.8" height="15" fill="#0072CE"/>
-  <rect x="20.5" y="17" width="12" height="6" rx="3" fill="#0D1B4B"/>
+  <rect x="8" y="13" width="24" height="14" rx="3" fill="#E30613"/>
+  <rect x="8" y="18" width="24" height="9" rx="0" fill="#1A1A1A"/>
+  <text x="20" y="21" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="5.5" font-weight="900" fill="#fff">BRICO</text>
+  <text x="20" y="27.5" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="5" font-weight="900" fill="#E30613">DÉPÔT</text>
 </svg>`;
 
 const iconNormal=L.divIcon({html:`<div style="filter:drop-shadow(1px 2px 4px rgba(0,0,0,.4));cursor:pointer;transition:transform .15s;transform-origin:bottom center" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">${PIN}</div>`,iconSize:[32,44],iconAnchor:[16,44],className:''});
@@ -518,7 +534,7 @@ L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r
 
 const cluster=L.markerClusterGroup({
   maxClusterRadius:55,showCoverageOnHover:false,
-  iconCreateFunction(c){const n=c.getChildCount(),sz=n<10?40:n<20?48:56;return L.divIcon({html:`<div class="casto-cluster" style="width:${sz+10}px;height:${sz+10}px"><div class="casto-cluster-inner" style="width:${sz}px;height:${sz}px;font-size:${sz<50?13:15}px">${n}</div></div>`,iconSize:[sz+10,sz+10],iconAnchor:[(sz+10)/2,(sz+10)/2],className:''});}
+  iconCreateFunction(c){const n=c.getChildCount(),sz=n<10?40:n<20?48:56;return L.divIcon({html:`<div class="bd-cluster" style="width:${sz+10}px;height:${sz+10}px"><div class="bd-cluster-inner" style="width:${sz}px;height:${sz}px;font-size:${sz<50?13:15}px">${n}</div></div>`,iconSize:[sz+10,sz+10],iconAnchor:[(sz+10)/2,(sz+10)/2],className:''});}
 });
 
 let activeMarker=null;
@@ -537,16 +553,16 @@ map.addLayer(cluster);
 const ResetCtrl=L.Control.extend({options:{position:'topright'},onAdd(){
   const btn=L.DomUtil.create('button');
   btn.title='Vue France entière';
-  btn.style.cssText='background:#0D1B4B;color:white;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.3);';
+  btn.style.cssText='background:#E30613;color:white;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.3);';
   btn.innerHTML='🇫🇷';
   btn.onclick=()=>{if(activeMarker){activeMarker.setIcon(iconNormal);activeMarker=null;}map.flyTo([46.6,2.35],6,{duration:1.2});};
   return btn;
 }});
 map.addControl(new ResetCtrl());
 
-markers[1].setIcon(iconActive);activeMarker=markers[1];
-renderPanel(stores[1],1);
-map.setView([stores[1].lat,stores[1].lng],12);
+markers[0].setIcon(iconActive);activeMarker=markers[0];
+renderPanel(stores[0],0);
+map.setView([stores[0].lat,stores[0].lng],12);
 </script>
 </body>
 </html>
