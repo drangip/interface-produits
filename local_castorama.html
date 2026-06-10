@@ -8,35 +8,62 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 <style>
-:root{--bg:#EEF1F6;--card:#fff;--nav:#0D1B4B;--primary:#006AB3;--t1:#0F1B35;--t2:#4B5675;--t3:#9CA3AF;--border:#E5E7EB;--r:10px;--sh:0 1px 4px rgba(13,27,75,.07),0 2px 10px rgba(13,27,75,.04);--green:#22C55E;--red:#EF4444;--orange:#F97316}
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;overflow:hidden}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;overflow:hidden;background:#EEF1F6}
 #layout{position:fixed;top:88px;bottom:0;left:0;right:0;display:flex}
-#map{flex:0 0 58%;height:100%}
-#panel{flex:1;overflow-y:auto;padding:14px;background:var(--bg);display:flex;flex-direction:column;gap:10px}
-.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:14px}
-.ct{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-bottom:6px}
-.stit{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--primary)}
-.store-hdr{background:linear-gradient(135deg,#0D1B4B 0%,#006AB3 100%);border-radius:var(--r);padding:16px;color:#fff}
-.store-hdr-name{font-size:15px;font-weight:800;margin-bottom:3px}
-.store-hdr-addr{font-size:11px;opacity:.7;line-height:1.5}
-.kpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.kpi-card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:10px}
-.kpi-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t3);margin-bottom:3px}
-.kpi-val{font-size:19px;font-weight:800;line-height:1;margin-bottom:3px}
-.kpi-delta{font-size:10px;font-weight:600;padding:1px 5px;border-radius:3px;display:inline-block;margin-bottom:5px}
-.pos{background:#DCFCE7;color:#16A34A}.neg{background:#FEE2E2;color:#DC2626}
-.rank-row{display:flex;align-items:center;gap:8px;padding:6px 4px;border-radius:5px}
-.rank-row.me{background:#EFF6FF}
-.rank-num{font-size:12px;font-weight:800;color:var(--t3);width:18px;text-align:center;flex-shrink:0}
-.rank-row.me .rank-num{color:var(--primary)}
-.rank-name{flex:1;font-size:11px;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.rank-row.me .rank-name{font-weight:700;color:var(--primary)}
-.rank-bar-wrap{width:70px;flex-shrink:0;height:5px;background:#F1F5F9;border-radius:3px;overflow:hidden}
-.rank-bar{height:100%;border-radius:3px}
-.rank-val{font-size:10px;font-weight:700;color:var(--t2);min-width:44px;text-align:right;flex-shrink:0}
-.casto-cluster{background:rgba(0,114,206,.25);border-radius:50%;display:flex;align-items:center;justify-content:center}
-.casto-cluster-inner{background:#0072CE;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3);font-family:Arial,sans-serif}
+#map{flex:0 0 44%;height:100%}
+#panel{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+
+/* Header */
+.lhdr{background:#fff;border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.lhdr-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.lhdr-logo{width:42px;height:42px;background:#0072CE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#fff;flex-shrink:0}
+.lhdr-logo span{color:#FFD700}
+.lhdr-name{font-size:14px;font-weight:800;color:#0D1B4B;margin-bottom:2px}
+.lhdr-addr{font-size:10px;color:#555;line-height:1.55}
+.lhdr-link{color:#0072CE;text-decoration:none}
+.lhdr-link:hover{text-decoration:underline}
+.lhdr-right{flex-shrink:0;text-align:right}
+.lhdr-badge{display:inline-flex;align-items:center;gap:4px;border:1.5px solid #0072CE;color:#0072CE;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;margin-bottom:3px}
+.lhdr-meta{font-size:9.5px;color:#888;margin-bottom:5px}
+.lbtn{border-radius:6px;padding:5px 10px;font-size:10px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px;transition:opacity .15s}
+.lbtn:hover{opacity:.8}
+.lbtn-out{background:#fff;border:1.5px solid #0072CE;color:#0072CE}
+.lbtn-fill{background:#0072CE;border:1.5px solid #0072CE;color:#fff}
+
+/* Section header */
+.lsec{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#4B5675;display:flex;align-items:center;gap:4px;padding:2px 0}
+.lsec-bar{width:3px;height:12px;background:#0072CE;border-radius:2px;flex-shrink:0}
+
+/* KPI cards */
+.lkpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.lkpi-card{background:#fff;border-radius:10px;padding:12px 11px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.lkpi-top{display:flex;align-items:center;gap:5px;margin-bottom:6px}
+.lkpi-ico{font-size:13px;line-height:1}
+.lkpi-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#4B5675;line-height:1.2}
+.lkpi-val{font-size:26px;font-weight:800;color:#0072CE;line-height:1.05;margin-bottom:2px}
+.lkpi-sub{font-size:8.5px;color:#9CA3AF;margin-bottom:8px}
+.lkpi-sep{height:1px;background:#E5E7EB;margin-bottom:7px}
+.lkpi-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.lkpi-rl{font-size:9px;color:#6B7280}
+.lkpi-rv{font-size:9px;font-weight:700;color:#374151}
+.delta{font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px}
+.pos{background:#DCFCE7;color:#15803D}
+.neg{background:#FEE2E2;color:#DC2626}
+
+/* Chart cards */
+.lchart-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.lchart-card{background:#fff;border-radius:10px;padding:10px 11px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.lchart-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:0}
+.lchart-label{font-size:10px;font-weight:700;color:#374151}
+.lchart-lv{font-size:18px;font-weight:800;color:#0072CE;line-height:1}
+.lchart-sub{font-size:7.5px;color:#9CA3AF;margin-bottom:2px}
+.lchart-legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
+.leg{font-size:7.5px;color:#9CA3AF;display:inline-flex;align-items:center;gap:2px}
+
+/* Cluster */
+.casto-cluster{background:rgba(0,114,206,.22);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.casto-cluster-inner{background:#0072CE;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
@@ -64,17 +91,41 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 <script>
 // ── UTILS ──
 function seededRand(seed){let s=seed;return()=>{s=(s*16807+0)%2147483647;return(s-1)/2147483646;};}
-const fmt={
-  k:v=>{if(v>=1e6)return(v/1e6).toFixed(1)+'M';if(v>=1e3)return(v/1e3).toFixed(0)+'k';return Math.round(v||0).toString();},
-  e:v=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v||0),
-  p:(v,d=1)=>`${(v||0).toFixed(d)}%`
-};
+const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v||0));
+const delta=(last,ref)=>+((last-ref)/ref*100).toFixed(1);
+const avg=a=>+(a.reduce((s,v)=>s+v,0)/a.length).toFixed(1);
 
-function sparkline(data,color,w,h){
-  w=w||80;h=h||26;
+// ── CHART SVG ──
+function chartSVG(data,gid){
+  const W=220,H=88,pL=26,pR=4,pT=6,pB=16;
+  const iw=W-pL-pR,ih=H-pT-pB;
   const mn=Math.min(...data),mx=Math.max(...data),rng=mx-mn||1;
-  const pts=data.map((v,i)=>`${i/(data.length-1)*w},${h-2-(v-mn)/rng*(h-6)+2}`).join(' ');
-  return`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block;margin-top:4px"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+  const av=data.reduce((a,b)=>a+b,0)/data.length;
+  const x=i=>pL+i/(data.length-1)*iw;
+  const y=v=>pT+(1-(v-mn)/rng)*ih;
+  const pts=data.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const ya=y(av);
+  const ap=`M${x(0).toFixed(1)},${y(data[0]).toFixed(1)} `+
+    data.slice(1).map((v,i)=>`L${x(i+1).toFixed(1)},${y(v).toFixed(1)}`).join(' ')+
+    ` L${x(21).toFixed(1)},${(pT+ih).toFixed(1)} L${pL},${(pT+ih).toFixed(1)} Z`;
+  const xlbls=[{i:0,t:'Déc'},{i:4,t:'Jan'},{i:8,t:'Fév'},{i:12,t:'Mar'},{i:16,t:'Avr'},{i:21,t:'Mai'}];
+  const ymax=pT+5,yavg=Math.max(pT+10,Math.min(ya,pT+ih-4));
+  return`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <defs>
+      <linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#1A73E8" stop-opacity=".28"/>
+        <stop offset="100%" stop-color="#1A73E8" stop-opacity=".01"/>
+      </linearGradient>
+    </defs>
+    <path d="${ap}" fill="url(#${gid})"/>
+    <polyline points="${pts}" fill="none" stroke="#1A73E8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="${pL}" y1="${ya.toFixed(1)}" x2="${W-pR}" y2="${ya.toFixed(1)}" stroke="#F59E0B" stroke-width="1" stroke-dasharray="4,3" opacity=".85"/>
+    <circle cx="${x(21).toFixed(1)}" cy="${y(data[21]).toFixed(1)}" r="4" fill="#F59E0B" stroke="white" stroke-width="1.5"/>
+    <text x="${pL-2}" y="${ymax}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(mx)}</text>
+    <text x="${pL-2}" y="${(yavg+3).toFixed(1)}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(av)}</text>
+    <text x="${pL-2}" y="${(pT+ih+2).toFixed(1)}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(mn)}</text>
+    ${xlbls.map(l=>`<text x="${x(l.i).toFixed(1)}" y="${H-2}" text-anchor="middle" font-size="7.5" fill="#9CA3AF">${l.t}</text>`).join('')}
+  </svg>`;
 }
 
 // ── STORES DATA ──
@@ -174,125 +225,89 @@ const stores=[
   {n:"Castorama Gonesse",cp:"95700",c:"Roissy CDG",a:"Z.i. de Paris Nord II",lat:48.990,lng:2.456}
 ];
 
-// ── KPI GENERATION ──
+// ── DATA GENERATION ──
 function getStoreData(idx){
-  const r=seededRand(idx*137+42);
-  const actifPct=Math.round(82+r()*14);
-  const impressions=Math.round((80000+r()*220000)/1000)*1000;
-  const clicks=Math.round(impressions*(0.025+r()*0.025));
-  const invest=Math.round(clicks*(0.35+r()*0.25)*10)/10;
-  const conversions=Math.round(clicks*(0.04+r()*0.04));
-  const ca=Math.round(invest*(1.8+r()*2.2)*10)/10;
-  const roi=Math.round(ca/invest*100)/100;
-  const ctr=Math.round(clicks/impressions*10000)/100;
-  const mkSpark=(base,seed)=>{const rs=seededRand(seed);return Array.from({length:7},(_,i)=>base*(0.7+(i/6)*0.55)*(0.85+rs()*0.30));};
-  const deltaSign=()=>(r()>0.35?1:-1);
-  return{
-    actifPct,impressions,clicks,invest,conversions,ca,roi,ctr,
-    sparkImp:mkSpark(impressions/7,idx*11+1),
-    sparkCA:mkSpark(ca/7,idx*23+2),
-    sparkConv:mkSpark(conversions/7,idx*37+3),
-    dImp:+(deltaSign()*(2+r()*18)).toFixed(1),
-    dCA:+(deltaSign()*(2+r()*25)).toFixed(1),
-    dConv:+(deltaSign()*(2+r()*15)).toFixed(1),
-  };
+  const rBase=seededRand(idx*17+3);
+  const vBase=Math.round(280+rBase()*320);
+  const cBase=Math.round(65+rBase()*115);
+  const iBase=Math.round(28+rBase()*52);
+  const rv=seededRand(idx*31+7),rc=seededRand(idx*31+107),ri=seededRand(idx*31+207);
+  const visits=Array.from({length:22},()=>Math.round(vBase*(0.72+rv()*0.56)));
+  const calls=Array.from({length:22},()=>Math.round(cBase*(0.72+rc()*0.56)));
+  const routes=Array.from({length:22},()=>Math.round(iBase*(0.72+ri()*0.56)));
+  const avgV=avg(visits),avgC=avg(calls),avgR=avg(routes);
+  const lastV=visits[21],prevV=visits[20],lastC=calls[21],prevC=calls[20],lastR=routes[21],prevR=routes[20];
+  return{visits,calls,routes,lastV,prevV,avgV,vsMoyV:delta(lastV,avgV),vsPrevV:delta(lastV,prevV),
+    lastC,prevC,avgC,vsMoyC:delta(lastC,avgC),vsPrevC:delta(lastC,prevC),
+    lastR,prevR,avgR,vsMoyR:delta(lastR,avgR),vsPrevR:delta(lastR,prevR)};
 }
 
-// pre-compute CA for ranking
-const storeCA=stores.map((_,i)=>{const r=seededRand(i*137+42);r();r();r();const imp=Math.round((80000+r()*220000)/1000)*1000;const cl=Math.round(imp*(0.025+r()*0.025));const inv=Math.round(cl*(0.35+r()*0.25)*10)/10;return Math.round(inv*(1.8+r()*2.2)*10)/10;});
-const rankOrder=[...stores.map((_,i)=>i)].sort((a,b)=>storeCA[b]-storeCA[a]);
-
-// ── RENDER ──
+// ── RENDER PANEL ──
 function renderPanel(store,idx){
   const d=getStoreData(idx);
-  const myRank=rankOrder.indexOf(idx)+1;
-  const top10=rankOrder.slice(0,10);
-  const maxCA=storeCA[top10[0]];
   const dc=v=>v>=0?'pos':'neg';
-  const ds=v=>`${v>=0?'+':''}${v}%`;
+  const ds=v=>`${v>=0?'+':''}${v.toFixed(1)} %`;
+  const snum=1000+idx*7+134;
+
+  function kpiCard(ico,lbl,val,prev,av,vsMoy,vsPrev){
+    return`<div class="lkpi-card">
+      <div class="lkpi-top"><span class="lkpi-ico">${ico}</span><span class="lkpi-lbl">${lbl}</span></div>
+      <div class="lkpi-val">${nf(val)}</div>
+      <div class="lkpi-sub">Semaine du 25 mai 2026</div>
+      <div class="lkpi-sep"></div>
+      <div class="lkpi-row"><span class="lkpi-rl">Moyenne sur 22 sem.</span><span class="lkpi-rv">${nf(av)}</span></div>
+      <div class="lkpi-row"><span class="lkpi-rl">vs Moyenne</span><span class="delta ${dc(vsMoy)}">${ds(vsMoy)}</span></div>
+      <div class="lkpi-row"><span class="lkpi-rl">vs Sem. préc. (${nf(prev)})</span><span class="delta ${dc(vsPrev)}">${ds(vsPrev)}</span></div>
+    </div>`;}
+
+  function chartCard(ico,lbl,data,gid,lastVal,av){
+    return`<div class="lchart-card">
+      <div class="lchart-top">
+        <div style="display:flex;align-items:center;gap:4px"><span class="lkpi-ico">${ico}</span><span class="lchart-label">${lbl}</span></div>
+        <span class="lchart-lv">${nf(lastVal)}</span>
+      </div>
+      <div class="lchart-sub">Déc 2025 → Mai 2026 &nbsp;·&nbsp; Moy. ${nf(av)}</div>
+      ${chartSVG(data,gid)}
+      <div class="lchart-legend">
+        <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#1A73E8" stroke-width="1.5"/></svg>Données semaine</span>
+        <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#F59E0B" stroke-width="1" stroke-dasharray="3,3"/></svg>Moyenne</span>
+        <span class="leg"><svg width="10" height="10"><circle cx="5" cy="5" r="3.5" fill="#F59E0B"/></svg>Dernière sem.</span>
+      </div>
+    </div>`;}
 
   document.getElementById('panel-content').innerHTML=`
-    <div class="store-hdr">
-      <div class="store-hdr-name">📍 ${store.n}</div>
-      <div class="store-hdr-addr">${store.a}</div>
-      <div class="store-hdr-addr">${store.cp} ${store.c}</div>
-      <div style="display:flex;justify-content:space-between;margin-top:12px">
-        <div style="text-align:center">
-          <div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Produits actifs</div>
-          <div style="font-size:30px;font-weight:900;color:#FFD700;line-height:1">${d.actifPct}%</div>
+    <div class="lhdr">
+      <div class="lhdr-left">
+        <div class="lhdr-logo">C<span>+</span></div>
+        <div>
+          <div class="lhdr-name">${store.n}</div>
+          <div class="lhdr-addr">📍 ${store.a} — ${store.cp} ${store.c}</div>
+          <div class="lhdr-addr"><a href="https://www.castorama.fr/store/${snum}" target="_blank" class="lhdr-link">castorama.fr/store/${snum}</a></div>
         </div>
-        <div style="width:1px;background:rgba(255,255,255,.2)"></div>
-        <div style="text-align:center">
-          <div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Rang national</div>
-          <div style="font-size:30px;font-weight:900;color:#FFD700;line-height:1">#${myRank}</div>
-        </div>
-        <div style="width:1px;background:rgba(255,255,255,.2)"></div>
-        <div style="text-align:center">
-          <div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">ROI</div>
-          <div style="font-size:30px;font-weight:900;color:#FFD700;line-height:1">${d.roi}</div>
+      </div>
+      <div class="lhdr-right">
+        <div class="lhdr-badge">📅 29 déc. 2025 → 25 mai 2026</div>
+        <div class="lhdr-meta">22 semaines · Mise à jour : 25 mai 2026</div>
+        <div style="display:flex;gap:5px;justify-content:flex-end">
+          <button class="lbtn lbtn-out" onclick="window.print()">🖨 Imprimer / PDF</button>
+          <button class="lbtn lbtn-fill" onclick="window.open('https://www.castorama.fr/store/${snum}','_blank')">🗺 Voir le magasin</button>
         </div>
       </div>
     </div>
 
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-lbl">Impressions</div>
-        <div class="kpi-val" style="color:#8B5CF6">${fmt.k(d.impressions)}</div>
-        <span class="kpi-delta ${dc(d.dImp)}">${ds(d.dImp)} vs S-1</span>
-        ${sparkline(d.sparkImp,'#8B5CF6',null,null)}
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-lbl">Conversions</div>
-        <div class="kpi-val" style="color:#22C55E">${fmt.k(d.conversions)}</div>
-        <span class="kpi-delta ${dc(d.dConv)}">${ds(d.dConv)} vs S-1</span>
-        ${sparkline(d.sparkConv,'#22C55E',null,null)}
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-lbl">CA</div>
-        <div class="kpi-val" style="color:#0EA5E9">${fmt.e(d.ca)}</div>
-        <span class="kpi-delta ${dc(d.dCA)}">${ds(d.dCA)} vs S-1</span>
-        ${sparkline(d.sparkCA,'#0EA5E9',null,null)}
-      </div>
+    <div class="lsec"><div class="lsec-bar"></div>INDICATEURS — DERNIÈRE SEMAINE (25 MAI 2026)</div>
+    <div class="lkpi-grid">
+      ${kpiCard('🏠','VISITES EN MAGASIN',d.lastV,d.prevV,d.avgV,d.vsMoyV,d.vsPrevV)}
+      ${kpiCard('📞','CLICS D\'APPEL',d.lastC,d.prevC,d.avgC,d.vsMoyC,d.vsPrevC)}
+      ${kpiCard('🗺','DEMANDES D\'ITINÉRAIRE',d.lastR,d.prevR,d.avgR,d.vsMoyR,d.vsPrevR)}
     </div>
 
-    <div class="kpi-grid">
-      <div class="kpi-card">
-        <div class="kpi-lbl">Investissement</div>
-        <div class="kpi-val" style="color:#F97316">${fmt.e(d.invest)}</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-lbl">CTR</div>
-        <div class="kpi-val" style="color:#14B8A6">${fmt.p(d.ctr)}</div>
-      </div>
-      <div class="kpi-card">
-        <div class="kpi-lbl">Clics</div>
-        <div class="kpi-val" style="color:#3B82F6">${fmt.k(d.clicks)}</div>
-      </div>
-    </div>
-
-    <div class="card">
-      <div class="stit">Classement national — CA</div>
-      ${top10.map((si,i)=>{
-        const isMe=si===idx;
-        const pct=Math.round(storeCA[si]/maxCA*100);
-        const name=stores[si].n.replace('Castorama ','').replace('Casto ','');
-        return`<div class="rank-row${isMe?' me':''}">
-          <div class="rank-num">${i+1}</div>
-          <div class="rank-name">${name}</div>
-          <div class="rank-bar-wrap"><div class="rank-bar" style="width:${pct}%;background:${isMe?'var(--primary)':'#CBD5E1'}"></div></div>
-          <div class="rank-val">${fmt.e(storeCA[si])}</div>
-        </div>`;
-      }).join('')}
-      ${myRank>10?`<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)">
-        <div class="rank-row me">
-          <div class="rank-num">${myRank}</div>
-          <div class="rank-name">${store.n.replace('Castorama ','').replace('Casto ','')}</div>
-          <div class="rank-bar-wrap"><div class="rank-bar" style="width:${Math.round(storeCA[idx]/maxCA*100)}%;background:var(--primary)"></div></div>
-          <div class="rank-val">${fmt.e(storeCA[idx])}</div>
-        </div>
-      </div>`:''}
-    </div>`;
-}
+    <div class="lsec"><div class="lsec-bar"></div>ÉVOLUTION HEBDOMADAIRE — 22 SEMAINES</div>
+    <div class="lchart-grid">
+      ${chartCard('🏠','Visites en magasin',d.visits,'gv'+idx,d.lastV,d.avgV)}
+      ${chartCard('📞','Clics d\'appel',d.calls,'gc'+idx,d.lastC,d.avgC)}
+      ${chartCard('🗺','Demandes d\'itinéraire',d.routes,'gr'+idx,d.lastR,d.avgR)}
+    </div>`;}
 
 // ── MAP ──
 const PIN=`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="44" viewBox="0 0 40 54">
@@ -313,15 +328,15 @@ const PIN_ACTIVE=`<svg xmlns="http://www.w3.org/2000/svg" width="36" height="50"
   <rect x="20.5" y="17" width="12" height="6" rx="3" fill="#0D1B4B"/>
 </svg>`;
 
-const iconNormal=L.divIcon({html:`<div style="filter:drop-shadow(1px 2px 4px rgba(0,0,0,.4));cursor:pointer;transition:transform .15s;transform-origin:bottom center" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">${PIN}</div>`,iconSize:[32,44],iconAnchor:[16,44],popupAnchor:[0,-44],className:''});
-const iconActive=L.divIcon({html:`<div style="filter:drop-shadow(2px 3px 8px rgba(0,0,0,.5));cursor:pointer;transform-origin:bottom center">${PIN_ACTIVE}</div>`,iconSize:[36,50],iconAnchor:[18,50],popupAnchor:[0,-50],className:''});
+const iconNormal=L.divIcon({html:`<div style="filter:drop-shadow(1px 2px 4px rgba(0,0,0,.4));cursor:pointer;transition:transform .15s;transform-origin:bottom center" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">${PIN}</div>`,iconSize:[32,44],iconAnchor:[16,44],className:''});
+const iconActive=L.divIcon({html:`<div style="filter:drop-shadow(2px 3px 8px rgba(0,0,0,.5));cursor:pointer;transform-origin:bottom center">${PIN_ACTIVE}</div>`,iconSize:[36,50],iconAnchor:[18,50],className:''});
 
 const map=L.map('map',{center:[46.6,2.35],zoom:6});
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
 
 const cluster=L.markerClusterGroup({
   maxClusterRadius:55,showCoverageOnHover:false,
-  iconCreateFunction(c){const n=c.getChildCount(),sz=n<10?42:n<20?50:58;return L.divIcon({html:`<div class="casto-cluster" style="width:${sz+10}px;height:${sz+10}px;"><div class="casto-cluster-inner" style="width:${sz}px;height:${sz}px;font-size:${sz<50?14:16}px;">${n}</div></div>`,iconSize:[sz+10,sz+10],iconAnchor:[(sz+10)/2,(sz+10)/2],className:''});}
+  iconCreateFunction(c){const n=c.getChildCount(),sz=n<10?40:n<20?48:56;return L.divIcon({html:`<div class="casto-cluster" style="width:${sz+10}px;height:${sz+10}px"><div class="casto-cluster-inner" style="width:${sz}px;height:${sz}px;font-size:${sz<50?13:15}px">${n}</div></div>`,iconSize:[sz+10,sz+10],iconAnchor:[(sz+10)/2,(sz+10)/2],className:''});}
 });
 
 let activeMarker=null;
@@ -333,12 +348,10 @@ const markers=stores.map((s,idx)=>{
     renderPanel(s,idx);
     map.setView([s.lat,s.lng],13,{animate:true,duration:0.8});
   });
-  cluster.addLayer(m);
-  return m;
+  cluster.addLayer(m);return m;
 });
 map.addLayer(cluster);
 
-// Reset button
 const ResetCtrl=L.Control.extend({options:{position:'topright'},onAdd(){
   const btn=L.DomUtil.create('button');
   btn.title='Vue France entière';
@@ -349,9 +362,7 @@ const ResetCtrl=L.Control.extend({options:{position:'topright'},onAdd(){
 }});
 map.addControl(new ResetCtrl());
 
-// Default: Mandelieu (index 1)
-markers[1].setIcon(iconActive);
-activeMarker=markers[1];
+markers[1].setIcon(iconActive);activeMarker=markers[1];
 renderPanel(stores[1],1);
 map.setView([stores[1].lat,stores[1].lng],12);
 </script>
