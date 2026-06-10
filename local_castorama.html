@@ -415,33 +415,38 @@ function renderPanel(store,idx){
       ${chartCard('🗺','Demandes d\'itinéraire',d.routes,'gr'+idx,d.lastR,d.avgR)}
     </div>
 
-    <div style="border-top:2px solid #E5E7EB;margin-top:4px;padding-top:12px;display:grid;grid-template-columns:1fr 1fr;gap:10px">
-      <!-- LEFT -->
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div class="lsec"><div class="lsec-bar"></div>FAITS MARQUANTS — SEMAINE DU 25 MAI 2026</div>
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px">
-          ${hCard('#F59E0B','🏆','PLUS DE VISITES',mostV,nf(mostV.lastV),'visites en magasin',`Sem. préc. : ${nf(mostV.prevV)} · Moy. : ${nf(mostV.avgV)}`)}
-          ${hCard('#22C55E','🚀','MEILLEURE PROGRESSION',bestP,(bestP.vsPrevV>=0?'+':'')+bestP.vsPrevV.toFixed(1)+' %',`${nf(bestP.prevV)} → ${nf(bestP.lastV)} visites`,`Moy. ${nf(bestP.avgV)} · vs moy. ${bestP.vsMoyV>=0?'+':''}${bestP.vsMoyV.toFixed(1)} %`)}
-          ${hCard('#F97316','👁','MOINS DE VISITES',leastV,nf(leastV.lastV),'visites en magasin',`Sem. préc. : ${nf(leastV.prevV)} · Moy. : ${nf(leastV.avgV)}`)}
-          ${hCard('#EF4444','📉','PLUS BASSE PROGRESSION',worstP,(worstP.vsPrevV>=0?'+':'')+worstP.vsPrevV.toFixed(1)+' %',`${nf(worstP.prevV)} → ${nf(worstP.lastV)} visites`,`Moy. ${nf(worstP.avgV)} · vs moy. ${worstP.vsMoyV>=0?'+':''}${worstP.vsMoyV.toFixed(1)} %`)}
-        </div>
-        <div class="lsec"><div class="lsec-bar"></div>ÉVOLUTION HEBDOMADAIRE — 22 SEMAINES</div>
-        <div class="lchart-card" style="padding:12px">
-          <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:1px">Visites en magasin — Top 5 magasins</div>
-          <div style="font-size:8.5px;color:#9CA3AF;margin-bottom:6px">29 déc. 2025 → 25 mai 2026</div>
-          <canvas id="evo-canvas" width="500" height="185" style="width:100%;height:auto;cursor:crosshair;display:block"></canvas>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:6px">
-            ${top5.map((t,i)=>`<span style="display:inline-flex;align-items:center;gap:3px;font-size:8.5px;color:#6B7280"><svg width="18" height="8"><line x1="0" y1="4" x2="18" y2="4" stroke="${RANK_COLORS[i]}" stroke-width="2"/></svg>${shortN(t)} (${t.s.cp})</span>`).join('')}
-          </div>
+    <div style="border-top:2px solid #E5E7EB;margin-top:4px;padding-top:12px;display:flex;flex-direction:column;gap:10px">
+
+      <!-- FAITS MARQUANTS — pleine largeur, 4 cartes en ligne -->
+      <div class="lsec"><div class="lsec-bar"></div>FAITS MARQUANTS — SEMAINE DU 25 MAI 2026</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px">
+        ${hCard('#F59E0B','🏆','PLUS DE VISITES',mostV,nf(mostV.lastV),'visites en magasin',`Sem. préc. : ${nf(mostV.prevV)} · Moy. : ${nf(mostV.avgV)}`)}
+        ${hCard('#22C55E','🚀','MEILLEURE PROGRESSION',bestP,(bestP.vsPrevV>=0?'+':'')+bestP.vsPrevV.toFixed(1)+' %',`${nf(bestP.prevV)} → ${nf(bestP.lastV)} visites`,`Moy. ${nf(bestP.avgV)} · vs moy. ${bestP.vsMoyV>=0?'+':''}${bestP.vsMoyV.toFixed(1)} %`)}
+        ${hCard('#F97316','👁','MOINS DE VISITES',leastV,nf(leastV.lastV),'visites en magasin',`Sem. préc. : ${nf(leastV.prevV)} · Moy. : ${nf(leastV.avgV)}`)}
+        ${hCard('#EF4444','📉','PLUS BASSE PROGRESSION',worstP,(worstP.vsPrevV>=0?'+':'')+worstP.vsPrevV.toFixed(1)+' %',`${nf(worstP.prevV)} → ${nf(worstP.lastV)} visites`,`Moy. ${nf(worstP.avgV)} · vs moy. ${worstP.vsMoyV>=0?'+':''}${worstP.vsMoyV.toFixed(1)} %`)}
+      </div>
+
+      <!-- ÉVOLUTION — pleine largeur -->
+      <div class="lsec"><div class="lsec-bar"></div>ÉVOLUTION HEBDOMADAIRE — 22 SEMAINES</div>
+      <div class="lchart-card" style="padding:14px">
+        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:1px">Visites en magasin — Top 5 magasins</div>
+        <div style="font-size:8.5px;color:#9CA3AF;margin-bottom:8px">29 déc. 2025 → 25 mai 2026</div>
+        <canvas id="evo-canvas" width="900" height="200" style="width:100%;height:auto;cursor:crosshair;display:block"></canvas>
+        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
+          ${top5.map((t,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:9px;color:#6B7280"><svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="${RANK_COLORS[i]}" stroke-width="2.5"/></svg>${shortN(t)} (${t.s.cp})</span>`).join('')}
         </div>
       </div>
-      <!-- RIGHT -->
-      <div style="display:flex;flex-direction:column;gap:8px">
-        <div class="lsec"><div class="lsec-bar"></div>CLASSEMENT DES VISITES — SEMAINE DU 25 MAI 2026</div>
-        <div class="lchart-card" style="padding:4px 6px">
-          ${top5.map((t,i)=>rankRow(i+1,t,RANK_COLORS[i],i===0)).join('')}
+
+      <!-- CLASSEMENT + TABLEAU — côte à côte -->
+      <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:10px">
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="lsec"><div class="lsec-bar"></div>CLASSEMENT DES VISITES — SEMAINE DU 25 MAI 2026</div>
+          <div class="lchart-card" style="padding:4px 6px;flex:1">
+            ${top5.map((t,i)=>rankRow(i+1,t,RANK_COLORS[i],i===0)).join('')}
+          </div>
         </div>
-        <div class="lsec"><div class="lsec-bar"></div>TABLEAU RÉCAPITULATIF</div>
+        <div style="display:flex;flex-direction:column;gap:8px">
+          <div class="lsec"><div class="lsec-bar"></div>TABLEAU RÉCAPITULATIF</div>
         <div class="lchart-card" style="padding:0;overflow:hidden">
           <table style="width:100%;border-collapse:collapse">
             <thead><tr style="background:#0072CE">
@@ -455,6 +460,7 @@ function renderPanel(store,idx){
             </tr></thead>
             <tbody>${top5.map((t,i)=>tableRow(t,i)).join('')}</tbody>
           </table>
+        </div>
         </div>
       </div>
     </div>`;
