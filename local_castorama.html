@@ -9,15 +9,18 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;overflow:hidden;background:#EEF1F6}
-#layout{position:fixed;top:88px;bottom:0;left:0;right:0;display:flex}
-#map{flex:0 0 44%;height:100%}
-#panel{flex:1;overflow-y:auto;padding:12px;display:flex;flex-direction:column;gap:8px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;overflow-y:auto;background:#EEF1F6}
+#layout{display:flex;margin-top:88px}
+#map-col{flex:0 0 44%;overflow:hidden}
+#map{width:100%;height:400px}
+#panel{flex:1;padding:12px 12px 2px;display:flex;flex-direction:column;gap:8px}
+.casto-cluster{background:rgba(0,114,206,.22);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.casto-cluster-inner{background:#0072CE;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+#global-section{display:flex;flex-direction:column;gap:8px;padding:0 12px 20px}
 
 .lhdr{background:#fff;border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .lhdr-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
-.lhdr-logo{width:42px;height:42px;background:#0072CE;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:900;color:#fff;flex-shrink:0}
-.lhdr-logo span{color:#FFD700}
+.lhdr-logo{flex-shrink:0;display:flex;align-items:center}
 .lhdr-name{font-size:14px;font-weight:800;color:#0D1B4B;margin-bottom:2px}
 .lhdr-addr{font-size:10px;color:#555;line-height:1.55}
 .lhdr-link{color:#0072CE;text-decoration:none}.lhdr-link:hover{text-decoration:underline}
@@ -50,15 +53,11 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 .lchart-sub{font-size:7.5px;color:#9CA3AF;margin-bottom:2px}
 .lchart-legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
 .leg{font-size:7.5px;color:#9CA3AF;display:inline-flex;align-items:center;gap:2px}
-.casto-cluster{background:rgba(0,114,206,.22);border-radius:50%;display:flex;align-items:center;justify-content:center}
-.casto-cluster-inner{background:#0072CE;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 </style>
 </head>
 <body>
 
 <nav id="main-nav" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0D1B4B;height:42px;display:flex;align-items:center;padding:0 20px;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif">
-  <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style="height:26px" onerror="this.style.display='none'">
-  <div style="width:1px;height:24px;background:rgba(255,255,255,.2);margin:0 6px"></div>
   <a href="dashboard.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Suivi Produits</a>
   <a href="audit_flux.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Audit de flux</a>
   <a href="competitivite_prix.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Compétitivité prix</a>
@@ -70,8 +69,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 </div>
 
 <div id="layout">
-  <div id="map"></div>
+  <div id="map-col"><div id="map"></div></div>
   <div id="panel"><div id="panel-content"></div></div>
+</div>
+<div id="global-title" style="padding:16px 12px 6px"></div>
+<div id="global-section" style="display:flex;flex-direction:column;gap:8px;padding:0 12px 20px">
+  <div id="global-row1" style="display:flex;gap:8px"></div>
+  <div id="global-row2" style="display:flex;gap:8px"></div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -381,11 +385,16 @@ function renderPanel(store,idx){
       <td style="padding:7px 8px;text-align:center"><span style="background:${vmS?'#DCFCE7':'#FEE2E2'};color:${vmS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px">${vmS?'+':''}${t.vsMoyV.toFixed(1)} %</span></td>
     </tr>`;}
 
+  // ── Bloc 1 : store info dans le panel ──
   document.getElementById('panel-content').innerHTML=`
-    <div style="min-height:calc(100vh - 112px);display:flex;flex-direction:column;gap:8px;padding-bottom:16px">
+    <div id="store-section" style="display:flex;flex-direction:column;gap:8px;padding-bottom:8px">
+    <div style="background:#0D1B4B;color:#fff;padding:9px 14px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px">
+      <div style="width:3px;height:14px;background:#FFD700;border-radius:2px"></div>
+      Performance par magasin
+    </div>
     <div class="lhdr">
       <div class="lhdr-left">
-        <div class="lhdr-logo">C<span>+</span></div>
+        <div class="lhdr-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-7 -7 78 54" width="46" height="32"><path d="M50 6 A22 22 0 1 0 50 34" stroke="#0072CE" stroke-width="12" fill="none" stroke-linecap="butt"/><rect x="42" y="13" width="22" height="14" rx="7" fill="#FFD700"/></svg></div>
         <div>
           <div class="lhdr-name">${store.n}</div>
           <div class="lhdr-addr">📍 ${store.a} — ${store.cp} ${store.c}</div>
@@ -401,34 +410,48 @@ function renderPanel(store,idx){
         </div>
       </div>
     </div>
-
     <div class="lsec"><div class="lsec-bar"></div>INDICATEURS — DERNIÈRE SEMAINE (25 MAI 2026)</div>
     <div class="lkpi-grid">
       ${kpiCard('🏠','VISITES EN MAGASIN',d.lastV,d.prevV,d.avgV,d.vsMoyV,d.vsPrevV)}
       ${kpiCard('📞','CLICS D\'APPEL',d.lastC,d.prevC,d.avgC,d.vsMoyC,d.vsPrevC)}
       ${kpiCard('🗺','DEMANDES D\'ITINÉRAIRE',d.lastR,d.prevR,d.avgR,d.vsMoyR,d.vsPrevR)}
     </div>
-
     <div class="lsec"><div class="lsec-bar"></div>ÉVOLUTION HEBDOMADAIRE — 22 SEMAINES</div>
     <div class="lchart-grid">
       ${chartCard('🏠','Visites en magasin',d.visits,'gv'+idx,d.lastV,d.avgV)}
       ${chartCard('📞','Clics d\'appel',d.calls,'gc'+idx,d.lastC,d.avgC)}
       ${chartCard('🗺','Demandes d\'itinéraire',d.routes,'gr'+idx,d.lastR,d.avgR)}
     </div>
+    </div>`;
 
-    </div>
-    <div style="border-top:2px solid #E5E7EB;margin-top:4px;padding-top:12px;display:flex;flex-direction:column;gap:10px">
+  // ── Titre pleine largeur ──
+  document.getElementById('global-title').innerHTML=`
+    <div style="background:#0D1B4B;color:#fff;padding:9px 14px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px">
+      <div style="width:3px;height:14px;background:#FFD700;border-radius:2px"></div>
+      Performance globale des magasins
+    </div>`;
 
-      <!-- FAITS MARQUANTS — pleine largeur, 4 cartes en ligne -->
+  // ── Rangée 1 : faits marquants (gauche) + classement (droite) ──
+  document.getElementById('global-row1').innerHTML=`
+    <div style="flex:0 0 44%;display:flex;flex-direction:column;gap:8px">
       <div class="lsec"><div class="lsec-bar"></div>FAITS MARQUANTS — SEMAINE DU 25 MAI 2026</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
         ${hCard('#F59E0B','🏆','PLUS DE VISITES',mostV,nf(mostV.lastV),'visites en magasin',`Sem. préc. : ${nf(mostV.prevV)} · Moy. : ${nf(mostV.avgV)}`)}
         ${hCard('#22C55E','🚀','MEILLEURE PROGRESSION',bestP,(bestP.vsPrevV>=0?'+':'')+bestP.vsPrevV.toFixed(1)+' %',`${nf(bestP.prevV)} → ${nf(bestP.lastV)} visites`,`Moy. ${nf(bestP.avgV)} · vs moy. ${bestP.vsMoyV>=0?'+':''}${bestP.vsMoyV.toFixed(1)} %`)}
         ${hCard('#F97316','👁','MOINS DE VISITES',leastV,nf(leastV.lastV),'visites en magasin',`Sem. préc. : ${nf(leastV.prevV)} · Moy. : ${nf(leastV.avgV)}`)}
         ${hCard('#EF4444','📉','PLUS BASSE PROGRESSION',worstP,(worstP.vsPrevV>=0?'+':'')+worstP.vsPrevV.toFixed(1)+' %',`${nf(worstP.prevV)} → ${nf(worstP.lastV)} visites`,`Moy. ${nf(worstP.avgV)} · vs moy. ${worstP.vsMoyV>=0?'+':''}${worstP.vsMoyV.toFixed(1)} %`)}
       </div>
+    </div>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px">
+      <div class="lsec"><div class="lsec-bar"></div>CLASSEMENT DES VISITES — SEMAINE DU 25 MAI 2026</div>
+      <div class="lchart-card" style="padding:4px 6px;flex:1">
+        ${top5.map((t,i)=>rankRow(i+1,t,RANK_COLORS[i],i===0)).join('')}
+      </div>
+    </div>`;
 
-      <!-- ÉVOLUTION — pleine largeur -->
+  // ── Rangée 2 : évolution (gauche) + tableau (droite) ──
+  document.getElementById('global-row2').innerHTML=`
+    <div style="flex:0 0 44%;display:flex;flex-direction:column;gap:8px">
       <div class="lsec"><div class="lsec-bar"></div>ÉVOLUTION HEBDOMADAIRE — 22 SEMAINES</div>
       <div class="lchart-card" style="padding:14px">
         <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:1px">Visites en magasin — Top 5 magasins</div>
@@ -438,36 +461,34 @@ function renderPanel(store,idx){
           ${top5.map((t,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:9px;color:#6B7280"><svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="${RANK_COLORS[i]}" stroke-width="2.5"/></svg>${shortN(t)} (${t.s.cp})</span>`).join('')}
         </div>
       </div>
-
-      <!-- CLASSEMENT + TABLEAU — côte à côte -->
-      <div style="display:grid;grid-template-columns:1fr 1.5fr;gap:10px">
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <div class="lsec"><div class="lsec-bar"></div>CLASSEMENT DES VISITES — SEMAINE DU 25 MAI 2026</div>
-          <div class="lchart-card" style="padding:4px 6px;flex:1">
-            ${top5.map((t,i)=>rankRow(i+1,t,RANK_COLORS[i],i===0)).join('')}
-          </div>
-        </div>
-        <div style="display:flex;flex-direction:column;gap:8px">
-          <div class="lsec"><div class="lsec-bar"></div>TABLEAU RÉCAPITULATIF</div>
-        <div class="lchart-card" style="padding:0;overflow:hidden">
-          <table style="width:100%;border-collapse:collapse">
-            <thead><tr style="background:#0072CE">
-              <th style="padding:8px 10px;text-align:left;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Magasin</th>
-              <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">CP</th>
-              <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Sem. 25 mai</th>
-              <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Sem. 18 mai</th>
-              <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">Prog. S/S</th>
-              <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Moy. 22 sem.</th>
-              <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">vs Moy.</th>
-            </tr></thead>
-            <tbody>${top5.map((t,i)=>tableRow(t,i)).join('')}</tbody>
-          </table>
-        </div>
-        </div>
+    </div>
+    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px">
+      <div class="lsec"><div class="lsec-bar"></div>TABLEAU RÉCAPITULATIF</div>
+      <div class="lchart-card" style="padding:0;overflow:hidden">
+        <table style="width:100%;border-collapse:collapse">
+          <thead><tr style="background:#0072CE">
+            <th style="padding:8px 10px;text-align:left;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Magasin</th>
+            <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">CP</th>
+            <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Sem. 25 mai</th>
+            <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Sem. 18 mai</th>
+            <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">Prog. S/S</th>
+            <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Moy. 22 sem.</th>
+            <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">vs Moy.</th>
+          </tr></thead>
+          <tbody>${top5.map((t,i)=>tableRow(t,i)).join('')}</tbody>
+        </table>
       </div>
     </div>`;
 
   setupEvoChart(top5);
+  requestAnimationFrame(()=>{
+    const el=document.getElementById('store-section');
+    if(!el)return;
+    const h=el.offsetHeight+14;
+    document.getElementById('layout').style.height=h+'px';
+    document.getElementById('map').style.height=h+'px';
+    map.invalidateSize();
+  });
 }
 
 // ── MAP ──
