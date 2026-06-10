@@ -370,14 +370,8 @@ function DChart({def,data}){
   </div>);
 }
 function BilanGlobal({stats,ts}){
-  const [active,setActive]=useState('investment');
   return(<div className="sec">
     <div className="stit">Bilan global</div>
-    <div style={{display:'flex',gap:8,marginBottom:14}}>
-      {CHIPS.map(c=><button key={c.k} className="chip" style={{background:active===c.k?c.c:c.bg,color:active===c.k?'#fff':c.c,borderColor:active===c.k?c.c:'transparent'}} onClick={()=>setActive(c.k)}>
-        <span className="chipl">{c.l}</span><span className="chipv">{c.f(stats[c.k]??0)}</span>
-      </button>)}
-    </div>
     <div className="g2">{CHARTS.map(d=><DChart key={d.t} def={d} data={ts}/>)}</div>
   </div>);
 }
