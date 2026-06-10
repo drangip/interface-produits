@@ -382,6 +382,7 @@ function renderPanel(store,idx){
     </tr>`;}
 
   document.getElementById('panel-content').innerHTML=`
+    <div style="min-height:calc(100vh - 112px);display:flex;flex-direction:column;gap:8px;padding-bottom:16px">
     <div class="lhdr">
       <div class="lhdr-left">
         <div class="lhdr-logo">C<span>+</span></div>
@@ -415,6 +416,7 @@ function renderPanel(store,idx){
       ${chartCard('🗺','Demandes d\'itinéraire',d.routes,'gr'+idx,d.lastR,d.avgR)}
     </div>
 
+    </div>
     <div style="border-top:2px solid #E5E7EB;margin-top:4px;padding-top:12px;display:flex;flex-direction:column;gap:10px">
 
       <!-- FAITS MARQUANTS — pleine largeur, 4 cartes en ligne -->
