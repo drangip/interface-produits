@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Local Castorama | WPP Media</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+<style>
+:root{--bg:#EEF1F6;--card:#fff;--nav:#0D1B4B;--primary:#006AB3;--t1:#0F1B35;--t2:#4B5675;--t3:#9CA3AF;--border:#E5E7EB;--r:10px;--sh:0 1px 4px rgba(13,27,75,.07),0 2px 10px rgba(13,27,75,.04);--green:#22C55E;--red:#EF4444;--orange:#F97316}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;overflow:hidden}
+#layout{position:fixed;top:88px;bottom:0;left:0;right:0;display:flex}
+#map{flex:0 0 58%;height:100%}
+#panel{flex:1;overflow-y:auto;padding:14px;background:var(--bg);display:flex;flex-direction:column;gap:10px}
+.card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:14px}
+.ct{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--t3);margin-bottom:6px}
+.stit{font-size:13px;font-weight:700;color:var(--t1);margin-bottom:10px;padding-bottom:6px;border-bottom:2px solid var(--primary)}
+.store-hdr{background:linear-gradient(135deg,#0D1B4B 0%,#006AB3 100%);border-radius:var(--r);padding:16px;color:#fff}
+.store-hdr-name{font-size:15px;font-weight:800;margin-bottom:3px}
+.store-hdr-addr{font-size:11px;opacity:.7;line-height:1.5}
+.kpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.kpi-card{background:var(--card);border-radius:var(--r);box-shadow:var(--sh);padding:10px}
+.kpi-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:var(--t3);margin-bottom:3px}
+.kpi-val{font-size:19px;font-weight:800;line-height:1;margin-bottom:3px}
+.kpi-delta{font-size:10px;font-weight:600;padding:1px 5px;border-radius:3px;display:inline-block;margin-bottom:5px}
+.pos{background:#DCFCE7;color:#16A34A}.neg{background:#FEE2E2;color:#DC2626}
+.rank-row{display:flex;align-items:center;gap:8px;padding:6px 4px;border-radius:5px}
+.rank-row.me{background:#EFF6FF}
+.rank-num{font-size:12px;font-weight:800;color:var(--t3);width:18px;text-align:center;flex-shrink:0}
+.rank-row.me .rank-num{color:var(--primary)}
+.rank-name{flex:1;font-size:11px;color:var(--t1);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.rank-row.me .rank-name{font-weight:700;color:var(--primary)}
+.rank-bar-wrap{width:70px;flex-shrink:0;height:5px;background:#F1F5F9;border-radius:3px;overflow:hidden}
+.rank-bar{height:100%;border-radius:3px}
+.rank-val{font-size:10px;font-weight:700;color:var(--t2);min-width:44px;text-align:right;flex-shrink:0}
+.casto-cluster{background:rgba(0,114,206,.25);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.casto-cluster-inner{background:#0072CE;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:bold;border:3px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3);font-family:Arial,sans-serif}
+</style>
+</head>
+<body>
+
+<nav id="main-nav" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0D1B4B;height:42px;display:flex;align-items:center;padding:0 20px;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif">
+  <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style="height:26px" onerror="this.style.display='none'">
+  <div style="width:1px;height:24px;background:rgba(255,255,255,.2);margin:0 6px"></div>
+  <a href="dashboard.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Suivi Produits</a>
+  <a href="audit_flux.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Audit de flux</a>
+  <a href="competitivite_prix.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Compétitivité prix</a>
+  <a href="local_castorama.html" style="padding:4px 14px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Local Castorama</a>
+  <a href="mesure_efficacite.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
+</nav>
+<div id="subbar" style="position:fixed;top:42px;left:0;right:0;height:46px;background:#fff;border-bottom:1px solid #E5E7EB;z-index:100;display:flex;align-items:center;justify-content:flex-end;padding:0 20px;">
+  <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style="height:28px" onerror="this.style.display='none'">
+</div>
+
+<div id="layout">
+  <div id="map"></div>
+  <div id="panel"><div id="panel-content"></div></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script>
+// ── UTILS ──
+function seededRand(seed){let s=seed;return()=>{s=(s*16807+0)%2147483647;return(s-1)/2147483646;};}
+const fmt={
+  k:v=>{if(v>=1e6)return(v/1e6).toFixed(1)+'M';if(v>=1e3)return(v/1e3).toFixed(0)+'k';return Math.round(v||0).toString();},
+  e:v=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',maximumFractionDigits:0}).format(v||0),
+  p:(v,d=1)=>`${(v||0).toFixed(d)}%`
+};
+
+function sparkline(data,color,w,h){
+  w=w||80;h=h||26;
+  const mn=Math.min(...data),mx=Math.max(...data),rng=mx-mn||1;
+  const pts=data.map((v,i)=>`${i/(data.length-1)*w},${h-2-(v-mn)/rng*(h-6)+2}`).join(' ');
+  return`<svg width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" style="display:block;margin-top:4px"><polyline points="${pts}" fill="none" stroke="${color}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+}
+
+// ── STORES DATA ──
+const stores=[
+  {n:"Castorama Bourg-en-Bresse",cp:"01440",c:"Bourg-en-Bresse",a:"128 b rue Lépine, Viriat",lat:46.195,lng:5.220},
+  {n:"Castorama Mandelieu",cp:"06210",c:"Mandelieu",a:"C.c. Géant route de Fréjus",lat:43.545,lng:6.937},
+  {n:"Castorama Antibes",cp:"06600",c:"Antibes",a:"C.d. 35 - Les Semboules",lat:43.590,lng:7.092},
+  {n:"Castorama Le Cannet",cp:"06110",c:"Le Cannet",a:"17 chemin du Carimäï",lat:43.577,lng:7.018},
+  {n:"Castorama Marseille St-Loup",cp:"13010",c:"Marseille",a:"3 rue d'André Bardon",lat:43.280,lng:5.407},
+  {n:"Castorama Vitrolles",cp:"13127",c:"Vitrolles",a:"Centre commercial Carrefour",lat:43.459,lng:5.248},
+  {n:"Castorama Plan de Campagne",cp:"13170",c:"Les Pennes Mirabeau",a:"C.c. Plan de Campagne",lat:43.422,lng:5.316},
+  {n:"Castorama Aix en Provence",cp:"13547",c:"Aix en Provence",a:"115 rue Beauvoisin",lat:43.510,lng:5.447},
+  {n:"Castorama Caen Fleury-sur-Orne",cp:"14123",c:"Fleury sur Orne",a:"Avenue d'Harcourt",lat:49.135,lng:-0.385},
+  {n:"Castorama Caen Hérouville",cp:"14200",c:"Hérouville St Clair",a:"Rue des Siettes",lat:49.205,lng:-0.335},
+  {n:"Castorama Angoulême",cp:"16000",c:"Angoulême",a:"Rond point de Girac route de Bordeaux",lat:45.648,lng:0.149},
+  {n:"Castorama La Rochelle",cp:"17440",c:"Aytré",a:"Z.a.c. de Belle Aire",lat:46.131,lng:-1.140},
+  {n:"Castorama Dijon",cp:"21160",c:"Marsannay-la-Côte",a:"Zone commerciale Acti Sud",lat:47.255,lng:5.022},
+  {n:"Castorama Besançon",cp:"25000",c:"Besançon",a:"Rue de l'If – Espace Valentin Sud",lat:47.258,lng:6.020},
+  {n:"Castorama St Marcel Les Valence",cp:"26320",c:"St Marcel Les Valence",a:"Quartier de la Laye",lat:44.922,lng:4.879},
+  {n:"Castorama Quimper",cp:"29000",c:"Quimper",a:"2 avenue Jacques Chaban Delmas",lat:47.986,lng:-4.083},
+  {n:"Castorama Brest",cp:"29200",c:"Brest",a:"ZI de Kergaradec 22 rue André Colin",lat:48.415,lng:-4.462},
+  {n:"Castorama Nîmes",cp:"30900",c:"Nîmes",a:"42 chemin du Capouchinè",lat:43.840,lng:4.365},
+  {n:"Castorama Portet sur Garonne",cp:"31128",c:"Portet sur Garonne",a:"2 route de Francazal",lat:43.519,lng:1.402},
+  {n:"Castorama Toulouse L'Union",cp:"31240",c:"L'Union",a:"3 avenue de Toulouse",lat:43.652,lng:1.497},
+  {n:"Castorama Toulouse St Orens",cp:"31650",c:"Saint-Orens",a:"2 rue du Commerce",lat:43.555,lng:1.510},
+  {n:"Castorama Toulouse Blagnac",cp:"31700",c:"Blagnac",a:"Rue Gustave Flaubert",lat:43.635,lng:1.390},
+  {n:"Castorama Villenave d'Ornon",cp:"33140",c:"Villenave d'Ornon",a:"1 rue André Bourvil",lat:44.774,lng:-0.566},
+  {n:"Castorama Bordeaux Lormont",cp:"33310",c:"Lormont",a:"ZI La Gardette Sud – Avenue de Paris",lat:44.882,lng:-0.518},
+  {n:"Castorama Mérignac",cp:"33700",c:"Mérignac",a:"29 avenue des Martyrs de la Libération",lat:44.836,lng:-0.637},
+  {n:"Castorama Béziers",cp:"34500",c:"Béziers",a:"Z.a.c de la Domitienne",lat:43.356,lng:3.228},
+  {n:"Castorama Lattes",cp:"34970",c:"Lattes",a:"Pae de Soriech",lat:43.568,lng:3.896},
+  {n:"Castorama St Clément",cp:"34980",c:"St Clément de Rivière",a:"C.c. Trifontaine rte de Ganges",lat:43.683,lng:3.870},
+  {n:"Castorama Rennes-St Jacques",cp:"35136",c:"St Jacques de la Lande",a:"140 rue du Temple de Blosne",lat:48.063,lng:-1.695},
+  {n:"Castorama Cap Malo",cp:"35520",c:"Melesse",a:"Avenue du Phare du Grand Jardin",lat:48.183,lng:-1.681},
+  {n:"Castorama Chambray-Lès-Tours",cp:"37170",c:"Chambray Les Tours",a:"RN10 ZAC de la Vrillonnerie",lat:47.337,lng:0.676},
+  {n:"Castorama Bourgoin-Jallieu",cp:"38300",c:"Bourgoin Jallieu",a:"Rue Denis Papin",lat:45.588,lng:5.278},
+  {n:"Castorama Grenoble",cp:"38400",c:"St Martin d'Hères",a:"Z.a.c. de Champ Roman",lat:45.165,lng:5.765},
+  {n:"Castorama Roanne",cp:"42300",c:"Mably",a:"Rue Jean de la Fontaine",lat:46.044,lng:4.076},
+  {n:"Castorama Nantes La Beaujoire",cp:"44300",c:"Nantes",a:"Boulevard de la Beaujoire",lat:47.239,lng:-1.537},
+  {n:"Castorama St Nazaire",cp:"44600",c:"St Nazaire",a:"Z.a.c. Océanis",lat:47.297,lng:-2.189},
+  {n:"Castorama Nantes Orvault",cp:"44700",c:"Orvault",a:"Le Forum 2 rue Hélène Boucher",lat:47.268,lng:-1.592},
+  {n:"Castorama Olivet",cp:"45160",c:"Olivet",a:"20 rue de Gascogne",lat:47.855,lng:1.905},
+  {n:"Castorama Agen",cp:"47000",c:"Agen",a:"Z.a.c. Agen Sud avenue de l'Atlantique",lat:44.199,lng:0.612},
+  {n:"Castorama Reims Thillois",cp:"51370",c:"Thillois",a:"RN 31 ZAC Nord Thillois",lat:49.270,lng:3.940},
+  {n:"Castorama Vandoeuvre",cp:"54504",c:"Vandoeuvre Les Nancy",a:"Espace Vandoeuvre Sud",lat:48.659,lng:6.163},
+  {n:"Castorama Vannes",cp:"56000",c:"Vannes",a:"Za de Pen Mené",lat:47.657,lng:-2.757},
+  {n:"Castorama Metz",cp:"57130",c:"Jouy aux Arches",a:"Zone Actisud 76 route de Metz",lat:49.064,lng:6.093},
+  {n:"Castorama Terville",cp:"57180",c:"Terville",a:"Avenue du 14 Juillet 1789",lat:49.372,lng:6.165},
+  {n:"Castorama Dunkerque",cp:"59140",c:"Dunkerque",a:"Rue de Rome",lat:51.024,lng:2.370},
+  {n:"Castorama Englos",cp:"59481",c:"Haubourdin",a:"Centre commercial",lat:50.634,lng:2.986},
+  {n:"Casto Solférino",cp:"59800",c:"Lille",a:"152 rue Solférino",lat:50.630,lng:3.066},
+  {n:"Castorama Bondues",cp:"59910",c:"Bondues",a:"422 avenue du Général de Gaulle",lat:50.704,lng:3.108},
+  {n:"Castorama Creil St Maximin",cp:"60740",c:"St Maximin",a:"ZAC les Longères des Haies",lat:49.280,lng:2.528},
+  {n:"Castorama Hénin-Beaumont",cp:"62110",c:"Hénin Beaumont",a:"Z.a.c. le Bord des Eaux",lat:50.420,lng:2.949},
+  {n:"Castorama Clermont-Ferrand",cp:"63170",c:"Aubière",a:"Centre commercial Cap Sud",lat:45.739,lng:3.126},
+  {n:"Castorama Pau – Lescar",cp:"64232",c:"Lescar",a:"Centre Lescar Soleil",lat:43.342,lng:-0.408},
+  {n:"Castorama Anglet",cp:"64600",c:"Anglet",a:"Zone de Jorlis bd du B.A.B.",lat:43.485,lng:-1.524},
+  {n:"Castorama Perpignan",cp:"66100",c:"Perpignan",a:"1270 avenue d'Espagne",lat:42.693,lng:2.891},
+  {n:"Castorama Strasbourg",cp:"67452",c:"Mundolsheim",a:"Route nationale 63",lat:48.619,lng:7.752},
+  {n:"Castorama Colmar",cp:"68027",c:"Colmar",a:"28 avenue de la Foire aux Vins",lat:48.083,lng:7.356},
+  {n:"Castorama Kingersheim",cp:"68264",c:"Kingersheim",a:"150 route de Richwiller",lat:47.795,lng:7.343},
+  {n:"Castorama Rillieux-La-Pape",cp:"69140",c:"Rillieux La Pape",a:"Le Champ du Roy",lat:45.823,lng:4.892},
+  {n:"Castorama Dardilly",cp:"69570",c:"Dardilly",a:"Parc d'affaires route du Paisy",lat:45.803,lng:4.758},
+  {n:"Castorama Bron",cp:"69675",c:"Bron",a:"Aéroport de Lyon Bron",lat:45.728,lng:4.934},
+  {n:"Castorama Givors",cp:"69700",c:"Givors",a:"Centre commercial Carrefour",lat:45.578,lng:4.773},
+  {n:"Castorama Chalon-sur-Saône",cp:"71100",c:"Chalon sur Saône",a:"Centre commercial Chalon Sud",lat:46.775,lng:4.855},
+  {n:"Castorama Le Mans",cp:"72021",c:"Le Mans",a:"Z.a. de l'Ardoise route d'Alençon",lat:47.998,lng:0.188},
+  {n:"Castorama Chambéry",cp:"73000",c:"Chambéry",a:"ZI Landiers Nord rue des Marais",lat:45.571,lng:5.918},
+  {n:"Castorama Metz Tessy (Annecy)",cp:"74370",c:"Metz-Tessy",a:"Zone de la Bouvarde",lat:45.924,lng:6.089},
+  {n:"Castorama Bir Hakeim",cp:"75015",c:"Paris 15e",a:"11 boulevard de Grenelle",lat:48.851,lng:2.292},
+  {n:"Castorama Place de Clichy",cp:"75018",c:"Paris 18e",a:"1/3 rue de Caulaincourt",lat:48.888,lng:2.326},
+  {n:"Castorama Nation",cp:"75020",c:"Paris 20e",a:"9/11 cours de Vincennes",lat:48.848,lng:2.395},
+  {n:"Castorama Barentin",cp:"76360",c:"Barentin",a:"Centre commercial La Carbonnière",lat:49.548,lng:0.957},
+  {n:"Castorama Melun",cp:"77000",c:"Melun",a:"Z.A.C du Champ de Foire",lat:48.540,lng:2.665},
+  {n:"Castorama Claye-Souilly",cp:"77410",c:"Claye Souilly",a:"Rue Jean Monnet ZAC des Sablons",lat:48.940,lng:2.686},
+  {n:"Castorama Vélizy",cp:"78140",c:"Vélizy Villacoublay",a:"Rue André Citroën ZA Vélizy",lat:48.779,lng:2.184},
+  {n:"Castorama Chambourcy",cp:"78240",c:"Chambourcy",a:"Les Vergers de la Plaine",lat:48.910,lng:1.933},
+  {n:"Castorama Coignières",cp:"78310",c:"Coignières",a:"76 route National 10",lat:48.739,lng:1.909},
+  {n:"Castorama Les-Clayes-Sous-Bois",cp:"78340",c:"Les Clayes Sous Bois",a:"90 avenue Henri Barbusse",lat:48.827,lng:1.985},
+  {n:"Castorama Niort",cp:"79043",c:"Niort",a:"10 rue Turgot",lat:46.323,lng:-0.466},
+  {n:"Castorama Toulon La Garde",cp:"83130",c:"La Garde",a:"Avenue de Draguignan ZI Toulon Est",lat:43.121,lng:5.983},
+  {n:"Castorama La Seyne sur Mer",cp:"83500",c:"La Seyne sur Mer",a:"168 avenue Robert Brun",lat:43.101,lng:5.881},
+  {n:"Castorama Fréjus",cp:"83600",c:"Fréjus",a:"Zone d'Activité Grand Esterel",lat:43.434,lng:6.729},
+  {n:"Castorama Avignon",cp:"84000",c:"Avignon",a:"600 rue du Bon Vent",lat:43.950,lng:4.810},
+  {n:"Castorama Poitiers",cp:"86000",c:"Poitiers",a:"137 avenue du 8 Mai 1945",lat:46.578,lng:0.340},
+  {n:"Castorama Limoges",cp:"87220",c:"Feytiat",a:"Avenue des Portes de Feytiat",lat:45.811,lng:1.375},
+  {n:"Castorama Villabé",cp:"91100",c:"Villabé",a:"C.cial Villabé A6",lat:48.560,lng:2.444},
+  {n:"Castorama Les Ulis",cp:"91940",c:"Les Ulis",a:"Z.a. Courtaboeuf",lat:48.677,lng:2.163},
+  {n:"Casto Levallois",cp:"92300",c:"Levallois Perret",a:"4 rue Henri Barbusse",lat:48.895,lng:2.286},
+  {n:"Castorama Villemomble",cp:"93250",c:"Villemomble",a:"43 allée du Plateau",lat:48.884,lng:2.523},
+  {n:"Casto Les Lilas",cp:"93260",c:"Les Lilas",a:"15 Boulevard de la Liberté",lat:48.879,lng:2.418},
+  {n:"Castorama Créteil",cp:"94034",c:"Créteil",a:"70 avenue du Maréchal Foch",lat:48.790,lng:2.460},
+  {n:"Castorama Fresnes",cp:"94260",c:"Fresnes",a:"R.n. 186 voie des Laitières",lat:48.756,lng:2.322},
+  {n:"Castorama Ormesson",cp:"94430",c:"Chennevières sur Marne",a:"C.c. Pince-Vent ZAC de l'Hippodrome",lat:48.782,lng:2.553},
+  {n:"Castorama Cormeilles-en-Parisis",cp:"95240",c:"Cormeilles-en-Parisis",a:"Boulevard Joffre RD 392",lat:48.980,lng:2.192},
+  {n:"Castorama Pierrelaye",cp:"95480",c:"Pierrelaye",a:"1 avenue du Général Leclerc",lat:49.022,lng:2.148},
+  {n:"Castorama Gonesse",cp:"95700",c:"Roissy CDG",a:"Z.i. de Paris Nord II",lat:48.990,lng:2.456}
+];
+
+// ── KPI GENERATION ──
+function getStoreData(idx){
+  const r=seededRand(idx*137+42);
+  const actifPct=Math.round(82+r()*14);
+  const impressions=Math.round((80000+r()*220000)/1000)*1000;
+  const clicks=Math.round(impressions*(0.025+r()*0.025));
+  const invest=Math.round(clicks*(0.35+r()*0.25)*10)/10;
+  const conversions=Math.round(clicks*(0.04+r()*0.04));
+  const ca=Math.round(invest*(1.8+r()*2.2)*10)/10;
+  const roi=Math.round(ca/invest*100)/100;
+  const ctr=Math.round(clicks/impressions*10000)/100;
+  const mkSpark=(base,seed)=>{const rs=seededRand(seed);return Array.from({length:7},(_,i)=>base*(0.7+(i/6)*0.55)*(0.85+rs()*0.30));};
+  const deltaSign=()=>(r()>0.35?1:-1);
+  return{
+    actifPct,impressions,clicks,invest,conversions,ca,roi,ctr,
+    sparkImp:mkSpark(impressions/7,idx*11+1),
+    sparkCA:mkSpark(ca/7,idx*23+2),
+    sparkConv:mkSpark(conversions/7,idx*37+3),
+    dImp:+(deltaSign()*(2+r()*18)).toFixed(1),
+    dCA:+(deltaSign()*(2+r()*25)).toFixed(1),
+    dConv:+(deltaSign()*(2+r()*15)).toFixed(1),
+  };
+}
+
+// pre-compute CA for ranking
+const storeCA=stores.map((_,i)=>{const r=seededRand(i*137+42);r();r();r();const imp=Math.round((80000+r()*220000)/1000)*1000;const cl=Math.round(imp*(0.025+r()*0.025));const inv=Math.round(cl*(0.35+r()*0.25)*10)/10;return Math.round(inv*(1.8+r()*2.2)*10)/10;});
+const rankOrder=[...stores.map((_,i)=>i)].sort((a,b)=>storeCA[b]-storeCA[a]);
+
+// ── RENDER ──
+function renderPanel(store,idx){
+  const d=getStoreData(idx);
+  const myRank=rankOrder.indexOf(idx)+1;
+  const top10=rankOrder.slice(0,10);
+  const maxCA=storeCA[top10[0]];
+  const dc=v=>v>=0?'pos':'neg';
+  const ds=v=>`${v>=0?'+':''}${v}%`;
+
+  document.getElementById('panel-content').innerHTML=`
+    <div class="store-hdr">
+      <div class="store-hdr-name">📍 ${store.n}</div>
+      <div class="store-hdr-addr">${store.a}</div>
+      <div class="store-hdr-addr">${store.cp} ${store.c}</div>
+      <div style="display:flex;justify-content:space-between;margin-top:12px">
+        <div style="text-align:center">
+          <div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Produits actifs</div>
+          <div style="font-size:30px;font-weight:900;color:#FFD700;line-height:1">${d.actifPct}%</div>
+        </div>
+        <div style="width:1px;background:rgba(255,255,255,.2)"></div>
+        <div style="text-align:center">
+          <div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">Rang national</div>
+          <div style="font-size:30px;font-weight:900;color:#FFD700;line-height:1">#${myRank}</div>
+        </div>
+        <div style="width:1px;background:rgba(255,255,255,.2)"></div>
+        <div style="text-align:center">
+          <div style="font-size:10px;opacity:.65;text-transform:uppercase;letter-spacing:.04em;margin-bottom:2px">ROI</div>
+          <div style="font-size:30px;font-weight:900;color:#FFD700;line-height:1">${d.roi}</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-lbl">Impressions</div>
+        <div class="kpi-val" style="color:#8B5CF6">${fmt.k(d.impressions)}</div>
+        <span class="kpi-delta ${dc(d.dImp)}">${ds(d.dImp)} vs S-1</span>
+        ${sparkline(d.sparkImp,'#8B5CF6',null,null)}
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Conversions</div>
+        <div class="kpi-val" style="color:#22C55E">${fmt.k(d.conversions)}</div>
+        <span class="kpi-delta ${dc(d.dConv)}">${ds(d.dConv)} vs S-1</span>
+        ${sparkline(d.sparkConv,'#22C55E',null,null)}
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">CA</div>
+        <div class="kpi-val" style="color:#0EA5E9">${fmt.e(d.ca)}</div>
+        <span class="kpi-delta ${dc(d.dCA)}">${ds(d.dCA)} vs S-1</span>
+        ${sparkline(d.sparkCA,'#0EA5E9',null,null)}
+      </div>
+    </div>
+
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-lbl">Investissement</div>
+        <div class="kpi-val" style="color:#F97316">${fmt.e(d.invest)}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">CTR</div>
+        <div class="kpi-val" style="color:#14B8A6">${fmt.p(d.ctr)}</div>
+      </div>
+      <div class="kpi-card">
+        <div class="kpi-lbl">Clics</div>
+        <div class="kpi-val" style="color:#3B82F6">${fmt.k(d.clicks)}</div>
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="stit">Classement national — CA</div>
+      ${top10.map((si,i)=>{
+        const isMe=si===idx;
+        const pct=Math.round(storeCA[si]/maxCA*100);
+        const name=stores[si].n.replace('Castorama ','').replace('Casto ','');
+        return`<div class="rank-row${isMe?' me':''}">
+          <div class="rank-num">${i+1}</div>
+          <div class="rank-name">${name}</div>
+          <div class="rank-bar-wrap"><div class="rank-bar" style="width:${pct}%;background:${isMe?'var(--primary)':'#CBD5E1'}"></div></div>
+          <div class="rank-val">${fmt.e(storeCA[si])}</div>
+        </div>`;
+      }).join('')}
+      ${myRank>10?`<div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--border)">
+        <div class="rank-row me">
+          <div class="rank-num">${myRank}</div>
+          <div class="rank-name">${store.n.replace('Castorama ','').replace('Casto ','')}</div>
+          <div class="rank-bar-wrap"><div class="rank-bar" style="width:${Math.round(storeCA[idx]/maxCA*100)}%;background:var(--primary)"></div></div>
+          <div class="rank-val">${fmt.e(storeCA[idx])}</div>
+        </div>
+      </div>`:''}
+    </div>`;
+}
+
+// ── MAP ──
+const PIN=`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="44" viewBox="0 0 40 54">
+  <ellipse cx="20" cy="52" rx="7" ry="2.8" fill="rgba(0,0,0,0.22)"/>
+  <path d="M20 2C10.06 2 2 10.06 2 20C2 33.8 20 52 20 52C20 52 38 33.8 38 20C38 10.06 29.94 2 20 2Z" fill="#0072CE"/>
+  <path d="M12 7C9 10.5 7.5 15 7.5 20" stroke="rgba(255,255,255,0.32)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+  <circle cx="20" cy="20" r="13" fill="white"/>
+  <path d="M23 14 A8 8 0 1 0 23 26" stroke="#0072CE" stroke-width="5" fill="none" stroke-linecap="butt"/>
+  <rect x="21.5" y="12.5" width="3.8" height="15" fill="#0072CE"/>
+  <rect x="20.5" y="17" width="12" height="6" rx="3" fill="#FFD700"/>
+</svg>`;
+const PIN_ACTIVE=`<svg xmlns="http://www.w3.org/2000/svg" width="36" height="50" viewBox="0 0 40 54">
+  <ellipse cx="20" cy="52" rx="8" ry="3" fill="rgba(0,0,0,0.3)"/>
+  <path d="M20 2C10.06 2 2 10.06 2 20C2 33.8 20 52 20 52C20 52 38 33.8 38 20C38 10.06 29.94 2 20 2Z" fill="#FFD700"/>
+  <circle cx="20" cy="20" r="13" fill="white"/>
+  <path d="M23 14 A8 8 0 1 0 23 26" stroke="#0072CE" stroke-width="5" fill="none" stroke-linecap="butt"/>
+  <rect x="21.5" y="12.5" width="3.8" height="15" fill="#0072CE"/>
+  <rect x="20.5" y="17" width="12" height="6" rx="3" fill="#0D1B4B"/>
+</svg>`;
+
+const iconNormal=L.divIcon({html:`<div style="filter:drop-shadow(1px 2px 4px rgba(0,0,0,.4));cursor:pointer;transition:transform .15s;transform-origin:bottom center" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">${PIN}</div>`,iconSize:[32,44],iconAnchor:[16,44],popupAnchor:[0,-44],className:''});
+const iconActive=L.divIcon({html:`<div style="filter:drop-shadow(2px 3px 8px rgba(0,0,0,.5));cursor:pointer;transform-origin:bottom center">${PIN_ACTIVE}</div>`,iconSize:[36,50],iconAnchor:[18,50],popupAnchor:[0,-50],className:''});
+
+const map=L.map('map',{center:[46.6,2.35],zoom:6});
+L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
+
+const cluster=L.markerClusterGroup({
+  maxClusterRadius:55,showCoverageOnHover:false,
+  iconCreateFunction(c){const n=c.getChildCount(),sz=n<10?42:n<20?50:58;return L.divIcon({html:`<div class="casto-cluster" style="width:${sz+10}px;height:${sz+10}px;"><div class="casto-cluster-inner" style="width:${sz}px;height:${sz}px;font-size:${sz<50?14:16}px;">${n}</div></div>`,iconSize:[sz+10,sz+10],iconAnchor:[(sz+10)/2,(sz+10)/2],className:''});}
+});
+
+let activeMarker=null;
+const markers=stores.map((s,idx)=>{
+  const m=L.marker([s.lat,s.lng],{icon:iconNormal});
+  m.on('click',()=>{
+    if(activeMarker)activeMarker.setIcon(iconNormal);
+    m.setIcon(iconActive);activeMarker=m;
+    renderPanel(s,idx);
+    map.setView([s.lat,s.lng],13,{animate:true,duration:0.8});
+  });
+  cluster.addLayer(m);
+  return m;
+});
+map.addLayer(cluster);
+
+// Reset button
+const ResetCtrl=L.Control.extend({options:{position:'topright'},onAdd(){
+  const btn=L.DomUtil.create('button');
+  btn.title='Vue France entière';
+  btn.style.cssText='background:#0D1B4B;color:white;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.3);';
+  btn.innerHTML='🇫🇷';
+  btn.onclick=()=>{if(activeMarker){activeMarker.setIcon(iconNormal);activeMarker=null;}map.flyTo([46.6,2.35],6,{duration:1.2});};
+  return btn;
+}});
+map.addControl(new ResetCtrl());
+
+// Default: Mandelieu (index 1)
+markers[1].setIcon(iconActive);
+activeMarker=markers[1];
+renderPanel(stores[1],1);
+map.setView([stores[1].lat,stores[1].lng],12);
+</script>
+</body>
+</html>
