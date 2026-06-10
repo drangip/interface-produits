@@ -143,7 +143,27 @@ function deriveStats(s){return{...s,ctr:s.impressions>0?s.clicks/s.impressions*1
 function prodStatus(prods){const t=prods.length,a=prods.filter(p=>p.availability==='in_stock').length,r=prods.filter(p=>p.availability==='out_of_stock').length;return{total:t,active:a,refused:r,pctA:t>0?Math.round(a/t*100):0,pctR:t>0?Math.round(r/t*100):0}}
 function countBy(prods,key){const d={};prods.forEach(p=>{const v=p[key];if(v!=null)d[v]=(d[v]||0)+1});return d}
 function catStats(prods){const m={};prods.forEach(p=>{if(!m[p.category])m[p.category]={name:p.category,color:CAT_COLORS[p.category]||'#6B7280',impressions:0,clicks:0,investment:0,conversions:0,revenue:0,count:0};const c=m[p.category];c.impressions+=p.stats.impressions;c.clicks+=p.stats.clicks;c.investment+=p.stats.investment;c.conversions+=p.stats.conversions;c.revenue+=p.stats.revenue;c.count++});return Object.values(m).map(c=>({...c,marge:c.revenue-c.investment,roi:c.investment>0?(c.revenue-c.investment)/c.investment*100:0})).sort((a,b)=>b.investment-a.investment)}
-function genTS(prods,days=30){const s=sumStats(prods),rnd=seededRand(42),start=new Date(2026,3,22),wts=[];for(let i=0;i<days;i++){const d=new Date(start);d.setDate(d.getDate()+i);const dow=d.getDay(),g=.82+(i/days)*.36,n=.88+rnd()*.24,wf=(dow===0||dow===6)?.68:1.18;wts.push(g*n*wf)}const tot=wts.reduce((a,b)=>a+b,0),norm=wts.map(w=>w/tot);const MO=['jan','fév','mars','avr','mai','juin','juil','août','sep','oct','nov','déc'];return Array.from({length:days},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i);const w=norm[i],cl=Math.round(s.clicks*w),im=Math.round(s.impressions*w),inv=Math.round(s.investment*w*100)/100,cv=Math.round(s.conversions*w),rv=Math.round(s.revenue*w*100)/100,mg=Math.round((rv-inv)*100)/100;return{date:`${d.getDate()} ${MO[d.getMonth()]}`,impressions:im,clicks:cl,investment:inv,conversions:cv,revenue:rv,ctr:im>0?Math.round(cl/im*10000)/100:0,cpc:cl>0?Math.round(inv/cl*100)/100:0,cvr:cl>0?Math.round(cv/cl*10000)/100:0,roi:inv>0?Math.round(rv/inv*100)/100:0}})}
+function genTS(prods,days=30){
+  const s=sumStats(prods),rnd=seededRand(42),start=new Date(2026,3,22),wts=[];
+  const rCTR=seededRand(101),rCVR=seededRand(202),rCPC=seededRand(303),rROI=seededRand(404);
+  for(let i=0;i<days;i++){const d=new Date(start);d.setDate(d.getDate()+i);const dow=d.getDay(),g=.82+(i/days)*.36,n=.88+rnd()*.24,wf=(dow===0||dow===6)?.68:1.18;wts.push(g*n*wf)}
+  const tot=wts.reduce((a,b)=>a+b,0),norm=wts.map(w=>w/tot);
+  const baseCTR=s.impressions>0?s.clicks/s.impressions*100:0;
+  const baseCVR=s.clicks>0?s.conversions/s.clicks*100:0;
+  const baseCPC=s.clicks>0?s.investment/s.clicks:0;
+  const baseROI=s.investment>0?s.revenue/s.investment:0;
+  const MO=['jan','fév','mars','avr','mai','juin','juil','août','sep','oct','nov','déc'];
+  return Array.from({length:days},(_,i)=>{
+    const d=new Date(start);d.setDate(d.getDate()+i);
+    const w=norm[i],cl=Math.round(s.clicks*w),im=Math.round(s.impressions*w),inv=Math.round(s.investment*w*100)/100,cv=Math.round(s.conversions*w),rv=Math.round(s.revenue*w*100)/100;
+    const trend=0.72+(i/days)*0.56;
+    const ctr=Math.round(baseCTR*trend*(0.84+rCTR()*0.32)*100)/100;
+    const cvr=Math.round(baseCVR*trend*(0.84+rCVR()*0.32)*100)/100;
+    const cpc=Math.round(baseCPC*trend*(0.84+rCPC()*0.32)*100)/100;
+    const roi=Math.round(baseROI*trend*(0.84+rROI()*0.32)*100)/100;
+    return{date:`${d.getDate()} ${MO[d.getMonth()]}`,impressions:im,clicks:cl,investment:inv,conversions:cv,revenue:rv,ctr,cpc,cvr,roi};
+  });
+}
 function genCatTS(prods,days=30){const cs=catStats(prods),rnd=seededRand(99),start=new Date(2026,3,22),wts=[];for(let i=0;i<days;i++){const d=new Date(start);d.setDate(d.getDate()+i);const dow=d.getDay(),g=.82+(i/days)*.36,n=.88+rnd()*.24,wf=(dow===0||dow===6)?.68:1.18;wts.push(g*n*wf)}const tot=wts.reduce((a,b)=>a+b,0),norm=wts.map(w=>w/tot);const MO=['jan','fév','mars','avr','mai','juin','juil','août','sep','oct','nov','déc'];return Array.from({length:days},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i);const e={date:`${d.getDate()} ${MO[d.getMonth()]}`};cs.forEach(c=>{const cr=seededRand(c.name.charCodeAt(0)*7+i*13),ns=.82+cr()*.36;e[c.name]=Math.round(c.investment*norm[i]*ns);e[c.name+'_m']=Math.round(c.marge*norm[i]*ns)});return e})}
 function genEvo(n=14){const r=seededRand(77);return Array.from({length:n},(_,i)=>({day:i+1,v:Math.round(88+r()*6)}))}
 
