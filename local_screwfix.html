@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>Local Castorama | WPP Media</title>
+<title>Local Screwfix | WPP Media</title>
 <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
@@ -14,8 +14,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 #map-col{flex:0 0 44%;overflow:hidden}
 #map{width:100%;height:400px}
 #panel{flex:1;padding:12px 12px 2px;display:flex;flex-direction:column;gap:8px}
-.casto-cluster{background:rgba(0,114,206,.22);border-radius:50%;display:flex;align-items:center;justify-content:center}
-.casto-cluster-inner{background:#0072CE;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+.sf-cluster{background:rgba(0,61,165,.18);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.sf-cluster-inner{background:#003DA5;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
 #global-section{display:flex;flex-direction:column;gap:8px;padding:0 12px 20px}
 
 .lhdr{background:#fff;border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
@@ -23,22 +23,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 .lhdr-logo{flex-shrink:0;display:flex;align-items:center}
 .lhdr-name{font-size:14px;font-weight:800;color:#0D1B4B;margin-bottom:2px}
 .lhdr-addr{font-size:10px;color:#555;line-height:1.55}
-.lhdr-link{color:#0072CE;text-decoration:none}.lhdr-link:hover{text-decoration:underline}
 .lhdr-right{flex-shrink:0;text-align:right}
-.lhdr-badge{display:inline-flex;align-items:center;gap:4px;border:1.5px solid #0072CE;color:#0072CE;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;margin-bottom:3px}
+.lhdr-badge{display:inline-flex;align-items:center;gap:4px;border:1.5px solid #003DA5;color:#003DA5;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;margin-bottom:3px}
 .lhdr-meta{font-size:9.5px;color:#888;margin-bottom:5px}
 .lbtn{border-radius:6px;padding:5px 10px;font-size:10px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px;transition:opacity .15s}
 .lbtn:hover{opacity:.8}
-.lbtn-out{background:#fff;border:1.5px solid #0072CE;color:#0072CE}
-.lbtn-fill{background:#0072CE;border:1.5px solid #0072CE;color:#fff}
+.lbtn-out{background:#fff;border:1.5px solid #003DA5;color:#003DA5}
+.lbtn-fill{background:#003DA5;border:1.5px solid #003DA5;color:#fff}
 .lsec{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#4B5675;display:flex;align-items:center;gap:4px;padding:2px 0}
-.lsec-bar{width:3px;height:12px;background:#0072CE;border-radius:2px;flex-shrink:0}
+.lsec-bar{width:3px;height:12px;background:#003DA5;border-radius:2px;flex-shrink:0}
 .lkpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
 .lkpi-card{background:#fff;border-radius:10px;padding:12px 11px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .lkpi-top{display:flex;align-items:center;gap:5px;margin-bottom:6px}
 .lkpi-ico{font-size:13px;line-height:1}
 .lkpi-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#4B5675;line-height:1.2}
-.lkpi-val{font-size:26px;font-weight:800;color:#0072CE;line-height:1.05;margin-bottom:2px}
+.lkpi-val{font-size:26px;font-weight:800;color:#003DA5;line-height:1.05;margin-bottom:2px}
 .lkpi-sub{font-size:8.5px;color:#9CA3AF;margin-bottom:8px}
 .lkpi-sep{height:1px;background:#E5E7EB;margin-bottom:7px}
 .lkpi-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
@@ -49,7 +48,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 .lchart-card{background:#fff;border-radius:10px;padding:10px 11px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
 .lchart-top{display:flex;justify-content:space-between;align-items:flex-start}
 .lchart-label{font-size:10px;font-weight:700;color:#374151}
-.lchart-lv{font-size:18px;font-weight:800;color:#0072CE;line-height:1}
+.lchart-lv{font-size:18px;font-weight:800;color:#003DA5;line-height:1}
 .lchart-sub{font-size:7.5px;color:#9CA3AF;margin-bottom:2px}
 .lchart-legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
 .leg{font-size:7.5px;color:#9CA3AF;display:inline-flex;align-items:center;gap:2px}
@@ -61,9 +60,9 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
   <a href="dashboard.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Suivi Produits</a>
   <a href="audit_flux.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Audit de flux</a>
   <a href="competitivite_prix.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Compétitivité prix</a>
-  <a href="local_castorama.html" style="padding:4px 14px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Local Castorama</a>
+  <a href="local_castorama.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Castorama</a>
   <a href="local_bricodepot.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Brico Dépôt</a>
-  <a href="local_screwfix.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Screwfix</a>
+  <a href="local_screwfix.html" style="padding:4px 14px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Local Screwfix</a>
   <a href="mesure_efficacite.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
 </nav>
 <div id="subbar" style="position:fixed;top:42px;left:0;right:0;height:46px;background:#fff;border-bottom:1px solid #E5E7EB;z-index:100;display:flex;align-items:center;justify-content:flex-end;padding:0 20px;">
@@ -83,14 +82,12 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script>
-// ── UTILS ──
 function seededRand(seed){let s=seed;return()=>{s=(s*16807+0)%2147483647;return(s-1)/2147483646;};}
 const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v||0));
 const avg=a=>+(a.reduce((s,v)=>s+v,0)/a.length).toFixed(1);
 const delta=(last,ref)=>+((last-ref)/ref*100).toFixed(1);
 const RANK_COLORS=['#F59E0B','#F97316','#22C55E','#8B5CF6','#EF4444'];
 
-// ── SPARKLINE SVG (store-specific evolution charts) ──
 function chartSVG(data,gid){
   const W=220,H=88,pL=26,pR=4,pT=6,pB=16;
   const iw=W-pL-pR,ih=H-pT-pB;
@@ -104,9 +101,9 @@ function chartSVG(data,gid){
   const xlbls=[{i:0,t:'Déc'},{i:4,t:'Jan'},{i:8,t:'Fév'},{i:12,t:'Mar'},{i:16,t:'Avr'},{i:21,t:'Mai'}];
   const ymax=pT+5,yavg=Math.max(pT+10,Math.min(ya,pT+ih-4));
   return`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1A73E8" stop-opacity=".28"/><stop offset="100%" stop-color="#1A73E8" stop-opacity=".01"/></linearGradient></defs>
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#003DA5" stop-opacity=".25"/><stop offset="100%" stop-color="#003DA5" stop-opacity=".01"/></linearGradient></defs>
     <path d="${ap}" fill="url(#${gid})"/>
-    <polyline points="${pts}" fill="none" stroke="#1A73E8" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <polyline points="${pts}" fill="none" stroke="#003DA5" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
     <line x1="${pL}" y1="${ya.toFixed(1)}" x2="${W-pR}" y2="${ya.toFixed(1)}" stroke="#F59E0B" stroke-width="1" stroke-dasharray="4,3" opacity=".85"/>
     <circle cx="${x(21).toFixed(1)}" cy="${y(data[21]).toFixed(1)}" r="4" fill="#F59E0B" stroke="white" stroke-width="1.5"/>
     <text x="${pL-2}" y="${ymax}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(mx)}</text>
@@ -115,104 +112,45 @@ function chartSVG(data,gid){
     ${xlbls.map(l=>`<text x="${x(l.i).toFixed(1)}" y="${H-2}" text-anchor="middle" font-size="7.5" fill="#9CA3AF">${l.t}</text>`).join('')}
   </svg>`;}
 
-// ── STORES DATA ──
 const stores=[
-  {n:"Castorama Bourg-en-Bresse",cp:"01440",c:"Bourg-en-Bresse",a:"128 b rue Lépine, Viriat",lat:46.195,lng:5.220},
-  {n:"Castorama Mandelieu",cp:"06210",c:"Mandelieu",a:"C.c. Géant route de Fréjus",lat:43.545,lng:6.937},
-  {n:"Castorama Antibes",cp:"06600",c:"Antibes",a:"C.d. 35 - Les Semboules",lat:43.590,lng:7.092},
-  {n:"Castorama Le Cannet",cp:"06110",c:"Le Cannet",a:"17 chemin du Carimäï",lat:43.577,lng:7.018},
-  {n:"Castorama Marseille St-Loup",cp:"13010",c:"Marseille",a:"3 rue d'André Bardon",lat:43.280,lng:5.407},
-  {n:"Castorama Vitrolles",cp:"13127",c:"Vitrolles",a:"Centre commercial Carrefour",lat:43.459,lng:5.248},
-  {n:"Castorama Plan de Campagne",cp:"13170",c:"Les Pennes Mirabeau",a:"C.c. Plan de Campagne",lat:43.422,lng:5.316},
-  {n:"Castorama Aix en Provence",cp:"13547",c:"Aix en Provence",a:"115 rue Beauvoisin",lat:43.510,lng:5.447},
-  {n:"Castorama Caen Fleury-sur-Orne",cp:"14123",c:"Fleury sur Orne",a:"Avenue d'Harcourt",lat:49.135,lng:-0.385},
-  {n:"Castorama Caen Hérouville",cp:"14200",c:"Hérouville St Clair",a:"Rue des Siettes",lat:49.205,lng:-0.335},
-  {n:"Castorama Angoulême",cp:"16000",c:"Angoulême",a:"Rond point de Girac route de Bordeaux",lat:45.648,lng:0.149},
-  {n:"Castorama La Rochelle",cp:"17440",c:"Aytré",a:"Z.a.c. de Belle Aire",lat:46.131,lng:-1.140},
-  {n:"Castorama Dijon",cp:"21160",c:"Marsannay-la-Côte",a:"Zone commerciale Acti Sud",lat:47.255,lng:5.022},
-  {n:"Castorama Besançon",cp:"25000",c:"Besançon",a:"Rue de l'If – Espace Valentin Sud",lat:47.258,lng:6.020},
-  {n:"Castorama St Marcel Les Valence",cp:"26320",c:"St Marcel Les Valence",a:"Quartier de la Laye",lat:44.922,lng:4.879},
-  {n:"Castorama Quimper",cp:"29000",c:"Quimper",a:"2 avenue Jacques Chaban Delmas",lat:47.986,lng:-4.083},
-  {n:"Castorama Brest",cp:"29200",c:"Brest",a:"ZI de Kergaradec 22 rue André Colin",lat:48.415,lng:-4.462},
-  {n:"Castorama Nîmes",cp:"30900",c:"Nîmes",a:"42 chemin du Capouchinè",lat:43.840,lng:4.365},
-  {n:"Castorama Portet sur Garonne",cp:"31128",c:"Portet sur Garonne",a:"2 route de Francazal",lat:43.519,lng:1.402},
-  {n:"Castorama Toulouse L'Union",cp:"31240",c:"L'Union",a:"3 avenue de Toulouse",lat:43.652,lng:1.497},
-  {n:"Castorama Toulouse St Orens",cp:"31650",c:"Saint-Orens",a:"2 rue du Commerce",lat:43.555,lng:1.510},
-  {n:"Castorama Toulouse Blagnac",cp:"31700",c:"Blagnac",a:"Rue Gustave Flaubert",lat:43.635,lng:1.390},
-  {n:"Castorama Villenave d'Ornon",cp:"33140",c:"Villenave d'Ornon",a:"1 rue André Bourvil",lat:44.774,lng:-0.566},
-  {n:"Castorama Bordeaux Lormont",cp:"33310",c:"Lormont",a:"ZI La Gardette Sud – Avenue de Paris",lat:44.882,lng:-0.518},
-  {n:"Castorama Mérignac",cp:"33700",c:"Mérignac",a:"29 avenue des Martyrs de la Libération",lat:44.836,lng:-0.637},
-  {n:"Castorama Béziers",cp:"34500",c:"Béziers",a:"Z.a.c de la Domitienne",lat:43.356,lng:3.228},
-  {n:"Castorama Lattes",cp:"34970",c:"Lattes",a:"Pae de Soriech",lat:43.568,lng:3.896},
-  {n:"Castorama St Clément",cp:"34980",c:"St Clément de Rivière",a:"C.c. Trifontaine rte de Ganges",lat:43.683,lng:3.870},
-  {n:"Castorama Rennes-St Jacques",cp:"35136",c:"St Jacques de la Lande",a:"140 rue du Temple de Blosne",lat:48.063,lng:-1.695},
-  {n:"Castorama Cap Malo",cp:"35520",c:"Melesse",a:"Avenue du Phare du Grand Jardin",lat:48.183,lng:-1.681},
-  {n:"Castorama Chambray-Lès-Tours",cp:"37170",c:"Chambray Les Tours",a:"RN10 ZAC de la Vrillonnerie",lat:47.337,lng:0.676},
-  {n:"Castorama Bourgoin-Jallieu",cp:"38300",c:"Bourgoin Jallieu",a:"Rue Denis Papin",lat:45.588,lng:5.278},
-  {n:"Castorama Grenoble",cp:"38400",c:"St Martin d'Hères",a:"Z.a.c. de Champ Roman",lat:45.165,lng:5.765},
-  {n:"Castorama Roanne",cp:"42300",c:"Mably",a:"Rue Jean de la Fontaine",lat:46.044,lng:4.076},
-  {n:"Castorama Nantes La Beaujoire",cp:"44300",c:"Nantes",a:"Boulevard de la Beaujoire",lat:47.239,lng:-1.537},
-  {n:"Castorama St Nazaire",cp:"44600",c:"St Nazaire",a:"Z.a.c. Océanis",lat:47.297,lng:-2.189},
-  {n:"Castorama Nantes Orvault",cp:"44700",c:"Orvault",a:"Le Forum 2 rue Hélène Boucher",lat:47.268,lng:-1.592},
-  {n:"Castorama Olivet",cp:"45160",c:"Olivet",a:"20 rue de Gascogne",lat:47.855,lng:1.905},
-  {n:"Castorama Agen",cp:"47000",c:"Agen",a:"Z.a.c. Agen Sud avenue de l'Atlantique",lat:44.199,lng:0.612},
-  {n:"Castorama Reims Thillois",cp:"51370",c:"Thillois",a:"RN 31 ZAC Nord Thillois",lat:49.270,lng:3.940},
-  {n:"Castorama Vandoeuvre",cp:"54504",c:"Vandoeuvre Les Nancy",a:"Espace Vandoeuvre Sud",lat:48.659,lng:6.163},
-  {n:"Castorama Vannes",cp:"56000",c:"Vannes",a:"Za de Pen Mené",lat:47.657,lng:-2.757},
-  {n:"Castorama Metz",cp:"57130",c:"Jouy aux Arches",a:"Zone Actisud 76 route de Metz",lat:49.064,lng:6.093},
-  {n:"Castorama Terville",cp:"57180",c:"Terville",a:"Avenue du 14 Juillet 1789",lat:49.372,lng:6.165},
-  {n:"Castorama Dunkerque",cp:"59140",c:"Dunkerque",a:"Rue de Rome",lat:51.024,lng:2.370},
-  {n:"Castorama Englos",cp:"59481",c:"Haubourdin",a:"Centre commercial",lat:50.634,lng:2.986},
-  {n:"Casto Solférino",cp:"59800",c:"Lille",a:"152 rue Solférino",lat:50.630,lng:3.066},
-  {n:"Castorama Bondues",cp:"59910",c:"Bondues",a:"422 avenue du Général de Gaulle",lat:50.704,lng:3.108},
-  {n:"Castorama Creil St Maximin",cp:"60740",c:"St Maximin",a:"ZAC les Longères des Haies",lat:49.280,lng:2.528},
-  {n:"Castorama Hénin-Beaumont",cp:"62110",c:"Hénin Beaumont",a:"Z.a.c. le Bord des Eaux",lat:50.420,lng:2.949},
-  {n:"Castorama Clermont-Ferrand",cp:"63170",c:"Aubière",a:"Centre commercial Cap Sud",lat:45.739,lng:3.126},
-  {n:"Castorama Pau – Lescar",cp:"64232",c:"Lescar",a:"Centre Lescar Soleil",lat:43.342,lng:-0.408},
-  {n:"Castorama Anglet",cp:"64600",c:"Anglet",a:"Zone de Jorlis bd du B.A.B.",lat:43.485,lng:-1.524},
-  {n:"Castorama Perpignan",cp:"66100",c:"Perpignan",a:"1270 avenue d'Espagne",lat:42.693,lng:2.891},
-  {n:"Castorama Strasbourg",cp:"67452",c:"Mundolsheim",a:"Route nationale 63",lat:48.619,lng:7.752},
-  {n:"Castorama Colmar",cp:"68027",c:"Colmar",a:"28 avenue de la Foire aux Vins",lat:48.083,lng:7.356},
-  {n:"Castorama Kingersheim",cp:"68264",c:"Kingersheim",a:"150 route de Richwiller",lat:47.795,lng:7.343},
-  {n:"Castorama Rillieux-La-Pape",cp:"69140",c:"Rillieux La Pape",a:"Le Champ du Roy",lat:45.823,lng:4.892},
-  {n:"Castorama Dardilly",cp:"69570",c:"Dardilly",a:"Parc d'affaires route du Paisy",lat:45.803,lng:4.758},
-  {n:"Castorama Bron",cp:"69675",c:"Bron",a:"Aéroport de Lyon Bron",lat:45.728,lng:4.934},
-  {n:"Castorama Givors",cp:"69700",c:"Givors",a:"Centre commercial Carrefour",lat:45.578,lng:4.773},
-  {n:"Castorama Chalon-sur-Saône",cp:"71100",c:"Chalon sur Saône",a:"Centre commercial Chalon Sud",lat:46.775,lng:4.855},
-  {n:"Castorama Le Mans",cp:"72021",c:"Le Mans",a:"Z.a. de l'Ardoise route d'Alençon",lat:47.998,lng:0.188},
-  {n:"Castorama Chambéry",cp:"73000",c:"Chambéry",a:"ZI Landiers Nord rue des Marais",lat:45.571,lng:5.918},
-  {n:"Castorama Metz Tessy (Annecy)",cp:"74370",c:"Metz-Tessy",a:"Zone de la Bouvarde",lat:45.924,lng:6.089},
-  {n:"Castorama Bir Hakeim",cp:"75015",c:"Paris 15e",a:"11 boulevard de Grenelle",lat:48.851,lng:2.292},
-  {n:"Castorama Place de Clichy",cp:"75018",c:"Paris 18e",a:"1/3 rue de Caulaincourt",lat:48.888,lng:2.326},
-  {n:"Castorama Nation",cp:"75020",c:"Paris 20e",a:"9/11 cours de Vincennes",lat:48.848,lng:2.395},
-  {n:"Castorama Barentin",cp:"76360",c:"Barentin",a:"Centre commercial La Carbonnière",lat:49.548,lng:0.957},
-  {n:"Castorama Melun",cp:"77000",c:"Melun",a:"Z.A.C du Champ de Foire",lat:48.540,lng:2.665},
-  {n:"Castorama Claye-Souilly",cp:"77410",c:"Claye Souilly",a:"Rue Jean Monnet ZAC des Sablons",lat:48.940,lng:2.686},
-  {n:"Castorama Vélizy",cp:"78140",c:"Vélizy Villacoublay",a:"Rue André Citroën ZA Vélizy",lat:48.779,lng:2.184},
-  {n:"Castorama Chambourcy",cp:"78240",c:"Chambourcy",a:"Les Vergers de la Plaine",lat:48.910,lng:1.933},
-  {n:"Castorama Coignières",cp:"78310",c:"Coignières",a:"76 route National 10",lat:48.739,lng:1.909},
-  {n:"Castorama Les-Clayes-Sous-Bois",cp:"78340",c:"Les Clayes Sous Bois",a:"90 avenue Henri Barbusse",lat:48.827,lng:1.985},
-  {n:"Castorama Niort",cp:"79043",c:"Niort",a:"10 rue Turgot",lat:46.323,lng:-0.466},
-  {n:"Castorama Toulon La Garde",cp:"83130",c:"La Garde",a:"Avenue de Draguignan ZI Toulon Est",lat:43.121,lng:5.983},
-  {n:"Castorama La Seyne sur Mer",cp:"83500",c:"La Seyne sur Mer",a:"168 avenue Robert Brun",lat:43.101,lng:5.881},
-  {n:"Castorama Fréjus",cp:"83600",c:"Fréjus",a:"Zone d'Activité Grand Esterel",lat:43.434,lng:6.729},
-  {n:"Castorama Avignon",cp:"84000",c:"Avignon",a:"600 rue du Bon Vent",lat:43.950,lng:4.810},
-  {n:"Castorama Poitiers",cp:"86000",c:"Poitiers",a:"137 avenue du 8 Mai 1945",lat:46.578,lng:0.340},
-  {n:"Castorama Limoges",cp:"87220",c:"Feytiat",a:"Avenue des Portes de Feytiat",lat:45.811,lng:1.375},
-  {n:"Castorama Villabé",cp:"91100",c:"Villabé",a:"C.cial Villabé A6",lat:48.560,lng:2.444},
-  {n:"Castorama Les Ulis",cp:"91940",c:"Les Ulis",a:"Z.a. Courtaboeuf",lat:48.677,lng:2.163},
-  {n:"Casto Levallois",cp:"92300",c:"Levallois Perret",a:"4 rue Henri Barbusse",lat:48.895,lng:2.286},
-  {n:"Castorama Villemomble",cp:"93250",c:"Villemomble",a:"43 allée du Plateau",lat:48.884,lng:2.523},
-  {n:"Casto Les Lilas",cp:"93260",c:"Les Lilas",a:"15 Boulevard de la Liberté",lat:48.879,lng:2.418},
-  {n:"Castorama Créteil",cp:"94034",c:"Créteil",a:"70 avenue du Maréchal Foch",lat:48.790,lng:2.460},
-  {n:"Castorama Fresnes",cp:"94260",c:"Fresnes",a:"R.n. 186 voie des Laitières",lat:48.756,lng:2.322},
-  {n:"Castorama Ormesson",cp:"94430",c:"Chennevières sur Marne",a:"C.c. Pince-Vent ZAC de l'Hippodrome",lat:48.782,lng:2.553},
-  {n:"Castorama Cormeilles-en-Parisis",cp:"95240",c:"Cormeilles-en-Parisis",a:"Boulevard Joffre RD 392",lat:48.980,lng:2.192},
-  {n:"Castorama Pierrelaye",cp:"95480",c:"Pierrelaye",a:"1 avenue du Général Leclerc",lat:49.022,lng:2.148},
-  {n:"Castorama Gonesse",cp:"95700",c:"Roissy CDG",a:"Z.i. de Paris Nord II",lat:48.990,lng:2.456}
+  {n:"Screwfix Saint-Quentin",cp:"02100",c:"Saint-Quentin",a:"Rue Charles Naudin",url:"https://www.screwfix.fr/comptoirs-screwfix/saint_quentin",lat:49.845,lng:3.288},
+  {n:"Screwfix Mondeville",cp:"14120",c:"Mondeville",a:"Allée du Bac - Cours Montalivet",url:"https://www.screwfix.fr/comptoirs-screwfix/mondeville",lat:49.176,lng:-0.330},
+  {n:"Screwfix Saint-Brieuc",cp:"22000",c:"Saint-Brieuc",a:"32 Rue Chaptal",url:"https://www.screwfix.fr/comptoirs-screwfix/saint_brieuc",lat:48.512,lng:-2.765},
+  {n:"Screwfix Evreux",cp:"27000",c:"Evreux",a:"63 rue Jean Monnet",url:"https://www.screwfix.fr/comptoirs-screwfix/evreux",lat:49.024,lng:1.151},
+  {n:"Screwfix Lucé",cp:"28110",c:"Lucé",a:"60A Rue du Maréchal Leclerc",url:"https://www.screwfix.fr/comptoirs-screwfix/luce",lat:48.423,lng:1.462},
+  {n:"Screwfix Saint-Sébastien-sur-Loire",cp:"44230",c:"Saint-Sébastien-sur-Loire",a:"385 Route de Clisson",url:"https://www.screwfix.fr/comptoirs-screwfix/saint_sebastien_sur_loire",lat:47.199,lng:-1.513},
+  {n:"Screwfix Reims",cp:"51100",c:"Reims",a:"9 Rue Dr Serge Bazelaire",url:"https://www.screwfix.fr/comptoirs-screwfix/reims",lat:49.255,lng:4.031},
+  {n:"Screwfix Metz",cp:"57070",c:"Metz",a:"197 Rue du Général Metman",url:"https://www.screwfix.fr/comptoirs-screwfix/metz_borny",lat:49.107,lng:6.217},
+  {n:"Screwfix Moulins-lès-Metz",cp:"57160",c:"Moulins-lès-Metz",a:"38 Avenue Jean-Claude Théobald",url:"https://www.screwfix.fr/comptoirs-screwfix/moulins_les_metz",lat:49.082,lng:6.155},
+  {n:"Screwfix Terville",cp:"57180",c:"Terville",a:"1 Rue du Forgeron",url:"https://www.screwfix.fr/comptoirs-screwfix/terville",lat:49.372,lng:6.165},
+  {n:"Screwfix Seclin",cp:"59113",c:"Seclin",a:"15 Route de Lille",url:"https://www.screwfix.fr/comptoirs-screwfix/seclin",lat:50.549,lng:3.031},
+  {n:"Screwfix Wambrechies",cp:"59118",c:"Wambrechies",a:"61 Rue Obert",url:"https://www.screwfix.fr/comptoirs-screwfix/wambrechies",lat:50.700,lng:3.036},
+  {n:"Screwfix Trith Saint Léger",cp:"59125",c:"Trith Saint Léger",a:"28 D630 ZAC 2",url:"https://www.screwfix.fr/comptoirs-screwfix/trith_saint_leger",lat:50.343,lng:3.472},
+  {n:"Screwfix Wattrelos",cp:"59150",c:"Wattrelos",a:"1 Rue Albert Premier",url:"https://www.screwfix.fr/comptoirs-screwfix/wattrelos",lat:50.700,lng:3.216},
+  {n:"Screwfix Férin",cp:"59169",c:"Férin",a:"150 Route Nationale",url:"https://www.screwfix.fr/comptoirs-screwfix/ferin",lat:50.368,lng:3.082},
+  {n:"Screwfix Cappelle-la-Grande",cp:"59180",c:"Cappelle-la-Grande",a:"Rue du Hooghe Porte",url:"https://www.screwfix.fr/comptoirs-screwfix/cappelle_la_grande",lat:51.008,lng:2.342},
+  {n:"Screwfix Roncq",cp:"59223",c:"Roncq",a:"Allée Des 3 Lions Bât. 8",url:"https://www.screwfix.fr/comptoirs-screwfix/roncq",lat:50.754,lng:3.121},
+  {n:"Screwfix Wasquehal",cp:"59290",c:"Wasquehal",a:"10 Rue de la Ladrié",url:"https://www.screwfix.fr/comptoirs-screwfix/la_pilaterie",lat:50.672,lng:3.136},
+  {n:"Screwfix Douai",cp:"59500",c:"Douai",a:"772 Rue Maurice Caullery",url:"https://www.screwfix.fr/comptoirs-screwfix/douai",lat:50.374,lng:3.091},
+  {n:"Screwfix Feignies",cp:"59750",c:"Feignies",a:"10 Avenue Joseph Cugnot",url:"https://www.screwfix.fr/comptoirs-screwfix/feignies",lat:50.293,lng:3.993},
+  {n:"Screwfix La Chapelle d'Armentières",cp:"59930",c:"La Chapelle d'Armentières",a:"1 bis rue Ambroise Paré",url:"https://www.screwfix.fr/comptoirs-screwfix/la_chapelle_darmentieres",lat:50.691,lng:2.876},
+  {n:"Screwfix Beauvais",cp:"60000",c:"Beauvais",a:"38 rue Arago",url:"https://www.screwfix.fr/comptoirs-screwfix/beauvais",lat:49.444,lng:2.082},
+  {n:"Screwfix Chambly",cp:"60230",c:"Chambly",a:"Route de Beaumont",url:"https://www.screwfix.fr/comptoirs-screwfix/chambly",lat:49.168,lng:2.246},
+  {n:"Screwfix Saint-Maximin",cp:"60740",c:"Saint-Maximin",a:"405 Rue Henry Bessemer",url:"https://www.screwfix.fr/comptoirs-screwfix/saint_maximin",lat:49.280,lng:2.528},
+  {n:"Screwfix Calais",cp:"62100",c:"Calais",a:"124 Avenue Antoine de Saint Exupéry",url:"https://www.screwfix.fr/comptoirs-screwfix/calais",lat:50.951,lng:1.858},
+  {n:"Screwfix Verquigneul",cp:"62113",c:"Verquigneul",a:"707 Rue Delbecque",url:"https://www.screwfix.fr/comptoirs-screwfix/verquigneul",lat:50.491,lng:2.594},
+  {n:"Screwfix Tilloy-Lès-Mofflaines",cp:"62217",c:"Tilloy-Lès-Mofflaines",a:"6 rue Camille Guérin",url:"https://www.screwfix.fr/comptoirs-screwfix/tilloy_les_mofflaines",lat:50.276,lng:2.799},
+  {n:"Screwfix Loison-sous-Lens",cp:"62218",c:"Loison-sous-Lens",a:"108 Route de Lille",url:"https://www.screwfix.fr/comptoirs-screwfix/loison_sous_lens",lat:50.424,lng:2.856},
+  {n:"Screwfix Longuenesse",cp:"62219",c:"Longuenesse",a:"1 Route des Bruyères",url:"https://www.screwfix.fr/comptoirs-screwfix/longuenesse",lat:50.751,lng:2.261},
+  {n:"Screwfix Saint-Léonard",cp:"62360",c:"Saint-Léonard",a:"36 Rue Louis Blériot",url:"https://www.screwfix.fr/comptoirs-screwfix/saint_leonard",lat:50.695,lng:1.610},
+  {n:"Screwfix Dieppe",cp:"76200",c:"Dieppe",a:"27 Av Normandie Sussex",url:"https://www.screwfix.fr/comptoirs-screwfix/dieppe",lat:49.928,lng:1.083},
+  {n:"Screwfix Sotteville-lès-Rouen",cp:"76300",c:"Sotteville-lès-Rouen",a:"8 Rue François Arago",url:"https://www.screwfix.fr/comptoirs-screwfix/sotteville_les_rouen",lat:49.395,lng:1.079},
+  {n:"Screwfix Caudebec-lès-Elbeuf",cp:"76320",c:"Caudebec-lès-Elbeuf",a:"218 rue de la chaussée",url:"https://www.screwfix.fr/comptoirs-screwfix/caudebec_les_elbeuf",lat:49.285,lng:1.025},
+  {n:"Screwfix Le Havre",cp:"76600",c:"Le Havre",a:"150 Boulevard Amiral Mouchez",url:"https://www.screwfix.fr/comptoirs-screwfix/le_havre",lat:49.497,lng:0.108},
+  {n:"Screwfix Abbeville",cp:"80100",c:"Abbeville",a:"10 Rue Rose Bertin",url:"https://www.screwfix.fr/comptoirs-screwfix/abbeville",lat:50.106,lng:1.834},
+  {n:"Screwfix Rivery",cp:"80136",c:"Rivery",a:"220 Avenue de la Défense Passive",url:"https://www.screwfix.fr/comptoirs-screwfix/rivery",lat:49.903,lng:2.327}
 ];
 
-// ── PER-STORE DATA ──
 function getStoreData(idx){
   const rBase=seededRand(idx*17+3);
   const vBase=Math.round(280+rBase()*320);
@@ -228,19 +166,16 @@ function getStoreData(idx){
     lastC,prevC,avgC,vsMoyC:delta(lastC,avgC),vsPrevC:delta(lastC,prevC),
     lastR,prevR,avgR,vsMoyR:delta(lastR,avgR),vsPrevR:delta(lastR,prevR)};}
 
-// ── PRE-COMPUTE ALL STORES (runs once at page load) ──
 const allStores=stores.map((s,i)=>({...getStoreData(i),s,idx:i}));
 const byVisits=[...allStores].sort((a,b)=>b.lastV-a.lastV);
 const byProg=[...allStores].sort((a,b)=>b.vsPrevV-a.vsPrevV);
 
-// ── WEEK DATE LABELS ──
 const WEEK_DATES=(()=>{
   const ms=['jan','fév','mar','avr','mai','jun'];
   const start=new Date(2025,11,29);
   return Array.from({length:22},(_,i)=>{const d=new Date(start);d.setDate(d.getDate()+i*7);return`${d.getDate()} ${ms[d.getMonth()]||'?'}`;});
 })();
 
-// ── CANVAS CHART: multi-store evolution ──
 function setupEvoChart(top5){
   const canvas=document.getElementById('evo-canvas');
   if(!canvas)return;
@@ -255,7 +190,6 @@ function setupEvoChart(top5){
 
   function draw(hw){
     ctx.clearRect(0,0,W,H);
-    // Grid
     [0,.25,.5,.75,1].forEach(t=>{
       const val=Math.round(maxV*t);
       const yv=y(val);
@@ -264,19 +198,16 @@ function setupEvoChart(top5){
       ctx.fillStyle='#9CA3AF';ctx.font='9px -apple-system,Arial,sans-serif';
       ctx.textAlign='right';ctx.fillText(val,pL-4,yv+3.5);
     });
-    // X labels
     [{i:0,t:'29 déc'},{i:4,t:'26 jan'},{i:8,t:'23 fév'},{i:12,t:'23 mar'},{i:16,t:'20 avr'},{i:21,t:'25 mai'}].forEach(({i,t})=>{
       ctx.fillStyle='#9CA3AF';ctx.font='8.5px -apple-system,Arial,sans-serif';
       ctx.textAlign='center';ctx.fillText(t,x(i),H-4);
     });
-    // Hover line
     if(hw!==null){
       ctx.strokeStyle='rgba(0,0,0,.12)';ctx.lineWidth=1;
       ctx.setLineDash([4,3]);
       ctx.beginPath();ctx.moveTo(x(hw),pT);ctx.lineTo(x(hw),pT+ih);ctx.stroke();
       ctx.setLineDash([]);
     }
-    // Lines + dots
     top5.forEach((t,ci)=>{
       const col=RANK_COLORS[ci];
       ctx.strokeStyle=col;ctx.lineWidth=2;ctx.lineJoin='round';
@@ -291,7 +222,6 @@ function setupEvoChart(top5){
   }
   draw(null);
 
-  // Tooltip
   let tip=document.getElementById('evo-tip');
   if(!tip){tip=document.createElement('div');tip.id='evo-tip';
     tip.style.cssText='position:fixed;display:none;background:rgba(15,27,53,.92);color:#fff;border-radius:8px;padding:8px 11px;font-size:9.5px;pointer-events:none;z-index:9999;min-width:145px;box-shadow:0 4px 14px rgba(0,0,0,.35);line-height:1.7';
@@ -304,7 +234,7 @@ function setupEvoChart(top5){
     draw(wi);
     let h=`<div style="font-weight:700;font-size:10px;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:3px;margin-bottom:4px">${WEEK_DATES[wi]}</div>`;
     top5.forEach((t,ci)=>{
-      const name=t.s.n.replace('Castorama ','').replace('Casto ','');
+      const name=t.s.n.replace('Screwfix ','');
       h+=`<div style="display:flex;justify-content:space-between;gap:10px"><span><span style="color:${RANK_COLORS[ci]}">●</span> ${name}</span><span style="font-weight:700">${nf(t.visits[wi])}</span></div>`;
     });
     tip.innerHTML=h;tip.style.display='block';
@@ -315,13 +245,19 @@ function setupEvoChart(top5){
   canvas.addEventListener('mouseleave',()=>{draw(null);tip.style.display='none';});
 }
 
-// ── RENDER PANEL ──
+const SF_LOGO=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 38" width="62" height="38">
+  <rect width="62" height="38" rx="3" fill="white" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="14" y="28" font-family="Arial Black,Arial,sans-serif" font-size="24" font-weight="900" fill="#003DA5">S</text>
+  <rect x="28" y="7" width="28" height="7" rx="1" fill="#EE1C25"/>
+  <rect x="28" y="16" width="21" height="7" rx="1" fill="#003DA5"/>
+  <rect x="28" y="25" width="28" height="7" rx="1" fill="#003DA5"/>
+</svg>`;
+
 function renderPanel(store,idx){
   const d=getStoreData(idx);
   const dc=v=>v>=0?'pos':'neg';
   const ds=v=>`${v>=0?'+':''}${v.toFixed(1)} %`;
-  const snum=1000+idx*7+134;
-  const shortN=t=>t.s.n.replace('Castorama ','').replace('Casto ','');
+  const shortN=t=>t.s.n.replace('Screwfix ','');
 
   function kpiCard(ico,lbl,val,prev,av,vsMoy,vsPrev){return`<div class="lkpi-card">
     <div class="lkpi-top"><span class="lkpi-ico">${ico}</span><span class="lkpi-lbl">${lbl}</span></div>
@@ -337,13 +273,12 @@ function renderPanel(store,idx){
     <div class="lchart-sub">Déc 2025 → Mai 2026 &nbsp;·&nbsp; Moy. ${nf(av)}</div>
     ${chartSVG(data,gid)}
     <div class="lchart-legend">
-      <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#1A73E8" stroke-width="1.5"/></svg>Données semaine</span>
+      <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#003DA5" stroke-width="1.5"/></svg>Données semaine</span>
       <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#F59E0B" stroke-width="1" stroke-dasharray="3,3"/></svg>Moyenne</span>
       <span class="leg"><svg width="10" height="10"><circle cx="5" cy="5" r="3.5" fill="#F59E0B"/></svg>Dernière sem.</span>
     </div>
   </div>`;}
 
-  // Global data
   const top5=byVisits.slice(0,5);
   const maxV5=top5[0].lastV;
   const mostV=byVisits[0],leastV=byVisits[byVisits.length-1];
@@ -369,7 +304,7 @@ function renderPanel(store,idx){
         <div style="font-size:8px;color:#9CA3AF">📍 ${t.s.cp}</div>
       </div>
       <div style="width:80px;flex-shrink:0"><div style="height:6px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="height:100%;width:${Math.round(t.lastV/maxV5*100)}%;background:${color};border-radius:3px"></div></div></div>
-      <div style="font-size:14px;font-weight:800;color:#0072CE;width:36px;text-align:right;flex-shrink:0">${nf(t.lastV)}</div>
+      <div style="font-size:14px;font-weight:800;color:#003DA5;width:36px;text-align:right;flex-shrink:0">${nf(t.lastV)}</div>
       <span style="background:${vspS?'#DCFCE7':'#FEE2E2'};color:${vspS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;white-space:nowrap;flex-shrink:0">${vspS?'↑':'↓'}${Math.abs(t.vsPrevV).toFixed(1)} %</span>
       <span style="font-size:8.5px;color:#6B7280;white-space:nowrap;flex-shrink:0">vs moy.&nbsp;<span style="color:${vmS?'#15803D':'#DC2626'};font-weight:700">${vmS?'+':''}${t.vsMoyV.toFixed(1)} %</span></span>
     </div>`;}
@@ -377,26 +312,25 @@ function renderPanel(store,idx){
   function tableRow(t,i){
     const vspS=t.vsPrevV>=0,vmS=t.vsMoyV>=0;
     const isSel=t.idx===idx;
-    return`<tr style="background:${isSel?'#FFFBEB':i%2===0?'#fff':'#FAFAFA'}">
+    return`<tr style="background:${isSel?'#EFF4FF':i%2===0?'#fff':'#FAFAFA'}">
       <td style="padding:7px 10px"><div style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:${RANK_COLORS[i]};display:inline-block;flex-shrink:0"></span><span style="font-size:10.5px;font-weight:${isSel?700:500};color:#0F1B35">${shortN(t)}</span></div></td>
       <td style="padding:7px 8px;font-size:9.5px;color:#6B7280;text-align:center">${t.s.cp}</td>
-      <td style="padding:7px 8px;font-size:12px;font-weight:800;color:#0072CE;text-align:right">${nf(t.lastV)}</td>
+      <td style="padding:7px 8px;font-size:12px;font-weight:800;color:#003DA5;text-align:right">${nf(t.lastV)}</td>
       <td style="padding:7px 8px;font-size:10px;color:#374151;text-align:right">${nf(t.prevV)}</td>
       <td style="padding:7px 8px;text-align:center"><span style="background:${vspS?'#DCFCE7':'#FEE2E2'};color:${vspS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px">${vspS?'↑':'↓'}${Math.abs(t.vsPrevV).toFixed(1)} %</span></td>
       <td style="padding:7px 8px;font-size:10px;color:#374151;text-align:right">${nf(t.avgV)}</td>
       <td style="padding:7px 8px;text-align:center"><span style="background:${vmS?'#DCFCE7':'#FEE2E2'};color:${vmS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px">${vmS?'+':''}${t.vsMoyV.toFixed(1)} %</span></td>
     </tr>`;}
 
-  // ── Bloc 1 : store info dans le panel ──
   document.getElementById('panel-content').innerHTML=`
     <div id="store-section" style="display:flex;flex-direction:column;gap:8px;padding-bottom:8px">
     <div style="background:#0D1B4B;color:#fff;padding:9px 14px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px">
-      <div style="width:3px;height:14px;background:#FFD700;border-radius:2px"></div>
-      Performance par magasin
+      <div style="width:3px;height:14px;background:#EE1C25;border-radius:2px"></div>
+      Performance par comptoir
     </div>
     <div class="lhdr">
       <div class="lhdr-left">
-        <div class="lhdr-logo"><svg xmlns="http://www.w3.org/2000/svg" viewBox="-7 -7 78 54" width="46" height="32"><path d="M50 6 A22 22 0 1 0 50 34" stroke="#0072CE" stroke-width="12" fill="none" stroke-linecap="butt"/><rect x="42" y="13" width="22" height="14" rx="7" fill="#FFD700"/></svg></div>
+        <div class="lhdr-logo">${SF_LOGO}</div>
         <div>
           <div class="lhdr-name">${store.n}</div>
           <div class="lhdr-addr">📍 ${store.a} — ${store.cp} ${store.c}</div>
@@ -407,39 +341,37 @@ function renderPanel(store,idx){
         <div class="lhdr-meta">22 semaines · Mise à jour : 25 mai 2026</div>
         <div style="display:flex;gap:5px;justify-content:flex-end">
           <button class="lbtn lbtn-out" onclick="window.print()">🖨 Imprimer / PDF</button>
-          <button class="lbtn lbtn-fill" onclick="window.open('https://www.castorama.fr/store/${snum}','_blank')">🗺 Voir le magasin</button>
+          <button class="lbtn lbtn-fill" onclick="window.open('${store.url}','_blank')">🗺 Voir le comptoir</button>
         </div>
       </div>
     </div>
     <div class="lsec"><div class="lsec-bar"></div>INDICATEURS — DERNIÈRE SEMAINE (25 MAI 2026)</div>
     <div class="lkpi-grid">
-      ${kpiCard('🏠','VISITES EN MAGASIN',d.lastV,d.prevV,d.avgV,d.vsMoyV,d.vsPrevV)}
+      ${kpiCard('🏠','VISITES EN COMPTOIR',d.lastV,d.prevV,d.avgV,d.vsMoyV,d.vsPrevV)}
       ${kpiCard('📞','CLICS D\'APPEL',d.lastC,d.prevC,d.avgC,d.vsMoyC,d.vsPrevC)}
       ${kpiCard('🗺','DEMANDES D\'ITINÉRAIRE',d.lastR,d.prevR,d.avgR,d.vsMoyR,d.vsPrevR)}
     </div>
     <div class="lsec"><div class="lsec-bar"></div>ÉVOLUTION HEBDOMADAIRE — 22 SEMAINES</div>
     <div class="lchart-grid">
-      ${chartCard('🏠','Visites en magasin',d.visits,'gv'+idx,d.lastV,d.avgV)}
+      ${chartCard('🏠','Visites en comptoir',d.visits,'gv'+idx,d.lastV,d.avgV)}
       ${chartCard('📞','Clics d\'appel',d.calls,'gc'+idx,d.lastC,d.avgC)}
       ${chartCard('🗺','Demandes d\'itinéraire',d.routes,'gr'+idx,d.lastR,d.avgR)}
     </div>
     </div>`;
 
-  // ── Titre pleine largeur ──
   document.getElementById('global-title').innerHTML=`
     <div style="background:#0D1B4B;color:#fff;padding:9px 14px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px">
-      <div style="width:3px;height:14px;background:#FFD700;border-radius:2px"></div>
-      Performance globale des magasins
+      <div style="width:3px;height:14px;background:#EE1C25;border-radius:2px"></div>
+      Performance globale des comptoirs
     </div>`;
 
-  // ── Rangée 1 : faits marquants (gauche) + classement (droite) ──
   document.getElementById('global-row1').innerHTML=`
     <div style="flex:0 0 44%;display:flex;flex-direction:column;gap:8px">
       <div class="lsec"><div class="lsec-bar"></div>FAITS MARQUANTS — SEMAINE DU 25 MAI 2026</div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        ${hCard('#F59E0B','🏆','PLUS DE VISITES',mostV,nf(mostV.lastV),'visites en magasin',`Sem. préc. : ${nf(mostV.prevV)} · Moy. : ${nf(mostV.avgV)}`)}
+        ${hCard('#F59E0B','🏆','PLUS DE VISITES',mostV,nf(mostV.lastV),'visites en comptoir',`Sem. préc. : ${nf(mostV.prevV)} · Moy. : ${nf(mostV.avgV)}`)}
         ${hCard('#22C55E','🚀','MEILLEURE PROGRESSION',bestP,(bestP.vsPrevV>=0?'+':'')+bestP.vsPrevV.toFixed(1)+' %',`${nf(bestP.prevV)} → ${nf(bestP.lastV)} visites`,`Moy. ${nf(bestP.avgV)} · vs moy. ${bestP.vsMoyV>=0?'+':''}${bestP.vsMoyV.toFixed(1)} %`)}
-        ${hCard('#F97316','👁','MOINS DE VISITES',leastV,nf(leastV.lastV),'visites en magasin',`Sem. préc. : ${nf(leastV.prevV)} · Moy. : ${nf(leastV.avgV)}`)}
+        ${hCard('#F97316','👁','MOINS DE VISITES',leastV,nf(leastV.lastV),'visites en comptoir',`Sem. préc. : ${nf(leastV.prevV)} · Moy. : ${nf(leastV.avgV)}`)}
         ${hCard('#EF4444','📉','PLUS BASSE PROGRESSION',worstP,(worstP.vsPrevV>=0?'+':'')+worstP.vsPrevV.toFixed(1)+' %',`${nf(worstP.prevV)} → ${nf(worstP.lastV)} visites`,`Moy. ${nf(worstP.avgV)} · vs moy. ${worstP.vsMoyV>=0?'+':''}${worstP.vsMoyV.toFixed(1)} %`)}
       </div>
     </div>
@@ -450,12 +382,11 @@ function renderPanel(store,idx){
       </div>
     </div>`;
 
-  // ── Rangée 2 : évolution (gauche) + tableau (droite) ──
   document.getElementById('global-row2').innerHTML=`
     <div style="flex:0 0 44%;display:flex;flex-direction:column;gap:8px">
       <div class="lsec"><div class="lsec-bar"></div>ÉVOLUTION HEBDOMADAIRE — 22 SEMAINES</div>
       <div class="lchart-card" style="padding:14px">
-        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:1px">Visites en magasin — Top 5 magasins</div>
+        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:1px">Visites en comptoir — Top 5 comptoirs</div>
         <div style="font-size:8.5px;color:#9CA3AF;margin-bottom:8px">29 déc. 2025 → 25 mai 2026</div>
         <canvas id="evo-canvas" width="900" height="200" style="width:100%;height:auto;cursor:crosshair;display:block"></canvas>
         <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
@@ -467,8 +398,8 @@ function renderPanel(store,idx){
       <div class="lsec"><div class="lsec-bar"></div>TABLEAU RÉCAPITULATIF</div>
       <div class="lchart-card" style="padding:0;overflow:hidden">
         <table style="width:100%;border-collapse:collapse">
-          <thead><tr style="background:#0072CE">
-            <th style="padding:8px 10px;text-align:left;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Magasin</th>
+          <thead><tr style="background:#003DA5">
+            <th style="padding:8px 10px;text-align:left;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Comptoir</th>
             <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">CP</th>
             <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Sem. 25 mai</th>
             <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Sem. 18 mai</th>
@@ -492,34 +423,30 @@ function renderPanel(store,idx){
   });
 }
 
-// ── MAP ──
 const PIN=`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="44" viewBox="0 0 40 54">
   <ellipse cx="20" cy="52" rx="7" ry="2.8" fill="rgba(0,0,0,0.22)"/>
-  <path d="M20 2C10.06 2 2 10.06 2 20C2 33.8 20 52 20 52C20 52 38 33.8 38 20C38 10.06 29.94 2 20 2Z" fill="#0072CE"/>
+  <path d="M20 2C10.06 2 2 10.06 2 20C2 33.8 20 52 20 52C20 52 38 33.8 38 20C38 10.06 29.94 2 20 2Z" fill="#003DA5"/>
   <path d="M12 7C9 10.5 7.5 15 7.5 20" stroke="rgba(255,255,255,0.32)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
   <circle cx="20" cy="20" r="13" fill="white"/>
-  <path d="M23 14 A8 8 0 1 0 23 26" stroke="#0072CE" stroke-width="5" fill="none" stroke-linecap="butt"/>
-  <rect x="21.5" y="12.5" width="3.8" height="15" fill="#0072CE"/>
-  <rect x="20.5" y="17" width="12" height="6" rx="3" fill="#FFD700"/>
+  <text x="20" y="25" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="10" font-weight="900" fill="#003DA5">SF</text>
 </svg>`;
+
 const PIN_ACTIVE=`<svg xmlns="http://www.w3.org/2000/svg" width="36" height="50" viewBox="0 0 40 54">
   <ellipse cx="20" cy="52" rx="8" ry="3" fill="rgba(0,0,0,0.3)"/>
-  <path d="M20 2C10.06 2 2 10.06 2 20C2 33.8 20 52 20 52C20 52 38 33.8 38 20C38 10.06 29.94 2 20 2Z" fill="#FFD700"/>
+  <path d="M20 2C10.06 2 2 10.06 2 20C2 33.8 20 52 20 52C20 52 38 33.8 38 20C38 10.06 29.94 2 20 2Z" fill="#EE1C25"/>
   <circle cx="20" cy="20" r="13" fill="white"/>
-  <path d="M23 14 A8 8 0 1 0 23 26" stroke="#0072CE" stroke-width="5" fill="none" stroke-linecap="butt"/>
-  <rect x="21.5" y="12.5" width="3.8" height="15" fill="#0072CE"/>
-  <rect x="20.5" y="17" width="12" height="6" rx="3" fill="#0D1B4B"/>
+  <text x="20" y="25" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="10" font-weight="900" fill="#003DA5">SF</text>
 </svg>`;
 
 const iconNormal=L.divIcon({html:`<div style="filter:drop-shadow(1px 2px 4px rgba(0,0,0,.4));cursor:pointer;transition:transform .15s;transform-origin:bottom center" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">${PIN}</div>`,iconSize:[32,44],iconAnchor:[16,44],className:''});
 const iconActive=L.divIcon({html:`<div style="filter:drop-shadow(2px 3px 8px rgba(0,0,0,.5));cursor:pointer;transform-origin:bottom center">${PIN_ACTIVE}</div>`,iconSize:[36,50],iconAnchor:[18,50],className:''});
 
-const map=L.map('map',{center:[46.6,2.35],zoom:6});
+const map=L.map('map',{center:[50.2,2.8],zoom:7});
 L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
 
 const cluster=L.markerClusterGroup({
   maxClusterRadius:55,showCoverageOnHover:false,
-  iconCreateFunction(c){const n=c.getChildCount(),sz=n<10?40:n<20?48:56;return L.divIcon({html:`<div class="casto-cluster" style="width:${sz+10}px;height:${sz+10}px"><div class="casto-cluster-inner" style="width:${sz}px;height:${sz}px;font-size:${sz<50?13:15}px">${n}</div></div>`,iconSize:[sz+10,sz+10],iconAnchor:[(sz+10)/2,(sz+10)/2],className:''});}
+  iconCreateFunction(c){const n=c.getChildCount(),sz=n<10?40:n<20?48:56;return L.divIcon({html:`<div class="sf-cluster" style="width:${sz+10}px;height:${sz+10}px"><div class="sf-cluster-inner" style="width:${sz}px;height:${sz}px;font-size:${sz<50?13:15}px">${n}</div></div>`,iconSize:[sz+10,sz+10],iconAnchor:[(sz+10)/2,(sz+10)/2],className:''});}
 });
 
 let activeMarker=null;
@@ -538,16 +465,16 @@ map.addLayer(cluster);
 const ResetCtrl=L.Control.extend({options:{position:'topright'},onAdd(){
   const btn=L.DomUtil.create('button');
   btn.title='Vue France entière';
-  btn.style.cssText='background:#0D1B4B;color:white;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.3);';
+  btn.style.cssText='background:#003DA5;color:white;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.3);';
   btn.innerHTML='🇫🇷';
-  btn.onclick=()=>{if(activeMarker){activeMarker.setIcon(iconNormal);activeMarker=null;}map.flyTo([46.6,2.35],6,{duration:1.2});};
+  btn.onclick=()=>{if(activeMarker){activeMarker.setIcon(iconNormal);activeMarker=null;}map.flyTo([50.2,2.8],7,{duration:1.2});};
   return btn;
 }});
 map.addControl(new ResetCtrl());
 
-markers[1].setIcon(iconActive);activeMarker=markers[1];
-renderPanel(stores[1],1);
-map.setView([stores[1].lat,stores[1].lng],12);
+markers[0].setIcon(iconActive);activeMarker=markers[0];
+renderPanel(stores[0],0);
+map.setView([stores[0].lat,stores[0].lng],13);
 </script>
 </body>
 </html>
