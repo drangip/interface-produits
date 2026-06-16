@@ -34,6 +34,22 @@ td{padding:8px 12px;font-size:11px;color:#374151;border-top:1px solid #F3F4F6}
 td:not(:first-child){text-align:right}
 tr:nth-child(even) td{background:#FAFAFA}
 tr:last-child td{background:#F0F4FF;font-weight:700}
+
+/* Period selector */
+#period-btn{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1.5px solid #E5E7EB;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:11px;font-weight:600;color:#374151;box-shadow:0 1px 3px rgba(0,0,0,.06);user-select:none;transition:border-color .15s}
+#period-btn:hover{border-color:#0D1B4B}
+#period-btn.open{border-color:#0D1B4B;box-shadow:0 0 0 3px rgba(13,27,75,.08)}
+#period-panel{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid #E5E7EB;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;min-width:280px;padding:8px 0}
+#period-panel.open{display:block}
+.period-opt{padding:8px 16px;font-size:11px;cursor:pointer;color:#374151;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:background .1s}
+.period-opt:hover{background:#F5F7FF}
+.period-opt.active{background:#EFF4FF;color:#0D1B4B;font-weight:700}
+.period-opt .dates{font-size:9.5px;color:#9CA3AF;font-weight:400}
+.period-opt.active .dates{color:#6B7280}
+.period-sep{font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#9CA3AF;padding:10px 16px 4px}
+.period-custom{padding:6px 16px 10px;display:flex;align-items:center;gap:6px;font-size:11px;color:#374151}
+.period-custom select{border:1.5px solid #E5E7EB;border-radius:6px;padding:4px 6px;font-size:10.5px;color:#374151;background:#fff;cursor:pointer;outline:none}
+.period-custom select:focus{border-color:#0D1B4B}
 </style>
 </head>
 <body>
@@ -54,15 +70,29 @@ tr:last-child td{background:#F0F4FF;font-weight:700}
 
 <div class="page">
 
-  <!-- Title -->
-  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px">
+  <!-- Title + period selector -->
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
     <div>
       <div style="font-size:20px;font-weight:800;color:#0D1B4B;margin-bottom:3px">Bilan Media — Performance Multiplateforme</div>
-      <div style="font-size:11px;color:#9CA3AF">29 déc. 2025 → 25 mai 2026 · 22 semaines · Mise à jour : 25 mai 2026</div>
+      <div id="subtitle" style="font-size:11px;color:#9CA3AF"></div>
     </div>
-    <div style="display:flex;gap:6px;align-items:center">
-      <div style="background:#0D1B4B;color:#fff;border-radius:6px;padding:5px 12px;font-size:10px;font-weight:700">📅 22 semaines</div>
-      <div style="background:#EFF6FF;color:#1D4ED8;border-radius:6px;padding:5px 12px;font-size:10px;font-weight:700">5 plateformes</div>
+    <div style="position:relative;display:flex;align-items:center;gap:8px;flex-shrink:0">
+      <div id="period-btn" onclick="togglePanel()">
+        <span style="font-size:14px">📅</span>
+        <span id="period-label"></span>
+        <span style="font-size:10px;color:#9CA3AF" id="period-arrow">▾</span>
+      </div>
+      <div id="period-panel">
+        <div class="period-opt" data-id="4"  onclick="selectPreset(4)">  <span>4 dernières semaines</span>  <span class="dates" id="d4"></span>  </div>
+        <div class="period-opt" data-id="8"  onclick="selectPreset(8)">  <span>8 dernières semaines</span>  <span class="dates" id="d8"></span>  </div>
+        <div class="period-opt" data-id="12" onclick="selectPreset(12)"> <span>12 dernières semaines</span> <span class="dates" id="d12"></span> </div>
+        <div class="period-opt" data-id="22" onclick="selectPreset(22)"> <span>Période complète (22 sem.)</span> <span class="dates" id="d22"></span> </div>
+        <div class="period-sep">Personnalisée</div>
+        <div class="period-custom">
+          De&nbsp;<select id="sel-start" onchange="onCustomChange()"></select>
+          &nbsp;à&nbsp;<select id="sel-end" onchange="onCustomChange()"></select>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -89,11 +119,11 @@ tr:last-child td{background:#F0F4FF;font-weight:700}
       <thead>
         <tr>
           <th>Plateforme</th>
-          <th style="text-align:right">Total 22 sem.</th>
+          <th style="text-align:right">Total période</th>
           <th style="text-align:right">% du budget</th>
-          <th style="text-align:right">Moy. / semaine</th>
-          <th style="text-align:right">Sem. 25 mai</th>
-          <th style="text-align:right">Sem. 18 mai</th>
+          <th style="text-align:right" id="th-avg">Moy. / semaine</th>
+          <th style="text-align:right" id="th-last">Dernière sem.</th>
+          <th style="text-align:right" id="th-prev">Sem. précédente</th>
           <th style="text-align:center">Prog. S/S</th>
           <th style="text-align:center">vs Moy.</th>
         </tr>
@@ -105,6 +135,7 @@ tr:last-child td{background:#F0F4FF;font-weight:700}
 </div>
 
 <script>
+/* ---------- helpers ---------- */
 function seededRand(seed){let s=seed;return()=>{s=(s*16807+0)%2147483647;return(s-1)/2147483646;};}
 const cf=v=>new Intl.NumberFormat('fr-FR',{style:'currency',currency:'EUR',minimumFractionDigits:0,maximumFractionDigits:0}).format(v);
 const kf=v=>v>=1000?(v/1000).toFixed(1).replace('.',',')+' K€':v+' €';
@@ -112,129 +143,228 @@ const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v));
 const avg=a=>a.reduce((s,v)=>s+v,0)/a.length;
 const delta=(a,b)=>+((a-b)/b*100).toFixed(1);
 
+/* ---------- platforms ---------- */
 const PLATFORMS=[
-  {key:'google_sea',  label:'Google SEA',      color:'#4285F4', base:17500, variance:0.35},
-  {key:'google_ytb',  label:'Google YouTube',  color:'#EA4335', base:9800,  variance:0.40},
-  {key:'microsoft_sea',label:'Microsoft SEA',  color:'#00BCF2', base:3200,  variance:0.30},
-  {key:'instagram',   label:'Instagram',       color:'#C13584', variance:0.45, base:7100},
-  {key:'tiktok',      label:'TikTok',          color:'#69C9D0', base:4200,  variance:0.50},
+  {key:'google_sea',   label:'Google SEA',      color:'#4285F4', base:17500, variance:0.35},
+  {key:'google_ytb',   label:'Google YouTube',  color:'#EA4335', base:9800,  variance:0.40},
+  {key:'microsoft_sea',label:'Microsoft SEA',   color:'#00BCF2', base:3200,  variance:0.30},
+  {key:'instagram',    label:'Instagram',       color:'#C13584', base:7100,  variance:0.45},
+  {key:'tiktok',       label:'TikTok',          color:'#69C9D0', base:4200,  variance:0.50},
 ];
 
+/* ---------- week dates ---------- */
 const WEEK_DATES=(()=>{
   const start=new Date(2025,11,29);
-  const names=['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
+  const mn=['jan','fév','mar','avr','mai','jun','jul','aoû','sep','oct','nov','déc'];
   return Array.from({length:22},(_,i)=>{
     const d=new Date(start);d.setDate(d.getDate()+i*7);
-    return`${d.getDate()} ${names[d.getMonth()]}`;
+    return`${d.getDate()} ${mn[d.getMonth()]}`;
+  });
+})();
+const SHORT_DATES=(()=>{
+  const start=new Date(2025,11,29);
+  const mn=['jan.','fév.','mar.','avr.','mai','jun.','jul.','aoû.','sep.','oct.','nov.','déc.'];
+  return Array.from({length:22},(_,i)=>{
+    const d=new Date(start);d.setDate(d.getDate()+i*7);
+    return`${d.getDate()} ${mn[d.getMonth()]}`;
   });
 })();
 
+/* ---------- generate raw weekly data ---------- */
 const DATA=PLATFORMS.map((p,pi)=>{
   const rng=seededRand(pi*991+17);
   const weeks=Array.from({length:22},()=>Math.round(p.base*(1-p.variance/2+rng()*p.variance)));
-  const total=weeks.reduce((s,v)=>s+v,0);
-  const av=avg(weeks);
-  const last=weeks[21],prev=weeks[20];
-  return{...p,weeks,total,av,last,prev,dPrev:delta(last,prev),dMoy:delta(last,av)};
+  return{...p,weeks};
 });
 
-const grandTotal=DATA.reduce((s,p)=>s+p.total,0);
+/* ---------- period state ---------- */
+let RS=0,RE=21,activePreset=22;
 
-// ---- KPI row ----
-const kpiRow=document.getElementById('kpi-row');
-const totalLast=DATA.reduce((s,p)=>s+p.last,0);
-const totalPrev=DATA.reduce((s,p)=>s+p.prev,0);
-const totalAv=DATA.reduce((s,p)=>s+p.av,0);
+/* ---------- period selector ---------- */
+const PRESETS=[{id:4,n:4},{id:8,n:8},{id:12,n:12},{id:22,n:22}];
+PRESETS.forEach(p=>{
+  const s=22-p.n, e=21;
+  const el=document.getElementById('d'+p.id);
+  if(el)el.textContent=SHORT_DATES[s]+' → '+SHORT_DATES[e];
+});
 
-function kpiCard(color,dot,lbl,val,avVal,lastVal,prevVal){
-  const dp=delta(lastVal,prevVal),dm=delta(lastVal,avVal);
-  return`<div class="kpi">
-    <div class="kpi-top"><div class="kpi-dot" style="background:${dot}"></div><div class="kpi-lbl">${lbl}</div></div>
-    <div class="kpi-val" style="color:${color}">${kf(val)}</div>
-    <div class="kpi-sub">Total 22 semaines</div>
-    <div class="kpi-sep"></div>
-    <div class="kpi-row"><span class="kpi-rl">Moy./semaine</span><span class="kpi-rv">${kf(avVal)}</span></div>
-    <div class="kpi-row"><span class="kpi-rl">vs Sem. préc.</span><span class="delta ${dp>=0?'pos':'neg'}">${dp>=0?'+':''}${dp.toFixed(1)} %</span></div>
-  </div>`;}
+// Populate custom selects
+const selStart=document.getElementById('sel-start');
+const selEnd=document.getElementById('sel-end');
+WEEK_DATES.forEach((d,i)=>{
+  selStart.add(new Option(d,i));
+  selEnd.add(new Option(d,i));
+});
+selStart.value=0; selEnd.value=21;
 
-// Total card
-kpiRow.innerHTML=`<div class="kpi" style="border-left:4px solid #0D1B4B">
-  <div class="kpi-top"><div class="kpi-dot" style="background:#0D1B4B"></div><div class="kpi-lbl">TOTAL TOUTES PLATEFORMES</div></div>
-  <div class="kpi-val" style="color:#0D1B4B">${kf(grandTotal)}</div>
-  <div class="kpi-sub">Total 22 semaines · 5 plateformes</div>
-  <div class="kpi-sep"></div>
-  <div class="kpi-row"><span class="kpi-rl">Moy./semaine</span><span class="kpi-rv">${kf(totalAv)}</span></div>
-  <div class="kpi-row"><span class="kpi-rl">Sem. 25 mai</span><span class="kpi-rv">${kf(totalLast)}</span></div>
-</div>`+DATA.map(p=>kpiCard(p.color,p.color,p.label,p.total,p.av,p.last,p.prev)).join('');
+function togglePanel(){
+  const btn=document.getElementById('period-btn');
+  const panel=document.getElementById('period-panel');
+  const open=panel.classList.toggle('open');
+  btn.classList.toggle('open',open);
+  document.getElementById('period-arrow').textContent=open?'▴':'▾';
+}
+document.addEventListener('click',e=>{
+  if(!e.target.closest('#period-btn')&&!e.target.closest('#period-panel')){
+    document.getElementById('period-panel').classList.remove('open');
+    document.getElementById('period-btn').classList.remove('open');
+    document.getElementById('period-arrow').textContent='▾';
+  }
+});
 
-// ---- Evolution chart ----
+function selectPreset(n){
+  activePreset=n;
+  const s=22-n, e=21;
+  selStart.value=s; selEnd.value=e;
+  document.querySelectorAll('.period-opt').forEach(el=>el.classList.remove('active'));
+  document.querySelector(`.period-opt[data-id="${n}"]`)?.classList.add('active');
+  closePanel();
+  render(s,e);
+}
+
+function onCustomChange(){
+  const s=+selStart.value, e=+selEnd.value;
+  if(e<=s){selEnd.value=Math.min(s+1,21);return;}
+  activePreset=null;
+  document.querySelectorAll('.period-opt').forEach(el=>el.classList.remove('active'));
+  closePanel();
+  render(+selStart.value,+selEnd.value);
+}
+
+function closePanel(){
+  document.getElementById('period-panel').classList.remove('open');
+  document.getElementById('period-btn').classList.remove('open');
+  document.getElementById('period-arrow').textContent='▾';
+}
+
+/* ---------- stats for a range ---------- */
+function getStats(p,s,e){
+  const ws=p.weeks.slice(s,e+1);
+  const total=ws.reduce((a,v)=>a+v,0);
+  const av=avg(ws);
+  const last=ws[ws.length-1];
+  const prev=ws.length>1?ws[ws.length-2]:last;
+  return{...p,ws,total,av,last,prev,dPrev:delta(last,prev),dMoy:delta(last,av)};
+}
+
+/* ---------- tooltip element (once) ---------- */
+const tipEl=document.createElement('div');
+tipEl.style.cssText='position:fixed;display:none;background:rgba(13,27,75,.93);color:#fff;border-radius:9px;padding:10px 13px;font-size:10px;pointer-events:none;z-index:9999;min-width:180px;box-shadow:0 4px 16px rgba(0,0,0,.35);line-height:1.75';
+document.body.appendChild(tipEl);
+
+/* ---------- RENDER ---------- */
+function render(s,e){
+  RS=s;RE=e;
+  const n=e-s+1;
+  const stats=DATA.map(p=>getStats(p,s,e));
+  const grandTotal=stats.reduce((a,p)=>a+p.total,0);
+  const totalLast=stats.reduce((a,p)=>a+p.last,0);
+  const totalPrev=stats.reduce((a,p)=>a+p.prev,0);
+  const totalAv=stats.reduce((a,p)=>a+p.av,0);
+
+  // Period label
+  const lbl=`${SHORT_DATES[s]} → ${SHORT_DATES[e]} · ${n} semaine${n>1?'s':''}`;
+  document.getElementById('period-label').textContent=lbl;
+  document.getElementById('subtitle').textContent=`${SHORT_DATES[s]} 2025/2026 → ${SHORT_DATES[e]} 2026 · ${n} semaine${n>1?'s':''} · Mise à jour : ${SHORT_DATES[21]} 2026`;
+
+  // KPIs
+  document.getElementById('kpi-row').innerHTML=
+    `<div class="kpi" style="border-left:4px solid #0D1B4B">
+      <div class="kpi-top"><div class="kpi-dot" style="background:#0D1B4B"></div><div class="kpi-lbl">TOTAL TOUTES PLATEFORMES</div></div>
+      <div class="kpi-val" style="color:#0D1B4B">${kf(grandTotal)}</div>
+      <div class="kpi-sub">${n} semaine${n>1?'s':''} · 5 plateformes</div>
+      <div class="kpi-sep"></div>
+      <div class="kpi-row"><span class="kpi-rl">Moy./semaine</span><span class="kpi-rv">${kf(totalAv)}</span></div>
+      <div class="kpi-row"><span class="kpi-rl">Dernière semaine</span><span class="kpi-rv">${kf(totalLast)}</span></div>
+    </div>`+
+    stats.map(p=>{
+      const dp=p.dPrev,dm=p.dMoy;
+      return`<div class="kpi">
+        <div class="kpi-top"><div class="kpi-dot" style="background:${p.color}"></div><div class="kpi-lbl">${p.label}</div></div>
+        <div class="kpi-val" style="color:${p.color}">${kf(p.total)}</div>
+        <div class="kpi-sub">${n} semaine${n>1?'s':''}</div>
+        <div class="kpi-sep"></div>
+        <div class="kpi-row"><span class="kpi-rl">Moy./semaine</span><span class="kpi-rv">${kf(p.av)}</span></div>
+        <div class="kpi-row"><span class="kpi-rl">vs Sem. préc.</span><span class="delta ${dp>=0?'pos':'neg'}">${dp>=0?'+':''}${dp.toFixed(1)} %</span></div>
+      </div>`;
+    }).join('');
+
+  renderEvo(stats,s,e);
+  renderDonut(stats,grandTotal);
+  renderTable(stats,grandTotal,totalLast,totalPrev,totalAv,n);
+}
+
+/* ---------- Evolution chart ---------- */
 const evoCanvas=document.getElementById('evo-canvas');
 const evoCtx=evoCanvas.getContext('2d');
-const W=evoCanvas.width,H=evoCanvas.height;
-const pL=52,pR=12,pT=12,pB=30;
-const iw=W-pL-pR,ih=H-pT-pB;
+const EW=evoCanvas.width,EH=evoCanvas.height;
+const pL=52,pR=12,pT=12,pB=30,eiw=EW-pL-pR,eih=EH-pT-pB;
 
-const maxVal=Math.ceil(Math.max(...DATA.flatMap(p=>p.weeks))*1.1/1000)*1000;
-const xp=i=>pL+i/21*iw;
-const yp=v=>pT+(1-v/maxVal)*ih;
-
-let tipEl=null;
+let currentStats=[],currentS=0,currentE=21;
 
 function drawEvo(hw){
-  evoCtx.clearRect(0,0,W,H);
+  const n=currentE-currentS+1;
+  const xp=i=>pL+(n===1?eiw/2:i/(n-1)*eiw);
+  const allVals=currentStats.flatMap(p=>p.ws);
+  const maxV=Math.ceil(Math.max(...allVals)*1.1/1000)*1000||1000;
+  const yp=v=>pT+(1-v/maxV)*eih;
+
+  evoCtx.clearRect(0,0,EW,EH);
   // Grid
   [0,.25,.5,.75,1].forEach(t=>{
-    const v=Math.round(maxVal*t);
+    const v=Math.round(maxV*t);
     const yv=yp(v);
     evoCtx.strokeStyle='#E9ECF0';evoCtx.lineWidth=1;
-    evoCtx.beginPath();evoCtx.moveTo(pL,yv);evoCtx.lineTo(W-pR,yv);evoCtx.stroke();
+    evoCtx.beginPath();evoCtx.moveTo(pL,yv);evoCtx.lineTo(EW-pR,yv);evoCtx.stroke();
     evoCtx.fillStyle='#9CA3AF';evoCtx.font='9px -apple-system,Arial,sans-serif';
     evoCtx.textAlign='right';
     evoCtx.fillText(v>=1000?(v/1000)+'K':v,pL-4,yv+3.5);
   });
-  // X labels
-  [{i:0,t:'29 déc'},{i:4,t:'26 jan'},{i:8,t:'23 fév'},{i:12,t:'23 mar'},{i:16,t:'20 avr'},{i:21,t:'25 mai'}].forEach(({i,t})=>{
+  // X labels — at most 7 ticks
+  const ticks=n<=7?Array.from({length:n},(_,i)=>i):[0,Math.round(n*.2),Math.round(n*.4),Math.round(n*.6),Math.round(n*.8),n-1].filter((v,i,a)=>a.indexOf(v)===i);
+  ticks.forEach(i=>{
     evoCtx.fillStyle='#9CA3AF';evoCtx.font='9px -apple-system,Arial,sans-serif';
-    evoCtx.textAlign='center';evoCtx.fillText(t,xp(i),H-5);
+    evoCtx.textAlign='center';evoCtx.fillText(WEEK_DATES[currentS+i],xp(i),EH-5);
   });
   // Hover line
   if(hw!==null){
     evoCtx.strokeStyle='rgba(0,0,0,.1)';evoCtx.lineWidth=1;evoCtx.setLineDash([4,3]);
-    evoCtx.beginPath();evoCtx.moveTo(xp(hw),pT);evoCtx.lineTo(xp(hw),pT+ih);evoCtx.stroke();
+    evoCtx.beginPath();evoCtx.moveTo(xp(hw),pT);evoCtx.lineTo(xp(hw),pT+eih);evoCtx.stroke();
     evoCtx.setLineDash([]);
   }
   // Lines
-  DATA.forEach(p=>{
+  currentStats.forEach(p=>{
     evoCtx.strokeStyle=p.color;evoCtx.lineWidth=2.2;evoCtx.lineJoin='round';evoCtx.lineCap='round';
     evoCtx.beginPath();
-    p.weeks.forEach((v,i)=>{if(i===0)evoCtx.moveTo(xp(i),yp(v));else evoCtx.lineTo(xp(i),yp(v));});
+    p.ws.forEach((v,i)=>{if(i===0)evoCtx.moveTo(xp(i),yp(v));else evoCtx.lineTo(xp(i),yp(v));});
     evoCtx.stroke();
     if(hw!==null){
-      evoCtx.fillStyle=p.color;evoCtx.beginPath();evoCtx.arc(xp(hw),yp(p.weeks[hw]),4.5,0,Math.PI*2);evoCtx.fill();
-      evoCtx.fillStyle='#fff';evoCtx.beginPath();evoCtx.arc(xp(hw),yp(p.weeks[hw]),2,0,Math.PI*2);evoCtx.fill();
+      evoCtx.fillStyle=p.color;evoCtx.beginPath();evoCtx.arc(xp(hw),yp(p.ws[hw]),4.5,0,Math.PI*2);evoCtx.fill();
+      evoCtx.fillStyle='#fff';evoCtx.beginPath();evoCtx.arc(xp(hw),yp(p.ws[hw]),2,0,Math.PI*2);evoCtx.fill();
     }
   });
 }
-drawEvo(null);
 
-// Tooltip
-tipEl=document.createElement('div');
-tipEl.style.cssText='position:fixed;display:none;background:rgba(13,27,75,.93);color:#fff;border-radius:9px;padding:10px 13px;font-size:10px;pointer-events:none;z-index:9999;min-width:180px;box-shadow:0 4px 16px rgba(0,0,0,.35);line-height:1.75';
-document.body.appendChild(tipEl);
+function renderEvo(stats,s,e){
+  currentStats=stats;currentS=s;currentE=e;
+  drawEvo(null);
+  // Legend
+  document.getElementById('evo-legend').innerHTML=stats.map(p=>`<span style="display:inline-flex;align-items:center;gap:5px;font-size:9.5px;color:#6B7280"><svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="${p.color}" stroke-width="2.5"/></svg>${p.label}</span>`).join('');
+}
 
 evoCanvas.addEventListener('mousemove',e=>{
+  const n=currentE-currentS+1;
+  if(n===0)return;
   const rect=evoCanvas.getBoundingClientRect();
-  const rawX=(e.clientX-rect.left)*W/rect.width;
-  const wi=Math.max(0,Math.min(21,Math.round((rawX-pL)/iw*21)));
+  const rawX=(e.clientX-rect.left)*EW/rect.width;
+  const xf=n===1?0:(rawX-pL)/eiw*(n-1);
+  const wi=Math.max(0,Math.min(n-1,Math.round(xf)));
   drawEvo(wi);
-  const weekTotal=DATA.reduce((s,p)=>s+p.weeks[wi],0);
-  let h=`<div style="font-weight:800;font-size:11px;border-bottom:1px solid rgba(255,255,255,.18);padding-bottom:4px;margin-bottom:5px">${WEEK_DATES[wi]}</div>`;
-  DATA.forEach(p=>{
-    const pct=((p.weeks[wi]/weekTotal)*100).toFixed(1);
-    h+=`<div style="display:flex;justify-content:space-between;gap:12px">
-      <span><span style="color:${p.color}">●</span> ${p.label}</span>
-      <span style="font-weight:700">${kf(p.weeks[wi])}<span style="font-size:8.5px;opacity:.65;margin-left:4px">${pct}%</span></span>
-    </div>`;
+  const weekTotal=currentStats.reduce((s,p)=>s+p.ws[wi],0);
+  let h=`<div style="font-weight:800;font-size:11px;border-bottom:1px solid rgba(255,255,255,.18);padding-bottom:4px;margin-bottom:5px">${WEEK_DATES[currentS+wi]}</div>`;
+  currentStats.forEach(p=>{
+    const pct=weekTotal>0?((p.ws[wi]/weekTotal)*100).toFixed(1):'0.0';
+    h+=`<div style="display:flex;justify-content:space-between;gap:12px"><span><span style="color:${p.color}">●</span> ${p.label}</span><span style="font-weight:700">${kf(p.ws[wi])}<span style="font-size:8.5px;opacity:.65;margin-left:4px">${pct}%</span></span></div>`;
   });
   h+=`<div style="border-top:1px solid rgba(255,255,255,.18);margin-top:5px;padding-top:4px;display:flex;justify-content:space-between;font-weight:800"><span>Total</span><span>${kf(weekTotal)}</span></div>`;
   tipEl.innerHTML=h;tipEl.style.display='block';
@@ -244,116 +374,108 @@ evoCanvas.addEventListener('mousemove',e=>{
 });
 evoCanvas.addEventListener('mouseleave',()=>{drawEvo(null);tipEl.style.display='none';});
 
-// Evo legend
-document.getElementById('evo-legend').innerHTML=DATA.map(p=>`<span style="display:inline-flex;align-items:center;gap:5px;font-size:9.5px;color:#6B7280"><svg width="22" height="8"><line x1="0" y1="4" x2="22" y2="4" stroke="${p.color}" stroke-width="2.5"/></svg>${p.label}</span>`).join('');
-
-// ---- Donut chart ----
+/* ---------- Donut chart ---------- */
 const dCanvas=document.getElementById('donut-canvas');
 const dCtx=dCanvas.getContext('2d');
 const DW=dCanvas.width,DH=dCanvas.height;
 const cx=DW/2,cy=DH/2-8;
-const rOut=Math.min(DW,DH)*0.37,rIn=rOut*0.56;
-
-let donutHover=-1;
-const sliceAngles=[];
+const rOut=Math.min(DW,DH)*.37,rIn=rOut*.56;
+let sliceAngles=[],donutStats=[],donutTotal=0,donutHov=-1;
 
 function drawDonut(hov){
   dCtx.clearRect(0,0,DW,DH);
-  const total=DATA.reduce((s,p)=>s+p.total,0);
+  const total=donutTotal||1;
   let start=-Math.PI/2;
-  DATA.forEach((p,i)=>{
+  sliceAngles=[];
+  donutStats.forEach((p,i)=>{
     const angle=(p.total/total)*2*Math.PI;
-    const isHov=hov===i;
-    const ro=isHov?rOut+6:rOut;
-    // Shadow
-    if(isHov){dCtx.shadowColor=p.color;dCtx.shadowBlur=14;}
-    dCtx.beginPath();
-    dCtx.moveTo(cx,cy);
-    dCtx.arc(cx,cy,ro,start,start+angle);
-    dCtx.closePath();
-    dCtx.fillStyle=p.color;
-    dCtx.fill();
-    dCtx.shadowBlur=0;
-    if(i===0)sliceAngles.length=0;
+    const isH=hov===i;
+    const ro=isH?rOut+6:rOut;
+    if(isH){dCtx.shadowColor=p.color;dCtx.shadowBlur=14;}
+    dCtx.beginPath();dCtx.moveTo(cx,cy);dCtx.arc(cx,cy,ro,start,start+angle);dCtx.closePath();
+    dCtx.fillStyle=p.color;dCtx.fill();dCtx.shadowBlur=0;
     sliceAngles.push({start,end:start+angle,i});
     start+=angle;
   });
-  // Inner circle
-  dCtx.beginPath();dCtx.arc(cx,cy,rIn,0,Math.PI*2);
-  dCtx.fillStyle='#fff';dCtx.fill();
-  // Center text
+  dCtx.beginPath();dCtx.arc(cx,cy,rIn,0,Math.PI*2);dCtx.fillStyle='#fff';dCtx.fill();
   dCtx.textAlign='center';
   if(hov>=0){
-    const hp=DATA[hov];
-    const pct=((hp.total/grandTotal)*100).toFixed(1);
-    dCtx.fillStyle=hp.color;dCtx.font='bold 13px -apple-system,Arial,sans-serif';
+    const hp=donutStats[hov];
+    const pct=((hp.total/total)*100).toFixed(1);
+    dCtx.fillStyle=hp.color;dCtx.font='bold 12px -apple-system,Arial,sans-serif';
     dCtx.fillText(hp.label,cx,cy-10);
-    dCtx.fillStyle='#0D1B4B';dCtx.font='bold 18px -apple-system,Arial,sans-serif';
-    dCtx.fillText(kf(hp.total),cx,cy+10);
-    dCtx.fillStyle='#9CA3AF';dCtx.font='11px -apple-system,Arial,sans-serif';
-    dCtx.fillText(pct+' % du budget',cx,cy+28);
+    dCtx.fillStyle='#0D1B4B';dCtx.font='bold 17px -apple-system,Arial,sans-serif';
+    dCtx.fillText(kf(hp.total),cx,cy+9);
+    dCtx.fillStyle='#9CA3AF';dCtx.font='10.5px -apple-system,Arial,sans-serif';
+    dCtx.fillText(pct+' % du budget',cx,cy+27);
   } else {
-    dCtx.fillStyle='#6B7280';dCtx.font='11px -apple-system,Arial,sans-serif';
-    dCtx.fillText('Budget total',cx,cy-10);
-    dCtx.fillStyle='#0D1B4B';dCtx.font='bold 20px -apple-system,Arial,sans-serif';
-    dCtx.fillText(kf(grandTotal),cx,cy+12);
+    dCtx.fillStyle='#6B7280';dCtx.font='11px -apple-system,Arial,sans-serif';dCtx.fillText('Budget total',cx,cy-10);
+    dCtx.fillStyle='#0D1B4B';dCtx.font='bold 19px -apple-system,Arial,sans-serif';dCtx.fillText(kf(total),cx,cy+12);
     dCtx.fillStyle='#9CA3AF';dCtx.font='10px -apple-system,Arial,sans-serif';
-    dCtx.fillText('22 semaines',cx,cy+28);
+    const n=RE-RS+1;dCtx.fillText(n+' semaine'+(n>1?'s':''),cx,cy+28);
   }
 }
-drawDonut(-1);
+
+function renderDonut(stats,grand){
+  donutStats=stats;donutTotal=grand;donutHov=-1;
+  drawDonut(-1);
+  document.getElementById('donut-legend').innerHTML=stats.map(p=>{
+    const pct=grand>0?((p.total/grand)*100).toFixed(1):'0.0';
+    return`<div style="display:flex;align-items:center;gap:7px">
+      <div style="width:12px;height:12px;border-radius:3px;background:${p.color};flex-shrink:0"></div>
+      <div style="flex:1;font-size:10.5px;color:#374151;font-weight:600">${p.label}</div>
+      <div style="font-size:10.5px;font-weight:700;color:#0D1B4B">${kf(p.total)}</div>
+      <div style="font-size:9.5px;color:#9CA3AF;width:38px;text-align:right">${pct} %</div>
+    </div>`;
+  }).join('');
+}
 
 dCanvas.addEventListener('mousemove',e=>{
   const rect=dCanvas.getBoundingClientRect();
   const mx=(e.clientX-rect.left)*DW/rect.width-cx;
   const my=(e.clientY-rect.top)*DH/rect.height-cy;
   const dist=Math.sqrt(mx*mx+my*my);
-  if(dist<rIn||dist>rOut+10){drawDonut(-1);donutHover=-1;dCanvas.style.cursor='default';return;}
+  if(dist<rIn||dist>rOut+10){if(donutHov!==-1){donutHov=-1;drawDonut(-1);}dCanvas.style.cursor='default';return;}
   let angle=Math.atan2(my,mx);
   if(angle<-Math.PI/2)angle+=2*Math.PI;
   const found=sliceAngles.findIndex(s=>angle>=s.start&&angle<s.end);
-  if(found!==donutHover){donutHover=found;drawDonut(found);dCanvas.style.cursor=found>=0?'pointer':'default';}
+  if(found!==donutHov){donutHov=found;drawDonut(found);dCanvas.style.cursor=found>=0?'pointer':'default';}
 });
-dCanvas.addEventListener('mouseleave',()=>{drawDonut(-1);donutHover=-1;});
+dCanvas.addEventListener('mouseleave',()=>{donutHov=-1;drawDonut(-1);});
 
-// Donut legend
-const dl=document.getElementById('donut-legend');
-dl.innerHTML=DATA.map(p=>{
-  const pct=((p.total/grandTotal)*100).toFixed(1);
-  return`<div style="display:flex;align-items:center;gap:7px">
-    <div style="width:12px;height:12px;border-radius:3px;background:${p.color};flex-shrink:0"></div>
-    <div style="flex:1;font-size:10.5px;color:#374151;font-weight:600">${p.label}</div>
-    <div style="font-size:10.5px;font-weight:700;color:#0D1B4B">${kf(p.total)}</div>
-    <div style="font-size:9.5px;color:#9CA3AF;width:38px;text-align:right">${pct} %</div>
-  </div>`;
-}).join('');
+/* ---------- Table ---------- */
+function renderTable(stats,grand,totalLast,totalPrev,totalAv,n){
+  document.getElementById('th-last').textContent=WEEK_DATES[RE];
+  document.getElementById('th-prev').textContent=n>1?WEEK_DATES[RE-1]:'—';
+  const dp=delta(totalLast,totalPrev),dm=delta(totalLast,totalAv);
+  document.getElementById('table-body').innerHTML=
+    stats.map(p=>{
+      const pct=grand>0?((p.total/grand)*100).toFixed(1):'0.0';
+      return`<tr>
+        <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:${p.color};display:inline-block;flex-shrink:0"></span><strong>${p.label}</strong></span></td>
+        <td style="font-weight:700;color:#0D1B4B">${cf(p.total)}</td>
+        <td><div style="display:flex;align-items:center;gap:5px;justify-content:flex-end"><div style="width:54px;height:6px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${p.color};border-radius:3px"></div></div><span>${pct} %</span></div></td>
+        <td>${cf(p.av)}</td>
+        <td style="font-weight:700">${cf(p.last)}</td>
+        <td>${n>1?cf(p.prev):'—'}</td>
+        <td style="text-align:center"><span class="delta ${p.dPrev>=0?'pos':'neg'}">${p.dPrev>=0?'↑':'↓'}${Math.abs(p.dPrev).toFixed(1)} %</span></td>
+        <td style="text-align:center"><span class="delta ${p.dMoy>=0?'pos':'neg'}">${p.dMoy>=0?'+':''}${p.dMoy.toFixed(1)} %</span></td>
+      </tr>`;
+    }).join('')+
+    `<tr>
+      <td><strong>Total toutes plateformes</strong></td>
+      <td style="font-weight:800;color:#0D1B4B">${cf(grand)}</td>
+      <td style="text-align:right;font-weight:700">100 %</td>
+      <td>${cf(totalAv)}</td>
+      <td style="font-weight:800">${cf(totalLast)}</td>
+      <td>${n>1?cf(totalPrev):'—'}</td>
+      <td style="text-align:center"><span class="delta ${dp>=0?'pos':'neg'}">${dp>=0?'↑':'↓'}${Math.abs(dp).toFixed(1)} %</span></td>
+      <td style="text-align:center"><span class="delta ${dm>=0?'pos':'neg'}">${dm>=0?'+':''}${dm.toFixed(1)} %</span></td>
+    </tr>`;
+}
 
-// ---- Table ----
-const tb=document.getElementById('table-body');
-const totalRow={total:grandTotal,av:avg(DATA.map(p=>p.av)),last:totalLast,prev:totalPrev};
-tb.innerHTML=DATA.map(p=>{
-  const pct=((p.total/grandTotal)*100).toFixed(1);
-  const dp=delta(p.last,p.prev),dm=delta(p.last,p.av);
-  return`<tr>
-    <td><span style="display:inline-flex;align-items:center;gap:6px"><span style="width:9px;height:9px;border-radius:50%;background:${p.color};display:inline-block;flex-shrink:0"></span><strong>${p.label}</strong></span></td>
-    <td style="font-weight:700;color:#0D1B4B">${cf(p.total)}</td>
-    <td><div style="display:flex;align-items:center;gap:5px;justify-content:flex-end"><div style="width:54px;height:6px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="height:100%;width:${pct}%;background:${p.color};border-radius:3px"></div></div><span>${pct} %</span></div></td>
-    <td>${cf(p.av)}</td>
-    <td style="font-weight:700">${cf(p.last)}</td>
-    <td>${cf(p.prev)}</td>
-    <td style="text-align:center"><span class="delta ${dp>=0?'pos':'neg'}">${dp>=0?'↑':'↓'}${Math.abs(dp).toFixed(1)} %</span></td>
-    <td style="text-align:center"><span class="delta ${dm>=0?'pos':'neg'}">${dm>=0?'+':''}${dm.toFixed(1)} %</span></td>
-  </tr>`;
-}).join('')+`<tr>
-  <td><strong>Total toutes plateformes</strong></td>
-  <td style="font-weight:800;color:#0D1B4B">${cf(grandTotal)}</td>
-  <td style="text-align:right;font-weight:700">100 %</td>
-  <td>${cf(totalAv)}</td>
-  <td style="font-weight:800">${cf(totalLast)}</td>
-  <td>${cf(totalPrev)}</td>
-  <td style="text-align:center"><span class="delta ${delta(totalLast,totalPrev)>=0?'pos':'neg'}">${delta(totalLast,totalPrev)>=0?'↑':'↓'}${Math.abs(delta(totalLast,totalPrev)).toFixed(1)} %</span></td>
-  <td style="text-align:center"><span class="delta ${delta(totalLast,totalAv)>=0?'pos':'neg'}">${delta(totalLast,totalAv)>=0?'+':''}${delta(totalLast,totalAv).toFixed(1)} %</span></td>
-</tr>`;
+/* ---------- Init ---------- */
+selectPreset(22);
 </script>
 </body>
 </html>
