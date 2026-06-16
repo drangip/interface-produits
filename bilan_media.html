@@ -39,7 +39,7 @@ tr:last-child td{background:#F0F4FF;font-weight:700}
 #period-btn{display:inline-flex;align-items:center;gap:7px;background:#fff;border:1.5px solid #E5E7EB;border-radius:8px;padding:7px 12px;cursor:pointer;font-size:11px;font-weight:600;color:#374151;box-shadow:0 1px 3px rgba(0,0,0,.06);user-select:none;transition:border-color .15s}
 #period-btn:hover{border-color:#0D1B4B}
 #period-btn.open{border-color:#0D1B4B;box-shadow:0 0 0 3px rgba(13,27,75,.08)}
-#period-panel{display:none;position:absolute;top:calc(100% + 6px);right:0;background:#fff;border:1px solid #E5E7EB;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;min-width:280px;padding:8px 0}
+#period-panel{display:none;position:absolute;top:calc(100% + 6px);left:0;background:#fff;border:1px solid #E5E7EB;border-radius:10px;box-shadow:0 8px 24px rgba(0,0,0,.12);z-index:200;min-width:280px;padding:8px 0}
 #period-panel.open{display:block}
 .period-opt{padding:8px 16px;font-size:11px;cursor:pointer;color:#374151;display:flex;align-items:center;justify-content:space-between;gap:10px;transition:background .1s}
 .period-opt:hover{background:#F5F7FF}
@@ -64,36 +64,34 @@ tr:last-child td{background:#F0F4FF;font-weight:700}
   <a href="local_screwfix.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Screwfix</a>
   <a href="mesure_efficacite.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
 </nav>
-<div style="position:fixed;top:42px;left:0;right:0;height:46px;background:#fff;border-bottom:1px solid #E5E7EB;z-index:100;display:flex;align-items:center;justify-content:flex-end;padding:0 20px">
+<div style="position:fixed;top:42px;left:0;right:0;height:46px;background:#fff;border-bottom:1px solid #E5E7EB;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 20px">
+  <div style="position:relative">
+    <div id="period-btn" onclick="togglePanel()">
+      <span style="font-size:14px">📅</span>
+      <span id="period-label"></span>
+      <span style="font-size:10px;color:#9CA3AF" id="period-arrow">▾</span>
+    </div>
+    <div id="period-panel">
+      <div class="period-opt" data-id="4"  onclick="selectPreset(4)">  <span>4 dernières semaines</span>  <span class="dates" id="d4"></span>  </div>
+      <div class="period-opt" data-id="8"  onclick="selectPreset(8)">  <span>8 dernières semaines</span>  <span class="dates" id="d8"></span>  </div>
+      <div class="period-opt" data-id="12" onclick="selectPreset(12)"> <span>12 dernières semaines</span> <span class="dates" id="d12"></span> </div>
+      <div class="period-opt" data-id="22" onclick="selectPreset(22)"> <span>Période complète (22 sem.)</span> <span class="dates" id="d22"></span> </div>
+      <div class="period-sep">Personnalisée</div>
+      <div class="period-custom">
+        De&nbsp;<select id="sel-start" onchange="onCustomChange()"></select>
+        &nbsp;à&nbsp;<select id="sel-end" onchange="onCustomChange()"></select>
+      </div>
+    </div>
+  </div>
   <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style="height:28px" onerror="this.style.display='none'">
 </div>
 
 <div class="page">
 
-  <!-- Title + period selector -->
-  <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:16px">
-    <div>
-      <div style="font-size:20px;font-weight:800;color:#0D1B4B;margin-bottom:3px">Bilan Media — Performance Multiplateforme</div>
-      <div id="subtitle" style="font-size:11px;color:#9CA3AF"></div>
-    </div>
-    <div style="position:relative;display:flex;align-items:center;gap:8px;flex-shrink:0">
-      <div id="period-btn" onclick="togglePanel()">
-        <span style="font-size:14px">📅</span>
-        <span id="period-label"></span>
-        <span style="font-size:10px;color:#9CA3AF" id="period-arrow">▾</span>
-      </div>
-      <div id="period-panel">
-        <div class="period-opt" data-id="4"  onclick="selectPreset(4)">  <span>4 dernières semaines</span>  <span class="dates" id="d4"></span>  </div>
-        <div class="period-opt" data-id="8"  onclick="selectPreset(8)">  <span>8 dernières semaines</span>  <span class="dates" id="d8"></span>  </div>
-        <div class="period-opt" data-id="12" onclick="selectPreset(12)"> <span>12 dernières semaines</span> <span class="dates" id="d12"></span> </div>
-        <div class="period-opt" data-id="22" onclick="selectPreset(22)"> <span>Période complète (22 sem.)</span> <span class="dates" id="d22"></span> </div>
-        <div class="period-sep">Personnalisée</div>
-        <div class="period-custom">
-          De&nbsp;<select id="sel-start" onchange="onCustomChange()"></select>
-          &nbsp;à&nbsp;<select id="sel-end" onchange="onCustomChange()"></select>
-        </div>
-      </div>
-    </div>
+  <!-- Title -->
+  <div style="margin-bottom:16px">
+    <div style="font-size:20px;font-weight:800;color:#0D1B4B;margin-bottom:3px">Bilan Media — Performance Multiplateforme</div>
+    <div id="subtitle" style="font-size:11px;color:#9CA3AF"></div>
   </div>
 
   <!-- KPI row -->
