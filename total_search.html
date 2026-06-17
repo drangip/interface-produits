@@ -103,13 +103,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
     </div>
   </div>
 
-  <!-- Row 3: Country chart -->
-  <div class="card" style="margin-bottom:12px">
-    <div class="sec"><div class="sec-bar"></div>SESSIONS AU FIL DU TEMPS PAR PAYS</div>
-    <canvas id="country-canvas" width="1400" height="200" style="width:100%;height:auto;display:block;cursor:crosshair"></canvas>
-    <div id="country-legend" style="display:flex;flex-wrap:wrap;gap:12px;margin-top:10px"></div>
-  </div>
-
   <!-- Row 4: Source table + donut -->
   <div style="display:flex;gap:12px;margin-bottom:12px">
     <div class="card" style="flex:1;padding:0;overflow:hidden">
@@ -408,17 +401,6 @@ function render(n){
   </tr>`).join('');
   addDonutHover(document.getElementById('ch-donut'),chSlices,chTotal,'Sessions','ch-donut-legend');
 
-  /* --- Country chart --- */
-  const countryCanvas=document.getElementById('country-canvas');
-  const countryDS=COUNTRY_DATA.map(c=>({color:c.color,data:c.sess.slice(P_S,P_E+1),lw:1.6}));
-  drawLineChart(countryCanvas,countryDS,labels,null,{pL:46,pB:26});
-  document.getElementById('country-legend').innerHTML=COUNTRY_DATA.map(c=>`<span style="display:inline-flex;align-items:center;gap:5px;font-size:9px;color:#6B7280"><svg width="18" height="8"><line x1="0" y1="4" x2="18" y2="4" stroke="${c.color}" stroke-width="2"/></svg>${c.label}</span>`).join('');
-  addHover(countryCanvas,countryDS,labels,{pL:46},wi=>{
-    let h=`<div style="font-weight:800;font-size:11px;border-bottom:1px solid rgba(255,255,255,.18);padding-bottom:4px;margin-bottom:5px">${labels[wi]}</div>`;
-    const sorted=[...countryDS.map((d,i)=>({...d,...COUNTRY_DATA[i]}))].sort((a,b)=>b.data[wi]-a.data[wi]);
-    sorted.forEach(d=>{h+=`<div style="display:flex;justify-content:space-between;gap:10px"><span><span style="color:${d.color}">●</span> ${d.label}</span><span style="font-weight:700">${nf(d.data[wi])}</span></div>`;});
-    return h;
-  });
 
   /* --- Source table + donut --- */
   // Scale source sessions by period ratio vs 30-day baseline
