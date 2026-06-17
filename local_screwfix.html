@@ -248,13 +248,7 @@ function setupEvoChart(top5){
   canvas.addEventListener('mouseleave',()=>{draw(null);tip.style.display='none';});
 }
 
-const SF_LOGO=`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 62 38" width="62" height="38">
-  <rect width="62" height="38" rx="3" fill="white" stroke="#E5E7EB" stroke-width="1"/>
-  <text x="14" y="28" font-family="Arial Black,Arial,sans-serif" font-size="24" font-weight="900" fill="#003DA5">S</text>
-  <rect x="28" y="7" width="28" height="7" rx="1" fill="#EE1C25"/>
-  <rect x="28" y="16" width="21" height="7" rx="1" fill="#003DA5"/>
-  <rect x="28" y="25" width="28" height="7" rx="1" fill="#003DA5"/>
-</svg>`;
+const SF_LOGO=`<img src="public/images/logos/screwfix-map.jpg" alt="Screwfix" style="height:38px;width:auto;border-radius:3px">`;
 
 function renderPanel(store,idx){
   const d=getStoreData(idx);
