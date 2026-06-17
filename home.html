@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Home | WPP Media</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#EEF1F6;min-height:100vh}
+.brand-card{
+  background:#fff;
+  border-radius:20px;
+  box-shadow:0 4px 20px rgba(13,27,75,.08);
+  padding:36px 48px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-decoration:none;
+  transition:transform .2s ease, box-shadow .2s ease;
+  cursor:pointer;
+  border:2px solid transparent;
+}
+.brand-card:hover{
+  transform:translateY(-6px);
+  box-shadow:0 12px 36px rgba(13,27,75,.16);
+  border-color:#E5E7EB;
+}
+</style>
+</head>
+<body>
+
+<nav style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0D1B4B;height:42px;display:flex;align-items:center;padding:0 20px;gap:6px;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif">
+  <a href="home.html" style="padding:4px 12px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Home</a>
+  <a href="bilan_media.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Bilan Media</a>
+  <a href="total_search.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Total Search</a>
+  <a href="dashboard.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Suivi Produits</a>
+  <a href="audit_flux.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Audit de flux</a>
+  <a href="competitivite_prix.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Compétitivité prix</a>
+  <a href="local_castorama.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Castorama</a>
+  <a href="local_bricodepot.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Brico Dépôt</a>
+  <a href="local_screwfix.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Screwfix</a>
+  <a href="mesure_efficacite.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
+</nav>
+
+<div style="min-height:calc(100vh - 42px);margin-top:42px;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:48px 24px">
+
+  <!-- WPP Media logo -->
+  <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style="height:72px;margin-bottom:40px" onerror="this.style.display='none'">
+
+  <!-- Tagline -->
+  <div style="font-size:26px;font-weight:700;color:#0D1B4B;text-align:center;max-width:620px;line-height:1.4;margin-bottom:14px">
+    Votre hub data : une vision unifiée pour piloter votre stratégie
+  </div>
+  <div style="font-size:13px;color:#9CA3AF;margin-bottom:56px;text-align:center">
+    Sélectionnez une enseigne pour accéder aux analyses
+  </div>
+
+  <!-- Brand logos -->
+  <div style="display:flex;gap:28px;align-items:stretch;flex-wrap:wrap;justify-content:center">
+
+    <!-- Castorama -->
+    <a href="local_castorama.html" class="brand-card" style="min-width:240px">
+      <img src="public/images/logos/Castorama.png" alt="Castorama" style="height:56px;max-width:200px;object-fit:contain">
+    </a>
+
+    <!-- Brico Dépôt -->
+    <a href="local_bricodepot.html" class="brand-card" style="min-width:240px">
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 80" width="200" height="100">
+        <rect width="160" height="46" rx="4" fill="#E30613"/>
+        <rect y="42" width="160" height="38" rx="4" fill="#1A1A1A"/>
+        <rect y="42" width="160" height="6" fill="#1A1A1A"/>
+        <text x="80" y="33" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="28" font-weight="900" fill="#fff">BRICO</text>
+        <text x="80" y="72" text-anchor="middle" font-family="Arial Black,Arial,sans-serif" font-size="22" font-weight="900" fill="#E30613">DÉPÔT</text>
+      </svg>
+    </a>
+
+    <!-- Screwfix -->
+    <a href="local_screwfix.html" class="brand-card" style="min-width:240px">
+      <img src="public/images/logos/Screwfix.svg" alt="Screwfix" style="height:56px;max-width:220px;object-fit:contain">
+    </a>
+
+  </div>
+</div>
+
+</body>
+</html>
