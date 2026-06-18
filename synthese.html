@@ -468,10 +468,6 @@ const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v));
   const allVals=datasets.flatMap(d=>d.data);
   const maxV=Math.max(...allVals)*1.05;
 
-  const px=i=>pad.l+i/（N-1)*fw;
-  const py=v=>pad.t+fh*(1-v/maxV);
-
-  // helper to handle Japanese full-width character issue
   const pxi=i=>pad.l+(i/(N-1))*fw;
   const pyi=v=>pad.t+fh*(1-v/maxV);
 
