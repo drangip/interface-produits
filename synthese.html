@@ -403,13 +403,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 /* ───── helpers ───── */
 function seededRand(seed){let s=seed;return()=>{s=(s*16807+0)%2147483647;return(s-1)/2147483646;}}
 const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v));
+function setupHiDPI(cv){
+  const dpr=window.devicePixelRatio||1;
+  const W=cv.width,H=cv.height;
+  cv.width=W*dpr;cv.height=H*dpr;
+  const ctx=cv.getContext('2d');
+  ctx.scale(dpr,dpr);
+  return{ctx,W,H};
+}
 
 /* ───── 1. DONUT — Bilan Media ───── */
 (function(){
   const cv=document.getElementById('donut-media');
   if(!cv)return;
-  const ctx=cv.getContext('2d');
-  const W=cv.width,H=cv.height;
+  const{ctx,W,H}=setupHiDPI(cv);
   const slices=[
     {pct:.416,color:'#4285F4'},
     {pct:.238,color:'#EA4335'},
@@ -440,8 +447,7 @@ const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v));
 (function(){
   const cv=document.getElementById('line-search');
   if(!cv)return;
-  const ctx=cv.getContext('2d');
-  const W=cv.width,H=cv.height;
+  const{ctx,W,H}=setupHiDPI(cv);
   const pad={t:16,r:24,b:36,l:52};
   const fw=W-pad.l-pad.r,fh=H-pad.t-pad.b;
 
@@ -551,8 +557,7 @@ const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v));
 (function(){
   const cv=document.getElementById('radar-audit');
   if(!cv)return;
-  const ctx=cv.getContext('2d');
-  const W=cv.width,H=cv.height;
+  const{ctx,W,H}=setupHiDPI(cv);
   const cx=W/2,cy=H/2+8;
   const r=68;
   const labels=['Couverture','Enrichissement','Titre','Product type','Étiquettes'];
@@ -609,8 +614,7 @@ const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v));
 (function(){
   const cv=document.getElementById('line-audit');
   if(!cv)return;
-  const ctx=cv.getContext('2d');
-  const W=cv.width,H=cv.height;
+  const{ctx,W,H}=setupHiDPI(cv);
   const pad={t:12,r:20,b:28,l:42};
   const fw=W-pad.l-pad.r,fh=H-pad.t-pad.b;
 
