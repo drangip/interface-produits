@@ -1,0 +1,658 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Synthèse | WPP Media</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#EEF1F6;overflow-y:auto}
+.page{padding:20px;max-width:1440px;margin:88px auto 48px}
+.card{background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.06);padding:14px 16px}
+.sec-block{margin-bottom:28px}
+.sec-hdr{font-size:15px;font-weight:800;color:#0D1B4B;margin-bottom:12px;padding-bottom:8px;border-bottom:2px solid #E5E7EB}
+.sec{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#4B5675;display:flex;align-items:center;gap:4px;margin-bottom:10px}
+.sec-bar{width:3px;height:11px;background:#0D1B4B;border-radius:2px}
+/* kpi media */
+.kpi{background:#fff;border-radius:10px;padding:11px 13px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.kpi-top{display:flex;align-items:center;gap:5px;margin-bottom:4px}
+.kpi-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.kpi-lbl{font-size:7px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#4B5675;line-height:1.2}
+.kpi-val{font-size:17px;font-weight:800;line-height:1.05;margin-bottom:1px}
+.kpi-sub{font-size:7.5px;color:#9CA3AF;margin-bottom:4px}
+.kpi-sep{height:1px;background:#F3F4F6;margin-bottom:4px}
+.kpi-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
+.kpi-rl{font-size:7.5px;color:#6B7280}.kpi-rv{font-size:7.5px;font-weight:700;color:#374151}
+.delta{font-size:7.5px;font-weight:700;padding:1px 5px;border-radius:4px}
+.pos{background:#DCFCE7;color:#15803D}.neg{background:#FEE2E2;color:#DC2626}
+/* mini kpi total search */
+.mkpi{background:#fff;border-radius:10px;padding:10px 13px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.mkpi-lbl{font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#9CA3AF;margin-bottom:3px}
+.mkpi-val{font-size:19px;font-weight:800;color:#0D1B4B;line-height:1.05;margin-bottom:2px}
+/* table */
+.pt{width:100%;border-collapse:collapse}
+.pt th{padding:7px 9px;background:#0D1B4B;color:#fff;font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;text-align:left;white-space:nowrap}
+.pt th:not(:first-child){text-align:right}
+.pt td{padding:6px 9px;font-size:10px;color:#374151;border-top:1px solid #F3F4F6;white-space:nowrap}
+.pt td:not(:first-child){text-align:right}
+.pt tbody tr:nth-child(even) td{background:#FAFAFA}
+/* local tile */
+.loc-tile{border-radius:8px;padding:10px 12px;color:#fff}
+.loc-tile-lbl{font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;opacity:.9;margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.loc-tile-val{font-size:19px;font-weight:800;line-height:1}
+.loc-tile-sub{font-size:8px;font-weight:600;margin-top:2px;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+/* donut legend */
+.dleg-row{display:flex;justify-content:space-between;align-items:center;padding:3px 0;border-bottom:1px solid #F3F4F6}
+.dleg-left{display:flex;align-items:center;gap:6px}
+.dleg-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.dleg-label{font-size:10px;color:#374151}
+.dleg-val{font-size:10px;font-weight:700;color:#374151}
+.dleg-pct{font-size:9px;color:#9CA3AF;margin-left:6px}
+</style>
+</head>
+<body>
+
+<nav style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0D1B4B;height:42px;display:flex;align-items:center;padding:0 20px;gap:5px;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif">
+  <a href="home.html" style="padding:4px 10px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Home</a>
+  <a href="synthese.html" style="padding:4px 10px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Synthèse</a>
+  <a href="bilan_media.html" style="padding:4px 10px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Bilan Media</a>
+  <a href="total_search.html" style="padding:4px 10px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Total Search</a>
+  <a href="dashboard.html" style="padding:4px 10px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Suivi Produits</a>
+  <a href="audit_flux.html" style="padding:4px 10px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Audit de flux</a>
+  <a href="competitivite_prix.html" style="padding:4px 10px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Compétitivité prix</a>
+  <a href="local_castorama.html" style="padding:4px 10px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Castorama</a>
+  <a href="local_bricodepot.html" style="padding:4px 10px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Brico Dépôt</a>
+  <a href="local_screwfix.html" style="padding:4px 10px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Screwfix</a>
+  <a href="mesure_efficacite.html" style="padding:4px 10px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
+</nav>
+
+<div id="subbar" style="position:fixed;top:42px;left:0;right:0;height:46px;background:#fff;border-bottom:1px solid #E5E7EB;z-index:100;display:flex;align-items:center;justify-content:flex-end;padding:0 20px">
+  <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style="height:28px" onerror="this.style.display='none'">
+</div>
+
+<div class="page">
+
+  <!-- Title -->
+  <div style="margin-bottom:20px">
+    <div style="font-size:20px;font-weight:800;color:#0D1B4B;margin-bottom:3px">Synthèse — Vue d'ensemble Kingfisher</div>
+    <div style="font-size:11px;color:#9CA3AF">Données au 21 mai 2026 · Semaine 21 · Mise à jour hebdomadaire</div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- BILAN MEDIA -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="sec-block">
+    <div class="sec-hdr">Bilan Media</div>
+    <div style="display:flex;gap:12px;align-items:flex-start">
+
+      <!-- 5 KPI cards 2-col grid -->
+      <div style="flex:1.5;display:grid;grid-template-columns:1fr 1fr;gap:10px">
+
+        <div class="kpi" style="border-left:3px solid #4285F4">
+          <div class="kpi-top"><div class="kpi-dot" style="background:#4285F4"></div><div class="kpi-lbl">Google SEA</div></div>
+          <div class="kpi-val" style="color:#4285F4">381,2 K€</div>
+          <div class="kpi-sub">22 semaines</div>
+          <div class="kpi-sep"></div>
+          <div class="kpi-row"><span class="kpi-rl">Moy./semaine</span><span class="kpi-rv">17,3 K€</span></div>
+          <div class="kpi-row"><span class="kpi-rl">vs Sem. préc.</span><span class="delta pos">+23,5 %</span></div>
+        </div>
+
+        <div class="kpi" style="border-left:3px solid #EA4335">
+          <div class="kpi-top"><div class="kpi-dot" style="background:#EA4335"></div><div class="kpi-lbl">Google YouTube</div></div>
+          <div class="kpi-val" style="color:#EA4335">217,9 K€</div>
+          <div class="kpi-sub">22 semaines</div>
+          <div class="kpi-sep"></div>
+          <div class="kpi-row"><span class="kpi-rl">Moy./semaine</span><span class="kpi-rv">9,9 K€</span></div>
+          <div class="kpi-row"><span class="kpi-rl">vs Sem. préc.</span><span class="delta neg">-19,8 %</span></div>
+        </div>
+
+        <div class="kpi" style="border-left:3px solid #00BCF2">
+          <div class="kpi-top"><div class="kpi-dot" style="background:#00BCF2"></div><div class="kpi-lbl">Microsoft SEA</div></div>
+          <div class="kpi-val" style="color:#00BCF2">70,2 K€</div>
+          <div class="kpi-sub">22 semaines</div>
+          <div class="kpi-sep"></div>
+          <div class="kpi-row"><span class="kpi-rl">Moy./semaine</span><span class="kpi-rv">3,2 K€</span></div>
+          <div class="kpi-row"><span class="kpi-rl">vs Sem. préc.</span><span class="delta pos">+9,0 %</span></div>
+        </div>
+
+        <div class="kpi" style="border-left:3px solid #C13584">
+          <div class="kpi-top"><div class="kpi-dot" style="background:#C13584"></div><div class="kpi-lbl">Instagram</div></div>
+          <div class="kpi-val" style="color:#C13584">156,2 K€</div>
+          <div class="kpi-sub">22 semaines</div>
+          <div class="kpi-sep"></div>
+          <div class="kpi-row"><span class="kpi-rl">Moy./semaine</span><span class="kpi-rv">7,1 K€</span></div>
+          <div class="kpi-row"><span class="kpi-rl">vs Sem. préc.</span><span class="delta pos">+8,4 %</span></div>
+        </div>
+
+        <div class="kpi" style="border-left:3px solid #69C9D0">
+          <div class="kpi-top"><div class="kpi-dot" style="background:#69C9D0"></div><div class="kpi-lbl">TikTok</div></div>
+          <div class="kpi-val" style="color:#69C9D0">90,7 K€</div>
+          <div class="kpi-sub">22 semaines</div>
+          <div class="kpi-sep"></div>
+          <div class="kpi-row"><span class="kpi-rl">Moy./semaine</span><span class="kpi-rv">4,1 K€</span></div>
+          <div class="kpi-row"><span class="kpi-rl">vs Sem. préc.</span><span class="delta pos">+2,0 %</span></div>
+        </div>
+
+      </div>
+
+      <!-- Donut -->
+      <div class="card" style="flex:1;min-width:260px">
+        <div class="sec"><div class="sec-bar"></div>RÉPARTITION DES INVESTISSEMENTS</div>
+        <canvas id="donut-media" width="320" height="200" style="width:100%;height:auto;display:block"></canvas>
+        <div style="margin-top:10px">
+          <div class="dleg-row">
+            <div class="dleg-left"><div class="dleg-dot" style="background:#4285F4"></div><span class="dleg-label">Google SEA</span></div>
+            <div><span class="dleg-val">381,2 K€</span><span class="dleg-pct">41,6 %</span></div>
+          </div>
+          <div class="dleg-row">
+            <div class="dleg-left"><div class="dleg-dot" style="background:#EA4335"></div><span class="dleg-label">Google YouTube</span></div>
+            <div><span class="dleg-val">217,9 K€</span><span class="dleg-pct">23,8 %</span></div>
+          </div>
+          <div class="dleg-row">
+            <div class="dleg-left"><div class="dleg-dot" style="background:#00BCF2"></div><span class="dleg-label">Microsoft SEA</span></div>
+            <div><span class="dleg-val">70,2 K€</span><span class="dleg-pct">7,7 %</span></div>
+          </div>
+          <div class="dleg-row">
+            <div class="dleg-left"><div class="dleg-dot" style="background:#C13584"></div><span class="dleg-label">Instagram</span></div>
+            <div><span class="dleg-val">156,2 K€</span><span class="dleg-pct">17,0 %</span></div>
+          </div>
+          <div class="dleg-row" style="border-bottom:none">
+            <div class="dleg-left"><div class="dleg-dot" style="background:#69C9D0"></div><span class="dleg-label">TikTok</span></div>
+            <div><span class="dleg-val">90,7 K€</span><span class="dleg-pct">9,9 %</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- TOTAL SEARCH -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="sec-block">
+    <div class="sec-hdr">Total Search</div>
+    <div style="display:flex;gap:12px;align-items:flex-start">
+
+      <!-- 4 mini KPIs -->
+      <div style="display:flex;flex-direction:column;gap:8px;width:160px;flex-shrink:0">
+        <div class="mkpi">
+          <div class="mkpi-lbl">Utilisateurs totaux</div>
+          <div class="mkpi-val">205 895</div>
+          <span class="delta pos">▲ 0,5 %</span>
+        </div>
+        <div class="mkpi">
+          <div class="mkpi-lbl">Sessions</div>
+          <div class="mkpi-val">309 148</div>
+          <span class="delta pos">▲ 0,5 %</span>
+        </div>
+        <div class="mkpi">
+          <div class="mkpi-lbl">Pages vues</div>
+          <div class="mkpi-val">942 902</div>
+          <span class="delta pos">▲ 0,5 %</span>
+        </div>
+        <div class="mkpi">
+          <div class="mkpi-lbl">Taux d'engagement</div>
+          <div class="mkpi-val">72,32 %</div>
+          <span class="delta neg">▼ 1,1 %</span>
+        </div>
+      </div>
+
+      <!-- Line chart -->
+      <div class="card" style="flex:1">
+        <div class="sec"><div class="sec-bar"></div>SESSIONS PAR CANAL — ÉVOLUTION</div>
+        <canvas id="line-search" width="900" height="220" style="width:100%;height:auto;display:block;cursor:crosshair"></canvas>
+        <div id="search-legend" style="display:flex;flex-wrap:wrap;gap:14px;margin-top:8px"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- BILAN PRODUITS -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="sec-block">
+    <div class="sec-hdr">Bilan Produits</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px">
+
+      <!-- Meilleur ROI -->
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="background:#0D1B4B;padding:8px 10px;font-size:9px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.05em">
+          Meilleur ROI — 7 derniers jours
+        </div>
+        <table class="pt">
+          <thead><tr>
+            <th>ID</th><th>Titre du produit</th><th>Invst. 7J</th><th>ROI</th>
+          </tr></thead>
+          <tbody id="tb-best-roi"></tbody>
+        </table>
+      </div>
+
+      <!-- Moins bon ROI -->
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="background:#DC2626;padding:8px 10px;font-size:9px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.05em">
+          Moins bon ROI — 7 derniers jours
+        </div>
+        <table class="pt">
+          <thead><tr>
+            <th>ID</th><th>Titre du produit</th><th>Invst. 7J</th><th>ROI</th>
+          </tr></thead>
+          <tbody id="tb-worst-roi"></tbody>
+        </table>
+      </div>
+
+      <!-- Meilleure Progression -->
+      <div class="card" style="padding:0;overflow:hidden">
+        <div style="background:#15803D;padding:8px 10px;font-size:9px;font-weight:700;color:#fff;text-transform:uppercase;letter-spacing:.05em">
+          Meilleure Progression 7J vs 7J préc.
+        </div>
+        <table class="pt">
+          <thead><tr>
+            <th>ID</th><th>Titre du produit</th><th>Invst. 7J</th><th>Progr.</th>
+          </tr></thead>
+          <tbody id="tb-best-prog"></tbody>
+        </table>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- AUDIT DE FLUX -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="sec-block">
+    <div class="sec-hdr">Audit de flux</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 2fr;gap:12px;align-items:start">
+
+      <!-- Radar + score -->
+      <div class="card">
+        <div class="sec"><div class="sec-bar"></div>SCORE PAR DIMENSION (/100)</div>
+        <div style="display:flex;align-items:center;gap:12px">
+          <canvas id="radar-audit" width="200" height="200" style="width:160px;height:160px;flex-shrink:0"></canvas>
+          <div style="text-align:center">
+            <div style="font-size:44px;font-weight:800;color:#006AB3;line-height:1">8</div>
+            <div style="font-size:9px;color:#9CA3AF;margin-top:2px">Note Ensemble</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- KPI actifs / refusés -->
+      <div style="display:flex;flex-direction:column;gap:10px">
+        <div class="card" style="text-align:center">
+          <div class="sec" style="justify-content:center"><div class="sec-bar"></div>PRODUITS ACTIFS</div>
+          <div style="font-size:40px;font-weight:800;color:#15803D;line-height:1">90%</div>
+          <div style="font-size:9px;color:#9CA3AF;margin-top:4px">−0,8 pp vs hier · 90 produits</div>
+          <div style="margin-top:6px"><span class="delta pos">−0,8pp vs hier</span></div>
+        </div>
+        <div class="card" style="text-align:center">
+          <div class="sec" style="justify-content:center"><div class="sec-bar"></div>PRODUITS REFUSÉS</div>
+          <div style="font-size:40px;font-weight:800;color:#DC2626;line-height:1">7%</div>
+          <div style="font-size:9px;color:#9CA3AF;margin-top:4px">+0,5pp vs hier · 7 produits</div>
+          <div style="margin-top:6px"><span class="delta neg">+0,5pp vs hier</span></div>
+        </div>
+      </div>
+
+      <!-- Evolution produits actifs -->
+      <div class="card">
+        <div class="sec"><div class="sec-bar"></div>ÉVOLUTION DES PRODUITS ACTIFS (14 JOURS)</div>
+        <canvas id="line-audit" width="600" height="160" style="width:100%;height:auto;display:block"></canvas>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ══════════════════════════════════════════ -->
+  <!-- LOCAL -->
+  <!-- ══════════════════════════════════════════ -->
+  <div class="sec-block">
+    <div class="sec-hdr">Local</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px">
+
+      <!-- Castorama -->
+      <div>
+        <div style="margin-bottom:10px">
+          <img src="public/images/logos/Castorama.png" alt="Castorama" style="height:40px;object-fit:contain" onerror="this.style.display='none'">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="loc-tile" style="background:#F97316">
+            <div class="loc-tile-lbl">Plus de visites</div>
+            <div class="loc-tile-val">355</div>
+            <div class="loc-tile-sub">Mandelieu-la-N.</div>
+          </div>
+          <div class="loc-tile" style="background:#22C55E">
+            <div class="loc-tile-lbl">Meill. progression</div>
+            <div class="loc-tile-val">+61,2%</div>
+            <div class="loc-tile-sub">Enghien-les-Bains</div>
+          </div>
+          <div class="loc-tile" style="background:#6B7280">
+            <div class="loc-tile-lbl">Moins de visites</div>
+            <div class="loc-tile-val">204</div>
+            <div class="loc-tile-sub">Saint-Lô</div>
+          </div>
+          <div class="loc-tile" style="background:#EF4444">
+            <div class="loc-tile-lbl">Plus basse progr.</div>
+            <div class="loc-tile-val">−39,3%</div>
+            <div class="loc-tile-sub">Cholet</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Brico Dépôt -->
+      <div>
+        <div style="margin-bottom:10px">
+          <img src="public/images/logos/brico_depot.jpg" alt="Brico Dépôt" style="height:40px;object-fit:contain" onerror="this.style.display='none'">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="loc-tile" style="background:#F97316">
+            <div class="loc-tile-lbl">Plus de visites</div>
+            <div class="loc-tile-val">364</div>
+            <div class="loc-tile-sub">Paris Est</div>
+          </div>
+          <div class="loc-tile" style="background:#22C55E">
+            <div class="loc-tile-lbl">Meill. progression</div>
+            <div class="loc-tile-val">+61,2%</div>
+            <div class="loc-tile-sub">Brest</div>
+          </div>
+          <div class="loc-tile" style="background:#6B7280">
+            <div class="loc-tile-lbl">Moins de visites</div>
+            <div class="loc-tile-val">284</div>
+            <div class="loc-tile-sub">Saint-Quentin</div>
+          </div>
+          <div class="loc-tile" style="background:#EF4444">
+            <div class="loc-tile-lbl">Plus basse progr.</div>
+            <div class="loc-tile-val">−39,3%</div>
+            <div class="loc-tile-sub">Angers</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Screwfix -->
+      <div>
+        <div style="margin-bottom:10px">
+          <img src="public/images/logos/Screwfix.svg" alt="Screwfix" style="height:36px;object-fit:contain" onerror="this.style.display='none'">
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
+          <div class="loc-tile" style="background:#F97316">
+            <div class="loc-tile-lbl">Plus de visites</div>
+            <div class="loc-tile-val">358</div>
+            <div class="loc-tile-sub">Mondeville</div>
+          </div>
+          <div class="loc-tile" style="background:#22C55E">
+            <div class="loc-tile-lbl">Meill. progression</div>
+            <div class="loc-tile-val">+54,1%</div>
+            <div class="loc-tile-sub">Gennevilliers</div>
+          </div>
+          <div class="loc-tile" style="background:#6B7280">
+            <div class="loc-tile-lbl">Moins de visites</div>
+            <div class="loc-tile-val">207</div>
+            <div class="loc-tile-sub">Clermont-Fd</div>
+          </div>
+          <div class="loc-tile" style="background:#EF4444">
+            <div class="loc-tile-lbl">Plus basse progr.</div>
+            <div class="loc-tile-val">−39,3%</div>
+            <div class="loc-tile-sub">Lyon Villeurbanne</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end .page -->
+
+<script>
+/* ───── helpers ───── */
+function seededRand(seed){let s=seed;return()=>{s=(s*16807+0)%2147483647;return(s-1)/2147483646;}}
+const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v));
+
+/* ───── 1. DONUT — Bilan Media ───── */
+(function(){
+  const cv=document.getElementById('donut-media');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  const slices=[
+    {pct:.416,color:'#4285F4'},
+    {pct:.238,color:'#EA4335'},
+    {pct:.077,color:'#00BCF2'},
+    {pct:.170,color:'#C13584'},
+    {pct:.099,color:'#69C9D0'},
+  ];
+  const cx=W/2,cy=H/2,r=Math.min(W,H)*0.42;
+  let a=-Math.PI/2;
+  slices.forEach(s=>{
+    const sweep=s.pct*2*Math.PI;
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.arc(cx,cy,r,a,a+sweep);
+    ctx.closePath();ctx.fillStyle=s.color;ctx.fill();
+    a+=sweep;
+  });
+  // inner hole
+  ctx.beginPath();ctx.arc(cx,cy,r*.54,0,2*Math.PI);
+  ctx.fillStyle='#fff';ctx.fill();
+  // center text
+  ctx.textAlign='center';ctx.fillStyle='#0D1B4B';
+  ctx.font='bold 13px -apple-system,Arial,sans-serif';ctx.fillText('Budget total',cx,cy-8);
+  ctx.font='bold 18px -apple-system,Arial,sans-serif';ctx.fillText('916,2 K€',cx,cy+12);
+  ctx.font='11px -apple-system,Arial,sans-serif';ctx.fillStyle='#9CA3AF';ctx.fillText('22 semaines',cx,cy+27);
+})();
+
+/* ───── 2. LINE CHART — Total Search ───── */
+(function(){
+  const cv=document.getElementById('line-search');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  const pad={t:16,r:24,b:36,l:52};
+  const fw=W-pad.l-pad.r,fh=H-pad.t-pad.b;
+
+  const CHANNELS=[
+    {label:'Organic Search',color:'#4285F4',base:7071,vr:.25},
+    {label:'Paid Search Branded',color:'#F59E0B',base:3181,vr:.32},
+    {label:'AI/LLM',color:'#8B5CF6',base:64,vr:.60},
+    {label:'Paid Search Unbranded',color:'#10B981',base:16,vr:.40},
+  ];
+  const N=90;
+  // build daily data
+  const datasets=CHANNELS.map((ch,ci)=>{
+    const rng=seededRand(ci*997+31);
+    const data=Array.from({length:N},(_,i)=>Math.max(0,Math.round(ch.base*(1-ch.vr/2+rng()*ch.vr)*(1+i*0.001))));
+    return{...ch,data};
+  });
+
+  // dates labels (every ~15 days)
+  const refDate=new Date(2026,1,21);
+  const labelIdx=[0,14,29,44,59,74,89];
+  const mn=['jan','fév','mar','avr','mai','jun'];
+  const dateLabel=i=>{const d=new Date(refDate);d.setDate(d.getDate()+i);return`${d.getDate()} ${mn[d.getMonth()]}`;}
+
+  const allVals=datasets.flatMap(d=>d.data);
+  const maxV=Math.max(...allVals)*1.05;
+
+  const px=i=>pad.l+i/（N-1)*fw;
+  const py=v=>pad.t+fh*(1-v/maxV);
+
+  // helper to handle Japanese full-width character issue
+  const pxi=i=>pad.l+(i/(N-1))*fw;
+  const pyi=v=>pad.t+fh*(1-v/maxV);
+
+  // grid lines
+  ctx.strokeStyle='#F3F4F6';ctx.lineWidth=1;
+  for(let g=0;g<=4;g++){
+    const y=pad.t+fh*g/4;
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+fw,y);ctx.stroke();
+    const val=Math.round(maxV*(1-g/4));
+    ctx.fillStyle='#9CA3AF';ctx.font='9px -apple-system,Arial,sans-serif';
+    ctx.textAlign='right';ctx.fillText(val>=1000?(val/1000).toFixed(1)+'k':val,pad.l-5,y+3);
+  }
+
+  // x labels
+  ctx.fillStyle='#9CA3AF';ctx.font='9px -apple-system,Arial,sans-serif';ctx.textAlign='center';
+  labelIdx.forEach(i=>{
+    ctx.fillText(dateLabel(i),pxi(i),H-pad.b+14);
+  });
+
+  // draw lines
+  datasets.forEach(ds=>{
+    ctx.beginPath();ctx.strokeStyle=ds.color;ctx.lineWidth=1.5;ctx.lineJoin='round';
+    ds.data.forEach((v,i)=>{
+      i===0?ctx.moveTo(pxi(i),pyi(v)):ctx.lineTo(pxi(i),pyi(v));
+    });
+    ctx.stroke();
+  });
+
+  // legend
+  const legEl=document.getElementById('search-legend');
+  if(legEl){
+    datasets.forEach(ds=>{
+      const d=document.createElement('div');
+      d.style.cssText='display:flex;align-items:center;gap:5px;font-size:9px;color:#374151';
+      d.innerHTML=`<span style="display:inline-block;width:16px;height:2px;background:${ds.color};border-radius:1px"></span>${ds.label}`;
+      legEl.appendChild(d);
+    });
+  }
+})();
+
+/* ───── 3. PRODUCT TABLES ───── */
+(function(){
+  const BEST_ROI=[
+    ['CAST091','Peinture murale blanc mat 10L','1 128 €','4,24'],
+    ['CAST050','Ampoule LED E27 10W blanc...','746 €','4,98'],
+    ['CAST027','Pistolet à colle thermofusible...','511 €','4,43'],
+    ['CAST068','Tournevis cruciforme PH2 20...','403 €','4,33'],
+    ['CAST089','Cutter sécurité lame 25mm','258 €','4,90'],
+  ];
+  const WORST_ROI=[
+    ['CAST178','Balançoire portique enfants b...','450 €','1,87'],
+    ['CAST948','Chauffe-eau électrique blindé...','437 €','1,92'],
+    ['CAST440','Mitigeur thermostatique bain...','405 €','2,02'],
+    ['CAST562','Baignoire acrylique rectangul...','320 €','1,76'],
+    ['CAST125','Moquette grise 4mm (au m²)','199 €','1,83'],
+  ];
+  const BEST_PROG=[
+    ['CAST091','Peinture murale blanc ma...','1 128 €','+85,5%'],
+    ['CAST062','Peinture murale gris perle...','653 €','+85,5%'],
+    ['CAST075','Sous-couche universelle 5L','442 €','+85,5%'],
+    ['CAST115','Peinture façade blanc 15L','389 €','+85,5%'],
+    ['CAST084','Peinture sol béton gris 5L','285 €','+85,5%'],
+  ];
+  function fill(id,rows){
+    const tb=document.getElementById(id);
+    if(!tb)return;
+    rows.forEach(r=>{
+      const tr=document.createElement('tr');
+      tr.innerHTML=`<td style="font-family:monospace;font-size:9px;color:#9CA3AF">${r[0]}</td>`+
+        `<td style="max-width:140px;overflow:hidden;text-overflow:ellipsis">${r[1]}</td>`+
+        `<td>${r[2]}</td><td style="font-weight:700">${r[3]}</td>`;
+      tb.appendChild(tr);
+    });
+  }
+  fill('tb-best-roi',BEST_ROI);
+  fill('tb-worst-roi',WORST_ROI);
+  fill('tb-best-prog',BEST_PROG);
+})();
+
+/* ───── 4. RADAR — Audit de flux ───── */
+(function(){
+  const cv=document.getElementById('radar-audit');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  const cx=W/2,cy=H/2+8;
+  const r=68;
+  const labels=['Couverture','Enrichissement','Titre','Product type','Étiquettes'];
+  const vals=[80,70,85,90,75];
+  const n=labels.length;
+  const step=(2*Math.PI)/n;
+  const ang=i=>i*step-Math.PI/2;
+
+  // rings
+  [.25,.5,.75,1].forEach(frac=>{
+    ctx.beginPath();
+    labels.forEach((_,i)=>{
+      const x=cx+r*frac*Math.cos(ang(i));
+      const y=cy+r*frac*Math.sin(ang(i));
+      i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+    });
+    ctx.closePath();ctx.strokeStyle='#E5E7EB';ctx.lineWidth=1;ctx.stroke();
+  });
+  // axes
+  labels.forEach((_,i)=>{
+    ctx.beginPath();ctx.moveTo(cx,cy);
+    ctx.lineTo(cx+r*Math.cos(ang(i)),cy+r*Math.sin(ang(i)));
+    ctx.strokeStyle='#E5E7EB';ctx.lineWidth=1;ctx.stroke();
+  });
+  // data polygon
+  ctx.beginPath();
+  vals.forEach((v,i)=>{
+    const rr=r*(v/100);
+    const x=cx+rr*Math.cos(ang(i));
+    const y=cy+rr*Math.sin(ang(i));
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.closePath();
+  ctx.fillStyle='rgba(0,106,179,.15)';ctx.fill();
+  ctx.strokeStyle='#006AB3';ctx.lineWidth=2;ctx.stroke();
+  // dots
+  vals.forEach((v,i)=>{
+    const rr=r*(v/100);
+    ctx.beginPath();ctx.arc(cx+rr*Math.cos(ang(i)),cy+rr*Math.sin(ang(i)),3.5,0,2*Math.PI);
+    ctx.fillStyle='#006AB3';ctx.fill();
+  });
+  // labels
+  ctx.font='9px -apple-system,Arial,sans-serif';ctx.fillStyle='#4B5675';
+  labels.forEach((lbl,i)=>{
+    const lx=cx+(r+16)*Math.cos(ang(i));
+    const ly=cy+(r+16)*Math.sin(ang(i));
+    ctx.textAlign=lx<cx-5?'right':lx>cx+5?'left':'center';
+    ctx.textBaseline=ly<cy-5?'bottom':ly>cy+5?'top':'middle';
+    ctx.fillText(lbl,lx,ly);
+  });
+})();
+
+/* ───── 5. LINE CHART — Audit évolution ───── */
+(function(){
+  const cv=document.getElementById('line-audit');
+  if(!cv)return;
+  const ctx=cv.getContext('2d');
+  const W=cv.width,H=cv.height;
+  const pad={t:12,r:20,b:28,l:42};
+  const fw=W-pad.l-pad.r,fh=H-pad.t-pad.b;
+
+  const rng=seededRand(555);
+  const N=14;
+  const data=Array.from({length:N},(_,i)=>Math.round(88+rng()*6*(1+i*0.05)));
+  const maxV=100,minV=80;
+  const pxi=i=>pad.l+(i/(N-1))*fw;
+  const pyi=v=>pad.t+fh*(1-(v-minV)/(maxV-minV));
+
+  // grid
+  [80,85,90,95,100].forEach(v=>{
+    const y=pyi(v);
+    ctx.beginPath();ctx.moveTo(pad.l,y);ctx.lineTo(pad.l+fw,y);
+    ctx.strokeStyle='#F3F4F6';ctx.lineWidth=1;ctx.stroke();
+    ctx.fillStyle='#9CA3AF';ctx.font='9px -apple-system,Arial,sans-serif';
+    ctx.textAlign='right';ctx.fillText(v+'%',pad.l-5,y+3);
+  });
+
+  // area fill
+  ctx.beginPath();
+  data.forEach((v,i)=>i===0?ctx.moveTo(pxi(i),pyi(v)):ctx.lineTo(pxi(i),pyi(v)));
+  ctx.lineTo(pxi(N-1),pyi(minV));ctx.lineTo(pxi(0),pyi(minV));ctx.closePath();
+  ctx.fillStyle='rgba(0,106,179,.08)';ctx.fill();
+
+  // line
+  ctx.beginPath();ctx.strokeStyle='#006AB3';ctx.lineWidth=2;ctx.lineJoin='round';
+  data.forEach((v,i)=>i===0?ctx.moveTo(pxi(i),pyi(v)):ctx.lineTo(pxi(i),pyi(v)));
+  ctx.stroke();
+
+  // x labels (day -13 to today)
+  const refDate=new Date(2026,4,21);
+  ctx.fillStyle='#9CA3AF';ctx.font='9px -apple-system,Arial,sans-serif';ctx.textAlign='center';
+  [0,6,13].forEach(i=>{
+    const d=new Date(refDate);d.setDate(d.getDate()-(13-i));
+    ctx.fillText(`${d.getDate()} mai`,pxi(i),H-pad.b+12);
+  });
+})();
+</script>
+</body>
+</html>
