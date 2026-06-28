@@ -68,7 +68,7 @@ tr:last-child td{background:#F0F4FF;font-weight:700}
   <a href="mesure_efficacite.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
     <span style="color:rgba(255,255,255,.5);font-size:11px;font-weight:500;letter-spacing:.03em">Annonceur</span>
-    <select id="annonceurSelect" onchange="switchAnnonceur(this.value)" style="background:#1a2d6b;color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;padding-right:22px;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,.5)'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 7px center">
+    <select id="annonceurSelect" onchange="switchAnnonceur(this.value)" style="background:#1a2d6b;color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;padding-right:22px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,.5)'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
       <option value="kingfisher">Kingfisher</option>
       <option value="coop-u">Coop&#233;rative U</option>
     </select>
@@ -81,10 +81,24 @@ tr:last-child td{background:#F0F4FF;font-weight:700}
   var isCU=COOP_U_PAGES.indexOf(cur)>=0;
   var saved=localStorage.getItem('annonceur');
   if(!saved){saved=isCU?'coop-u':'kingfisher';localStorage.setItem('annonceur',saved);}
-  var sel=document.getElementById('annonceurSelect');
-  if(sel)sel.value=saved;
+
+  function applyFilter(v){
+    var nav=document.querySelector('nav');
+    if(!nav)return;
+    var links=nav.querySelectorAll('a[href]');
+    links.forEach(function(a){
+      var href=a.getAttribute('href')||'';
+      var isU=COOP_U_PAGES.indexOf(href)>=0;
+      a.style.display=(v==='coop-u'?isU:!isU)?'':'none';
+    });
+    var sel=document.getElementById('annonceurSelect');
+    if(sel)sel.value=v;
+  }
+
   if(saved==='coop-u'&&!isCU){location.replace('local_magasinsU.html');return;}
   if(saved==='kingfisher'&&isCU){location.replace('home.html');return;}
+  applyFilter(saved);
+
   window.switchAnnonceur=function(v){
     localStorage.setItem('annonceur',v);
     location.href=v==='coop-u'?'local_magasinsU.html':'home.html';
