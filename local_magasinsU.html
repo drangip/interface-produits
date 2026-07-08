@@ -9,64 +9,57 @@
 <link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
-body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;overflow-y:auto;background:#EEF1F6}
-#layout{display:flex;margin-top:88px}
-#map-col{flex:0 0 44%;overflow:hidden}
-#map{width:100%;height:400px}
-#panel{flex:1;padding:12px 12px 2px;display:flex;flex-direction:column;gap:8px}
-.u-cluster{background:rgba(0,150,58,.22);border-radius:50%;display:flex;align-items:center;justify-content:center}
-.u-cluster-inner{background:#00963A;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
-#global-section{display:flex;flex-direction:column;gap:8px;padding:0 12px 20px}
-.lhdr{background:#fff;border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.lhdr-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
-.lhdr-logo{flex-shrink:0;display:flex;align-items:center}
-.lhdr-name{font-size:14px;font-weight:800;color:#0D1B4B;margin-bottom:2px}
-.lhdr-addr{font-size:10px;color:#555;line-height:1.55}
-.lhdr-right{flex-shrink:0;text-align:right}
-.lhdr-badge{display:inline-flex;align-items:center;gap:4px;border:1.5px solid #00963A;color:#00963A;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;margin-bottom:3px}
-.lhdr-meta{font-size:9.5px;color:#888;margin-bottom:5px}
-.lbtn{border-radius:6px;padding:5px 10px;font-size:10px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px;transition:opacity .15s;border:none}
-.lbtn:hover{opacity:.8}
-.lbtn-out{background:#fff;border:1.5px solid #00963A !important;color:#00963A}
-.lsec{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#4B5675;display:flex;align-items:center;gap:4px;padding:2px 0}
-.lsec-bar{width:3px;height:12px;background:#00963A;border-radius:2px;flex-shrink:0}
-.lkpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.lkpi-card{background:#fff;border-radius:10px;padding:12px 11px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.lkpi-top{display:flex;align-items:center;gap:5px;margin-bottom:6px}
-.lkpi-ico{font-size:13px;line-height:1}
-.lkpi-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#4B5675;line-height:1.2}
-.lkpi-val{font-size:26px;font-weight:800;color:#00963A;line-height:1.05;margin-bottom:2px}
-.lkpi-sub{font-size:8.5px;color:#9CA3AF;margin-bottom:8px}
-.lkpi-sep{height:1px;background:#E5E7EB;margin-bottom:7px}
-.lkpi-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
-.lkpi-rl{font-size:9px;color:#6B7280}.lkpi-rv{font-size:9px;font-weight:700;color:#374151}
-.delta{font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;background:#EEF1F6;overflow-x:hidden}
+.delta{font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;display:inline-block}
 .pos{background:#DCFCE7;color:#15803D}.neg{background:#FEE2E2;color:#DC2626}
-.lchart-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
-.lchart-card{background:#fff;border-radius:10px;padding:10px 11px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
-.lchart-top{display:flex;justify-content:space-between;align-items:flex-start}
-.lchart-label{font-size:10px;font-weight:700;color:#374151}
-.lchart-lv{font-size:18px;font-weight:800;color:#00963A;line-height:1}
-.lchart-sub{font-size:7.5px;color:#9CA3AF;margin-bottom:2px}
-.lchart-legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
-.leg{font-size:7.5px;color:#9CA3AF;display:inline-flex;align-items:center;gap:2px}
+.sec-lbl{background:#1e3565;padding:5px 14px;font-size:9px;font-weight:700;color:rgba(255,255,255,.85);letter-spacing:.12em;text-transform:uppercase}
+.kpi-grid{display:grid;gap:8px;padding:10px 12px}
+.kpi-card{background:#fff;border-radius:10px;padding:12px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.kpi-val{font-size:28px;font-weight:800;color:#00963A;line-height:1}
+.kpi-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:#6B7280;margin-bottom:6px}
+.kpi-sep{height:1px;background:#F3F4F6;margin:8px 0}
+.kpi-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:3px}
+.kpi-rl{font-size:9px;color:#9CA3AF}.kpi-rv{font-size:9px;font-weight:700;color:#374151}
+.chart-card{background:#fff;border-radius:10px;padding:10px 12px;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.chart-lbl{font-size:9px;font-weight:700;color:#374151;text-transform:uppercase;letter-spacing:.05em;margin-bottom:2px}
+.chart-val{font-size:22px;font-weight:800;color:#00963A;line-height:1.1;margin-bottom:6px}
+.hl-card{border-radius:10px;padding:14px 16px;color:#fff;display:flex;flex-direction:column;gap:4px;cursor:pointer;transition:opacity .15s}
+.hl-card:hover{opacity:.9}
+.hl-title{font-size:8.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;opacity:.85}
+.hl-name{font-size:11px;font-weight:700;line-height:1.3}
+.hl-val{font-size:24px;font-weight:800;line-height:1}
+.hl-sub{font-size:9px;opacity:.8}
+.rank-item{display:flex;align-items:center;gap:8px;padding:7px 12px;border-bottom:1px solid #F3F4F6;cursor:pointer;transition:background .1s}
+.rank-item:hover{background:#F9FAFB}
+.rank-num{font-size:12px;font-weight:800;width:18px;text-align:center;flex-shrink:0}
+.rank-name{flex:1;font-size:10px;font-weight:600;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-val{font-size:11px;font-weight:700;color:#0D1B4B;flex-shrink:0}
+.rank-delta{font-size:9px;flex-shrink:0}
+table{width:100%;border-collapse:collapse;font-size:10px}
+thead tr{background:#00963A;color:#fff}
+th{padding:7px 10px;text-align:left;font-size:9px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+td{padding:6px 10px;border-bottom:1px solid #F3F4F6;color:#374151}
+tr:hover td{background:#F9FAFB}
+.sort-btn{cursor:pointer;user-select:none}
+.sort-btn:hover{opacity:.8}
 </style>
 </head>
 <body>
 
-<nav id="main-nav" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0D1B4B;height:42px;display:flex;align-items:center;padding:0 20px;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif">
-  <a href="home.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Home</a>
-  <a href="synthese.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Synthèse</a>
-  <a href="bilan_media.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Bilan Media</a>
-  <a href="total_search.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Total Search</a>
-  <a href="dashboard.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Suivi Produits</a>
-  <a href="audit_flux.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Audit de flux</a>
-  <a href="competitivite_prix.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Compétitivité prix</a>
-  <a href="local_castorama.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Castorama</a>
-  <a href="local_bricodepot.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Brico Dépôt</a>
-  <a href="local_screwfix.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Screwfix</a>
-  <a href="local_magasinsU.html" style="padding:4px 14px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Magasins U</a>
-  <a href="mesure_efficacite.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
+<nav id="main-nav" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0D1B4B;height:42px;display:flex;align-items:center;padding:0 16px;gap:4px;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif">
+  <a href="home.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Home</a>
+  <a href="synthese.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Synthèse</a>
+  <a href="bilan_media.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Bilan Media</a>
+  <a href="total_search.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Total Search</a>
+  <a href="dashboard.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Suivi Produits</a>
+  <a href="audit_flux.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Audit de flux</a>
+  <a href="competitivite_prix.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Compétitivité prix</a>
+  <a href="local_castorama.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Castorama</a>
+  <a href="local_bricodepot.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Brico Dépôt</a>
+  <a href="local_screwfix.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Screwfix</a>
+  <a href="local_magasinsU.html" style="padding:4px 12px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Magasins U</a>
+  <a href="local_quick.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Quick</a>
+  <a href="mesure_efficacite.html" style="padding:4px 12px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
   <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
     <span style="color:rgba(255,255,255,.5);font-size:11px;font-weight:500;letter-spacing:.03em">Annonceur</span>
     <select id="annonceurSelect" onchange="switchAnnonceur(this.value)" style="background:#1a2d6b;color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;padding-right:22px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,.5)'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
@@ -85,7 +78,6 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
   var isQ=QUICK_PAGES.indexOf(cur)>=0;
   var saved=localStorage.getItem('annonceur');
   if(!saved){saved=isCU?'coop-u':isQ?'quick':'kingfisher';localStorage.setItem('annonceur',saved);}
-
   function applyFilter(v){
     var nav=document.querySelector('nav');
     if(!nav)return;
@@ -100,12 +92,10 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
     var sel=document.getElementById('annonceurSelect');
     if(sel)sel.value=v;
   }
-
   if(saved==='coop-u'&&!isCU){location.replace('local_magasinsU.html');return;}
   if(saved==='quick'&&!isQ){location.replace('local_quick.html');return;}
   if(saved==='kingfisher'&&(isCU||isQ)){location.replace('home.html');return;}
   applyFilter(saved);
-
   window.switchAnnonceur=function(v){
     localStorage.setItem('annonceur',v);
     if(v==='coop-u')location.href='local_magasinsU.html';
@@ -114,57 +104,97 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
   };
 })();
 </script>
-<div id="subbar" style="position:fixed;top:42px;left:0;right:0;height:46px;background:#fff;border-bottom:1px solid #E5E7EB;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 20px;">
-  <img src="public/images/logos/magasinsU-logo.png" alt="Magasins U" style="height:32px" onerror="this.style.display='none'">
-  <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style="height:28px" onerror="this.style.display='none'">
+<div id="subbar" style="position:fixed;top:42px;left:0;right:0;height:46px;background:#fff;border-bottom:1px solid #E5E7EB;z-index:9998;display:flex;align-items:center;justify-content:space-between;padding:0 20px">
+  <img src="public/images/logos/magasinsU-logo.png" alt="Magasins U" style="height:34px" onerror="this.style.display='none'">
+  <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style="height:26px" onerror="this.style.display='none'">
 </div>
 
-<div id="layout">
-  <div id="map-col"><div id="map"></div></div>
-  <div id="panel"><div id="panel-content"></div></div>
+<!-- TOP: Map + Store Panel -->
+<div id="top-row" style="display:flex;margin-top:88px;height:calc(100vh - 88px)">
+  <div id="map-col" style="flex:0 0 55%;position:relative">
+    <div id="map" style="width:100%;height:100%"></div>
+  </div>
+  <div id="store-col" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;background:#EEF1F6">
+    <div style="background:#0D1B4B;padding:7px 16px;font-size:10px;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.1em;text-transform:uppercase;flex-shrink:0">Performance par magasin</div>
+    <div id="panel-content" style="flex:1"></div>
+  </div>
 </div>
-<div id="global-title" style="padding:16px 12px 6px"></div>
-<div id="global-section" style="display:flex;flex-direction:column;gap:8px;padding:0 12px 20px">
-  <div id="global-row1" style="display:flex;gap:8px"></div>
-  <div id="global-row2" style="display:flex;gap:8px"></div>
+
+<!-- BOTTOM: Global Performance -->
+<div id="bottom-section" style="background:#EEF1F6;padding-bottom:32px">
+  <div style="background:#0D1B4B;padding:8px 20px;font-size:10px;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.1em;text-transform:uppercase">Performance globale des magasins</div>
+  <div style="display:flex;gap:0;padding:16px;gap:14px;align-items:flex-start">
+    <!-- Left col -->
+    <div style="flex:0 0 44%;display:flex;flex-direction:column;gap:12px">
+      <div id="highlight-cards" style="display:grid;grid-template-columns:1fr 1fr;gap:8px"></div>
+      <div id="evo-chart-wrap" style="background:#fff;border-radius:10px;padding:14px 16px;box-shadow:0 1px 4px rgba(0,0,0,.07)">
+        <div style="font-size:10px;font-weight:700;color:#4B5675;text-transform:uppercase;letter-spacing:.06em;margin-bottom:10px">Évolution visites — Top 5</div>
+        <div id="evo-chart"></div>
+        <div id="evo-legend" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:6px"></div>
+      </div>
+    </div>
+    <!-- Right col -->
+    <div style="flex:1;display:flex;flex-direction:column;gap:12px">
+      <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden">
+        <div class="sec-lbl">Classement — dernière semaine</div>
+        <div id="rankings"></div>
+      </div>
+      <div style="background:#fff;border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.07);overflow:hidden">
+        <div class="sec-lbl">Tableau récapitulatif</div>
+        <div style="overflow-x:auto;max-height:420px;overflow-y:auto">
+          <table id="store-table">
+            <thead>
+              <tr>
+                <th class="sort-btn" onclick="sortTable('n')">Magasin ↕</th>
+                <th style="padding:7px 10px">CP</th>
+                <th class="sort-btn" style="text-align:right" onclick="sortTable('lastV')">Dern. sem. ↕</th>
+                <th class="sort-btn" style="text-align:right" onclick="sortTable('avgV')">Moy. sem. ↕</th>
+                <th class="sort-btn" style="text-align:right" onclick="sortTable('vsMoyV')">Évol. vs moy ↕</th>
+                <th style="text-align:right;padding:7px 10px">Appels</th>
+                <th style="text-align:right;padding:7px 10px">Itinéraires</th>
+                
+              </tr>
+            </thead>
+            <tbody id="table-body"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 <script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
 <script>
-// ── UTILS ──
 const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v||0));
-const avg=a=>a.length?+(a.reduce((s,v)=>s+v,0)/a.length).toFixed(1):0;
-const delta=(last,ref)=>ref>0?+((last-ref)/ref*100).toFixed(1):0;
+const delta=(a,b)=>b>0?+((a-b)/b*100).toFixed(1):0;
+const BRAND='#00963A';
 const RANK_COLORS=['#F59E0B','#F97316','#22C55E','#8B5CF6','#EF4444'];
 
-// ── SPARKLINE SVG (variable-length data) ──
 function chartSVG(data,gid,color){
-  color=color||'#00963A';
-  const W=220,H=88,pL=26,pR=4,pT=6,pB=16;
-  const iw=W-pL-pR,ih=H-pT-pB;
-  const n=data.length;
+  color=color||BRAND;
+  const W=240,H=72,pL=28,pR=4,pT=6,pB=14;
+  const iw=W-pL-pR,ih=H-pT-pB;const n=data.length;
   if(n<2)return'<svg width="100%" height="'+H+'"></svg>';
   const mn=Math.min(...data),mx=Math.max(...data),rng=mx-mn||1;
   const av=data.reduce((a,b)=>a+b,0)/data.length;
-  const x=i=>pL+i/(n-1)*iw;
-  const y=v=>pT+(1-(v-mn)/rng)*ih;
-  const pts=data.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const x=i=>pL+i/(n-1)*iw,y=v=>pT+(1-(v-mn)/rng)*ih;
+  const pts=data.map((v,i)=>x(i).toFixed(1)+','+y(v).toFixed(1)).join(' ');
   const ya=y(av);
-  const ap=`M${x(0).toFixed(1)},${y(data[0]).toFixed(1)} `+data.slice(1).map((v,i)=>`L${x(i+1).toFixed(1)},${y(v).toFixed(1)}`).join(' ')+` L${x(n-1).toFixed(1)},${(pT+ih).toFixed(1)} L${pL},${(pT+ih).toFixed(1)} Z`;
+  const ap='M'+x(0).toFixed(1)+','+y(data[0]).toFixed(1)+' '+data.slice(1).map((v,i)=>'L'+x(i+1).toFixed(1)+','+y(v).toFixed(1)).join(' ')+' L'+x(n-1).toFixed(1)+','+(pT+ih).toFixed(1)+' L'+pL+','+(pT+ih).toFixed(1)+' Z';
   const ymax=pT+5,yavg=Math.max(pT+10,Math.min(ya,pT+ih-4));
   return`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity=".25"/><stop offset="100%" stop-color="${color}" stop-opacity=".01"/></linearGradient></defs>
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity=".25"/><stop offset="100%" stop-color="${color}" stop-opacity=".02"/></linearGradient></defs>
     <path d="${ap}" fill="url(#${gid})"/>
     <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
-    <line x1="${pL}" y1="${ya.toFixed(1)}" x2="${W-pR}" y2="${ya.toFixed(1)}" stroke="#F59E0B" stroke-width="1" stroke-dasharray="4,3" opacity=".85"/>
-    <circle cx="${x(n-1).toFixed(1)}" cy="${y(data[n-1]).toFixed(1)}" r="4" fill="#F59E0B" stroke="white" stroke-width="1.5"/>
-    <text x="${pL-2}" y="${ymax}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(mx)}</text>
-    <text x="${pL-2}" y="${(yavg+3).toFixed(1)}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(av)}</text>
-    <text x="${pL-2}" y="${(pT+ih+2).toFixed(1)}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(mn)}</text>
-  </svg>`;}
+    <line x1="${pL}" y1="${ya.toFixed(1)}" x2="${W-pR}" y2="${ya.toFixed(1)}" stroke="#F59E0B" stroke-width="1" stroke-dasharray="4,3" opacity=".7"/>
+    <circle cx="${x(n-1).toFixed(1)}" cy="${y(data[n-1]).toFixed(1)}" r="3.5" fill="#F59E0B" stroke="white" stroke-width="1.5"/>
+    <text x="${pL-2}" y="${ymax}" text-anchor="end" font-size="7" fill="#9CA3AF">${Math.round(mx)}</text>
+    <text x="${pL-2}" y="${(yavg+3).toFixed(1)}" text-anchor="end" font-size="7" fill="#9CA3AF">${Math.round(av)}</text>
+    <text x="${pL-2}" y="${(pT+ih+2).toFixed(1)}" text-anchor="end" font-size="7" fill="#9CA3AF">${Math.round(mn)}</text>
+  </svg>`;
+}
 
-// ── STORES DATA (from CSV) ──
 const stores=[
 {n:"Utile TOULON David",cp:"83200",c:"Toulon",a:"567 Rue David",lat:43.124,lng:5.928,visits:[1036, 541, 2214, 188, 1466],calls:[27, 4, 21, 3, 33],routes:[288, 102, 122, 16, 103],lastV:1466,prevV:188,avgV:1089.0,lastC:33,prevC:3,avgC:17.6,lastR:103,prevR:16,avgR:126.2},
 {n:"Station U",cp:"2310",c:"Charly-sur-Marne",a:"Rte de Pavant",lat:45.7192,lng:1.6788,visits:[221, 19, 1650, 2611, 516],calls:[6, 0, 24, 37, 5],routes:[49, 7, 59, 142, 166],lastV:516,prevV:2611,avgV:1003.4,lastC:5,prevC:37,avgC:14.4,lastR:166,prevR:142,avgR:84.6},
@@ -2315,318 +2345,186 @@ const stores=[
 {n:"U Express et Drive",cp:"71800",c:"La Clayette",a:"14 Rte des Forges",lat:46.6686,lng:5.2381,visits:[20],calls:[9],routes:[13],lastV:20,prevV:20,avgV:20.0,lastC:9,prevC:9,avgC:9.0,lastR:13,prevR:13,avgR:13.0}
 ];
 
-// ── PRE-COMPUTE GLOBAL STATS ──
 const allStores=stores.map((s,i)=>{
-  const vsMoyV=delta(s.lastV,s.avgV);
-  const vsPrevV=delta(s.lastV,s.prevV);
-  const vsMoyC=delta(s.lastC,s.avgC);
-  const vsPrevC=delta(s.lastC,s.prevC);
-  const vsMoyR=delta(s.lastR,s.avgR);
-  const vsPrevR=delta(s.lastR,s.prevR);
-  return{...s,idx:i,vsMoyV,vsPrevV,vsMoyC,vsPrevC,vsMoyR,vsPrevR};
+  return{...s,idx:i,
+    vsMoyV:delta(s.lastV,s.avgV),vsPrevV:delta(s.lastV,s.prevV),
+    vsMoyC:delta(s.lastC,s.avgC),vsMoyR:delta(s.lastR,s.avgR)};
 });
 const byVisits=[...allStores].sort((a,b)=>b.lastV-a.lastV);
 const byProg=[...allStores].sort((a,b)=>b.vsPrevV-a.vsPrevV);
 
-// ── RENDER PANEL ──
-function renderPanel(store,idx){
-  const s=allStores[idx];
-  const dc=v=>v>=0?'pos':'neg';
-  const ds=v=>`${v>=0?'+':''}${v.toFixed(1)} %`;
+// ── MAP ──
+const map=L.map('map',{zoomControl:true,attributionControl:false}).setView([46.8,2.3],6);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
+const mcg=L.markerClusterGroup({
+  iconCreateFunction:function(cl){
+    const n=cl.getChildCount(),sz=n<10?30:n<50?36:42;
+    return L.divIcon({className:'',iconSize:[sz,sz],html:`<div style="width:${sz}px;height:${sz}px;background:${BRAND}22;border-radius:50%;display:flex;align-items:center;justify-content:center"><div style="width:${sz-8}px;height:${sz-8}px;background:${BRAND};color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:${sz>36?13:11}px;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)">${n}</div></div>`});
+  },maxClusterRadius:50
+});
+let activeIdx=null;
+const markerMap={};
+function pinSVG(active){
+  const fill=active?'#FFCC00':BRAND;const tc=active?'#0D1B4B':'#fff';
+  return`<svg xmlns="http://www.w3.org/2000/svg" width="26" height="36" viewBox="0 0 26 36"><path d="M13 0C5.8 0 0 5.8 0 13c0 8.7 13 23 13 23S26 21.7 26 13C26 5.8 20.2 0 13 0z" fill="${fill}" stroke="#fff" stroke-width="1.5"/><text x="13" y="18" text-anchor="middle" font-family="Arial" font-size="11" font-weight="800" fill="${tc}">M</text></svg>`;
+}
+allStores.forEach(s=>{
+  const m=L.marker([s.lat,s.lng],{icon:L.divIcon({className:'',iconSize:[26,36],iconAnchor:[13,36],html:pinSVG(false)})});
+  m.on('click',()=>selectStore(s.idx));
+  markerMap[s.idx]=m;
+  mcg.addLayer(m);
+});
+map.addLayer(mcg);
 
-  function kpiCard(ico,lbl,val,prev,av,vsMoy,vsPrev){return`<div class="lkpi-card">
-    <div class="lkpi-top"><span class="lkpi-ico">${ico}</span><span class="lkpi-lbl">${lbl}</span></div>
-    <div class="lkpi-val">${nf(val)}</div><div class="lkpi-sub">Semaine du 15 juin 2026</div>
-    <div class="lkpi-sep"></div>
-    <div class="lkpi-row"><span class="lkpi-rl">Moyenne sur la période</span><span class="lkpi-rv">${nf(av)}</span></div>
-    <div class="lkpi-row"><span class="lkpi-rl">vs Moyenne</span><span class="delta ${dc(vsMoy)}">${ds(vsMoy)}</span></div>
-    <div class="lkpi-row"><span class="lkpi-rl">vs Sem. préc. (${nf(prev)})</span><span class="delta ${dc(vsPrev)}">${ds(vsPrev)}</span></div>
-  </div>`;}
+function setPin(idx,active){
+  if(markerMap[idx])markerMap[idx].setIcon(L.divIcon({className:'',iconSize:[26,36],iconAnchor:[13,36],html:pinSVG(active)}));
+}
 
-  function chartCard(ico,lbl,data,gid,lv,av){
-    const n=data.length;
-    return`<div class="lchart-card">
-    <div class="lchart-top"><div style="display:flex;align-items:center;gap:4px"><span class="lkpi-ico">${ico}</span><span class="lchart-label">${lbl}</span></div><span class="lchart-lv">${nf(lv)}</span></div>
-    <div class="lchart-sub">${n} semaine${n>1?'s':''} · Moy. ${nf(av)}</div>
-    ${chartSVG(data,gid,'#00963A')}
-    <div class="lchart-legend">
-      <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#00963A" stroke-width="1.5"/></svg>Données sem.</span>
-      <span class="leg"><svg width="14" height="8"><line x1="0" y1="4" x2="14" y2="4" stroke="#F59E0B" stroke-width="1" stroke-dasharray="3,3"/></svg>Moyenne</span>
-      <span class="leg"><svg width="10" height="10"><circle cx="5" cy="5" r="3.5" fill="#F59E0B"/></svg>Dernière</span>
+// ── KPI CARD ──
+function kpiCard(ico,lbl,last,prev,av,gid,data){
+  const d=delta(last,av),dp=delta(last,prev);
+  return`<div class="kpi-card">
+    <div class="kpi-lbl">${ico} ${lbl}</div>
+    <div class="kpi-val">${nf(last)}</div>
+    ${chartSVG(data,gid,BRAND)}
+    <div class="kpi-sep"></div>
+    <div class="kpi-row"><span class="kpi-rl">vs moy.</span><span class="delta ${d>=0?'pos':'neg'}">${d>=0?'+':''}${d}%</span></div>
+    <div class="kpi-row"><span class="kpi-rl">vs préc.</span><span class="delta ${dp>=0?'pos':'neg'}">${dp>=0?'+':''}${dp}%</span></div>
+    <div class="kpi-row"><span class="kpi-rl">Moy.</span><span class="kpi-rv">${nf(av)}</span></div>
+  </div>`;
+}
+
+// ── CHART CARD (large sparkline) ──
+function chartCard(lbl,last,av,gid,data){
+  const d=delta(last,av);
+  return`<div class="chart-card">
+    <div class="chart-lbl">${lbl}</div>
+    <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:4px">
+      <span class="chart-val">${nf(last)}</span>
+      <span class="delta ${d>=0?'pos':'neg'}" style="margin-bottom:4px">${d>=0?'+':''}${d}% vs moy</span>
     </div>
-  </div>`;}
+    ${chartSVG(data,'c'+gid,BRAND)}
+    <div style="display:flex;justify-content:space-between;margin-top:4px">
+      <span style="font-size:8px;color:#9CA3AF">Moy. : ${nf(av)}</span>
+      <span style="font-size:8px;color:#9CA3AF">Dernière semaine</span>
+    </div>
+  </div>`;
+}
 
-  const top5=byVisits.slice(0,5);
-  const maxV5=top5[0].lastV;
-  const mostV=byVisits[0],leastV=byVisits[byVisits.length-1];
-  const bestP=byProg[0],worstP=byProg[byProg.length-1];
-  const shortN=t=>t.n.replace('Super U et Drive','Super U').replace('Hyper U et Drive','Hyper U').replace('U Express et Drive','U Express');
+// ── SELECT STORE ──
+function selectStore(idx){
+  const s=allStores[idx];
+  if(activeIdx!==null)setPin(activeIdx,false);
+  activeIdx=idx;setPin(idx,true);
+  try{map.setView([s.lat,s.lng],13,{animate:true});}catch(e){}
 
-  function hCard(bg,ico,tag,t,bigVal,sub1,sub2){
-    return`<div style="background:${bg};border-radius:10px;padding:11px 12px;color:white;position:relative;overflow:hidden;min-height:126px">
-      <div style="font-size:7.5px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;background:rgba(0,0,0,.18);display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;margin-bottom:5px">${ico} ${tag}</div>
-      <div style="font-size:12px;font-weight:800;margin-bottom:2px">${shortN(t)}</div>
-      <div style="display:inline-flex;align-items:center;background:rgba(0,0,0,.15);border-radius:4px;padding:1px 5px;font-size:8px;margin-bottom:5px">📍 ${t.cp}</div>
-      <div style="font-size:26px;font-weight:900;line-height:1.05;margin-bottom:2px">${bigVal}</div>
-      <div style="font-size:8.5px;opacity:.9">${sub1}</div>
-      <div style="font-size:8px;opacity:.7;margin-top:2px">${sub2}</div>
-    </div>`;}
-
-  function rankRow(rank,t,color,first){
-    const vspS=t.vsPrevV>=0,vmS=t.vsMoyV>=0;
-    return`<div style="display:flex;align-items:center;gap:6px;padding:7px 6px;${first?'':'border-top:1px solid #F3F4F6'}">
-      <div style="width:22px;height:22px;border-radius:50%;background:#F1F5F9;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:#6B7280;flex-shrink:0">${rank}</div>
-      <div style="width:9px;height:9px;border-radius:50%;background:${color};flex-shrink:0"></div>
-      <div style="flex:1;min-width:0">
-        <div style="font-size:11px;font-weight:700;color:#0F1B35;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${shortN(t)}</div>
-        <div style="font-size:8px;color:#9CA3AF">📍 ${t.cp}</div>
-      </div>
-      <div style="width:80px;flex-shrink:0"><div style="height:6px;background:#F1F5F9;border-radius:3px;overflow:hidden"><div style="height:100%;width:${Math.round(t.lastV/maxV5*100)}%;background:${color};border-radius:3px"></div></div></div>
-      <div style="font-size:14px;font-weight:800;color:#00963A;width:40px;text-align:right;flex-shrink:0">${nf(t.lastV)}</div>
-      <span style="background:${vspS?'#DCFCE7':'#FEE2E2'};color:${vspS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px;white-space:nowrap;flex-shrink:0">${vspS?'↑':'↓'}${Math.abs(t.vsPrevV).toFixed(1)} %</span>
-      <span style="font-size:8.5px;color:#6B7280;white-space:nowrap;flex-shrink:0">vs moy.&nbsp;<span style="color:${vmS?'#15803D':'#DC2626'};font-weight:700">${vmS?'+':''}${t.vsMoyV.toFixed(1)} %</span></span>
-    </div>`;}
-
-  function tableRow(t,i){
-    const vspS=t.vsPrevV>=0,vmS=t.vsMoyV>=0;
-    const isSel=t.idx===idx;
-    return`<tr style="background:${isSel?'#F0FDF4':i%2===0?'#fff':'#FAFAFA'}">
-      <td style="padding:7px 10px"><div style="display:flex;align-items:center;gap:5px"><span style="width:8px;height:8px;border-radius:50%;background:${RANK_COLORS[i]};display:inline-block;flex-shrink:0"></span><span style="font-size:10.5px;font-weight:${isSel?700:500};color:#0F1B35">${shortN(t)}</span></div></td>
-      <td style="padding:7px 8px;font-size:9.5px;color:#6B7280;text-align:center">${t.cp}</td>
-      <td style="padding:7px 8px;font-size:12px;font-weight:800;color:#00963A;text-align:right">${nf(t.lastV)}</td>
-      <td style="padding:7px 8px;font-size:10px;color:#374151;text-align:right">${nf(t.prevV)}</td>
-      <td style="padding:7px 8px;text-align:center"><span style="background:${vspS?'#DCFCE7':'#FEE2E2'};color:${vspS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px">${vspS?'↑':'↓'}${Math.abs(t.vsPrevV).toFixed(1)} %</span></td>
-      <td style="padding:7px 8px;font-size:10px;color:#374151;text-align:right">${nf(t.avgV)}</td>
-      <td style="padding:7px 8px;text-align:center"><span style="background:${vmS?'#DCFCE7':'#FEE2E2'};color:${vmS?'#15803D':'#DC2626'};font-size:9px;font-weight:700;padding:2px 5px;border-radius:4px">${vmS?'+':''}${t.vsMoyV.toFixed(1)} %</span></td>
-    </tr>`;}
+  const rV=byVisits.findIndex(x=>x.idx===idx)+1;
+  const rP=byProg.findIndex(x=>x.idx===idx)+1;
 
   document.getElementById('panel-content').innerHTML=`
-    <div id="store-section" style="display:flex;flex-direction:column;gap:8px;padding-bottom:8px">
-    <div style="background:#0D1B4B;color:#fff;padding:9px 14px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px">
-      <div style="width:3px;height:14px;background:#00963A;border-radius:2px"></div>
-      Performance par magasin
-    </div>
-    <div class="lhdr">
-      <div class="lhdr-left">
-        <div class="lhdr-logo"><img src="public/images/logos/magasinsU-logo.png" alt="Magasins U" style="height:32px" onerror="this.style.display='none'"></div>
-        <div>
-          <div class="lhdr-name">${store.n}</div>
-          <div class="lhdr-addr">📍 ${store.a} — ${store.cp} ${store.c}</div>
-        </div>
+    <div style="padding:12px 14px;background:#fff;border-bottom:1px solid #E5E7EB;display:flex;align-items:center;gap:10px">
+      <img src="public/images/logos/magasinsU-logo.png" alt="Magasins U" style="height:36px;flex-shrink:0" onerror="this.style.display='none'">
+      <div style="flex:1;min-width:0">
+        <div style="font-size:13px;font-weight:800;color:#0D1B4B;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.n}</div>
+        <div style="font-size:10px;color:#6B7280;margin-top:1px">${s.a?s.a+' — ':''}<b>${s.cp} ${s.c}</b></div>
       </div>
-      <div class="lhdr-right">
-        <div class="lhdr-badge">📅 Données 2026</div>
-        <div class="lhdr-meta">${store.visits.length} semaine${store.visits.length>1?'s':''} disponible${store.visits.length>1?'s':''} · Mise à jour : juin 2026</div>
-        <div style="display:flex;gap:5px;justify-content:flex-end">
-          <button class="lbtn lbtn-out" onclick="window.print()">🖨 Imprimer / PDF</button>
-        </div>
+      <div style="flex-shrink:0;text-align:right">
+        <div style="border:1.5px solid ${BRAND};color:${BRAND};border-radius:6px;padding:2px 8px;font-size:9px;font-weight:700;margin-bottom:3px">🏆 #${rV} Visites</div>
+        <div style="font-size:9px;color:#9CA3AF">#${rP} progression</div>
       </div>
     </div>
-    <div class="lsec"><div class="lsec-bar"></div>INDICATEURS — DERNIÈRE SEMAINE DISPONIBLE</div>
-    <div class="lkpi-grid">
-      ${kpiCard('🏠','VISITES EN MAGASIN',s.lastV,s.prevV,s.avgV,s.vsMoyV,s.vsPrevV)}
-      ${kpiCard('📞','CLICS D\'APPEL',s.lastC,s.prevC,s.avgC,s.vsMoyC,s.vsPrevC)}
-      ${kpiCard('🗺','DEMANDES D\'ITINÉRAIRE',s.lastR,s.prevR,s.avgR,s.vsMoyR,s.vsPrevR)}
+    <div class="sec-lbl">Indicateurs — dernières semaines disponibles</div>
+    <div class="kpi-grid" style="grid-template-columns:1fr 1fr 1fr${s.commandes&&s.commandes.length?' 1fr':''}"  >
+      ${kpiCard('👣','Visites',s.lastV,s.prevV,s.avgV,`v${idx}`,s.visits)}
+      ${kpiCard('📞','Appels',s.lastC,s.prevC,s.avgC,`c${idx}`,s.calls)}
+      ${kpiCard('🗺️','Itinéraires',s.lastR,s.prevR,s.avgR,`r${idx}`,s.routes)}
+      ${s.commandes&&s.commandes.length?kpiCard('🍔','Commandes',s.lastCmd,s.prevCmd,s.avgCmd,`d${idx}`,s.commandes):''}
     </div>
-    <div class="lsec"><div class="lsec-bar"></div>ÉVOLUTION HEBDOMADAIRE</div>
-    <div class="lchart-grid">
-      ${chartCard('🏠','Visites en magasin',store.visits,'gv'+idx,s.lastV,s.avgV)}
-      ${chartCard('📞','Clics d\'appel',store.calls,'gc'+idx,s.lastC,s.avgC)}
-      ${chartCard('🗺','Demandes d\'itinéraire',store.routes,'gr'+idx,s.lastR,s.avgR)}
+    <div class="sec-lbl">Évolution hebdomadaire</div>
+    <div class="kpi-grid" style="grid-template-columns:1fr 1fr 1fr">
+      ${chartCard('Visites en magasin',s.lastV,s.avgV,`ev${idx}`,s.visits)}
+      ${chartCard("Clics d'appel",s.lastC,s.avgC,`ec${idx}`,s.calls)}
+      ${chartCard("Demandes d'itinéraires",s.lastR,s.avgR,`er${idx}`,s.routes)}
     </div>
-    </div>`;
-
-  document.getElementById('global-title').innerHTML=`
-    <div style="background:#0D1B4B;color:#fff;padding:9px 14px;border-radius:8px;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px">
-      <div style="width:3px;height:14px;background:#00963A;border-radius:2px"></div>
-      Performance globale des magasins
-    </div>`;
-
-  document.getElementById('global-row1').innerHTML=`
-    <div style="flex:0 0 44%;display:flex;flex-direction:column;gap:8px">
-      <div class="lsec"><div class="lsec-bar"></div>FAITS MARQUANTS — DERNIÈRE SEMAINE</div>
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px">
-        ${hCard('#F59E0B','🏆','PLUS DE VISITES',mostV,nf(mostV.lastV),'visites en magasin',`Sem. préc. : ${nf(mostV.prevV)} · Moy. : ${nf(mostV.avgV)}`)}
-        ${hCard('#22C55E','🚀','MEILLEURE PROGRESSION',bestP,(bestP.vsPrevV>=0?'+':'')+bestP.vsPrevV.toFixed(1)+' %',`${nf(bestP.prevV)} → ${nf(bestP.lastV)} visites`,`Moy. ${nf(bestP.avgV)} · vs moy. ${bestP.vsMoyV>=0?'+':''}${bestP.vsMoyV.toFixed(1)} %`)}
-        ${hCard('#F97316','👁','MOINS DE VISITES',leastV,nf(leastV.lastV),'visites en magasin',`Sem. préc. : ${nf(leastV.prevV)} · Moy. : ${nf(leastV.avgV)}`)}
-        ${hCard('#EF4444','📉','PLUS BASSE PROGRESSION',worstP,(worstP.vsPrevV>=0?'+':'')+worstP.vsPrevV.toFixed(1)+' %',`${nf(worstP.prevV)} → ${nf(worstP.lastV)} visites`,`Moy. ${nf(worstP.avgV)} · vs moy. ${worstP.vsMoyV>=0?'+':''}${worstP.vsMoyV.toFixed(1)} %`)}
-      </div>
-    </div>
-    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px">
-      <div class="lsec"><div class="lsec-bar"></div>CLASSEMENT DES VISITES — DERNIÈRE SEMAINE</div>
-      <div class="lchart-card" style="padding:4px 6px;flex:1">
-        ${top5.map((t,i)=>rankRow(i+1,t,RANK_COLORS[i],i===0)).join('')}
-      </div>
-    </div>`;
-
-  document.getElementById('global-row2').innerHTML=`
-    <div style="flex:0 0 44%;display:flex;flex-direction:column;gap:8px">
-      <div class="lsec"><div class="lsec-bar"></div>ÉVOLUTION — TOP 5 MAGASINS</div>
-      <div class="lchart-card" style="padding:14px">
-        <div style="font-size:11px;font-weight:700;color:#374151;margin-bottom:1px">Visites en magasin — Top 5 magasins</div>
-        <div style="font-size:8.5px;color:#9CA3AF;margin-bottom:8px">Données 2026</div>
-        <canvas id="evo-canvas" width="900" height="200" style="width:100%;height:auto;cursor:crosshair;display:block"></canvas>
-        <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:8px">
-          ${top5.map((t,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:9px;color:#6B7280"><svg width="20" height="8"><line x1="0" y1="4" x2="20" y2="4" stroke="${RANK_COLORS[i]}" stroke-width="2.5"/></svg>${shortN(t)} (${t.cp})</span>`).join('')}
-        </div>
-      </div>
-    </div>
-    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px">
-      <div class="lsec"><div class="lsec-bar"></div>TABLEAU RÉCAPITULATIF</div>
-      <div class="lchart-card" style="padding:0;overflow:hidden">
-        <table style="width:100%;border-collapse:collapse">
-          <thead><tr style="background:#00963A">
-            <th style="padding:8px 10px;text-align:left;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;letter-spacing:.04em">Magasin</th>
-            <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">CP</th>
-            <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Dernière sem.</th>
-            <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Sem. préc.</th>
-            <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">Prog. S/S</th>
-            <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:right">Moy.</th>
-            <th style="padding:8px;color:#fff;font-size:8.5px;font-weight:700;text-transform:uppercase;text-align:center">vs Moy.</th>
-          </tr></thead>
-          <tbody>${top5.map((t,i)=>tableRow(t,i)).join('')}</tbody>
-        </table>
-      </div>
-    </div>`;
-
-  setupEvoChart(top5);
-  requestAnimationFrame(()=>{
-    const el=document.getElementById('store-section');
-    if(!el)return;
-    const h=el.offsetHeight+14;
-    document.getElementById('layout').style.height=h+'px';
-    document.getElementById('map').style.height=h+'px';
-    map.invalidateSize();
-  });
+  `;
 }
 
-// ── EVO CHART (multi-store, variable length) ──
-function setupEvoChart(top5){
-  const canvas=document.getElementById('evo-canvas');
-  if(!canvas)return;
-  const ctx=canvas.getContext('2d');
-  const W=canvas.width,H=canvas.height;
-  const pL=40,pR=8,pT=10,pB=26;
+// ── GLOBAL SECTION ──
+function renderGlobal(){
+  // Highlight cards
+  const maxV=byVisits[0],minV=byVisits[byVisits.length-1];
+  const maxP=byProg[0],minP=byProg[byProg.length-1];
+  const hl=[
+    {bg:'#F97316',title:'Plus de visites',s:maxV,val:nf(maxV.lastV),sub:(maxV.vsMoyV>=0?'+':'')+maxV.vsMoyV+'% vs moy'},
+    {bg:'#22C55E',title:'Meilleure progression',s:maxP,val:(maxP.vsPrevV>=0?'+':'')+maxP.vsPrevV+'%',sub:maxP.n},
+    {bg:'#EF4444',title:'Moins de visites',s:minV,val:nf(minV.lastV),sub:(minV.vsMoyV>=0?'+':'')+minV.vsMoyV+'% vs moy'},
+    {bg:'#DC2626',title:'Plus basse progression',s:minP,val:(minP.vsPrevV>=0?'+':'')+minP.vsPrevV+'%',sub:minP.n},
+  ];
+  document.getElementById('highlight-cards').innerHTML=hl.map(h=>`
+    <div class="hl-card" style="background:${h.bg}" onclick="selectStore(${h.s.idx})">
+      <div class="hl-title">${h.title}</div>
+      <div class="hl-name">${h.s.n}</div>
+      <div class="hl-val">${h.val}</div>
+      <div class="hl-sub">${h.sub}</div>
+    </div>`).join('');
+
+  // Evolution chart
+  const top5=byVisits.slice(0,5);
+  const maxN=Math.max(...top5.map(s=>s.visits.length));
+  const W=560,H=150,pL=32,pR=10,pT=8,pB=18;
   const iw=W-pL-pR,ih=H-pT-pB;
-  const maxN=Math.max(...top5.map(t=>t.visits.length));
-  const allVals=top5.flatMap(t=>t.visits);
-  const maxV=Math.ceil(Math.max(...allVals)*1.08/50)*50;
-  const x=i=>pL+i/(maxN-1)*iw;
-  const y=v=>pT+(1-v/maxV)*ih;
-
-  function draw(hw){
-    ctx.clearRect(0,0,W,H);
-    [0,.25,.5,.75,1].forEach(t=>{
-      const val=Math.round(maxV*t);
-      const yv=y(val);
-      ctx.strokeStyle='#E9ECF0';ctx.lineWidth=1;
-      ctx.beginPath();ctx.moveTo(pL,yv);ctx.lineTo(W-pR,yv);ctx.stroke();
-      ctx.fillStyle='#9CA3AF';ctx.font='9px sans-serif';ctx.textAlign='right';
-      ctx.fillText(nf(val),pL-4,yv+3.5);
-    });
-    top5.forEach((t,ci)=>{
-      const col=RANK_COLORS[ci];
-      const n=t.visits.length;
-      ctx.strokeStyle=col;ctx.lineWidth=2;ctx.lineJoin='round';
-      ctx.beginPath();
-      t.visits.forEach((v,i)=>{
-        const xi=pL+i/(maxN-1)*iw;
-        if(i===0)ctx.moveTo(xi,y(v));else ctx.lineTo(xi,y(v));
-      });
-      ctx.stroke();
-      if(hw!==null&&hw<n){
-        const xi=pL+hw/(maxN-1)*iw;
-        ctx.fillStyle=col;ctx.beginPath();ctx.arc(xi,y(t.visits[hw]),4.5,0,Math.PI*2);ctx.fill();
-        ctx.fillStyle='#fff';ctx.beginPath();ctx.arc(xi,y(t.visits[hw]),2,0,Math.PI*2);ctx.fill();
-      }
-    });
-    if(hw!==null){
-      const xi=pL+hw/(maxN-1)*iw;
-      ctx.strokeStyle='rgba(0,0,0,.12)';ctx.lineWidth=1;ctx.setLineDash([4,3]);
-      ctx.beginPath();ctx.moveTo(xi,pT);ctx.lineTo(xi,pT+ih);ctx.stroke();
-      ctx.setLineDash([]);
-    }
-  }
-  draw(null);
-
-  let tip=document.getElementById('evo-tip');
-  if(!tip){tip=document.createElement('div');tip.id='evo-tip';
-    tip.style.cssText='position:fixed;display:none;background:rgba(15,27,53,.92);color:#fff;border-radius:8px;padding:8px 11px;font-size:9.5px;pointer-events:none;z-index:9999;min-width:145px;box-shadow:0 4px 14px rgba(0,0,0,.35);line-height:1.7';
-    document.body.appendChild(tip);}
-
-  canvas.addEventListener('mousemove',e=>{
-    const rect=canvas.getBoundingClientRect();
-    const rawX=(e.clientX-rect.left)*W/rect.width;
-    const wi=Math.max(0,Math.min(maxN-1,Math.round((rawX-pL)/iw*(maxN-1))));
-    draw(wi);
-    let h=`<div style="font-weight:700;font-size:10px;border-bottom:1px solid rgba(255,255,255,.2);padding-bottom:3px;margin-bottom:4px">Sem. ${wi+1}</div>`;
-    top5.forEach((t,ci)=>{
-      const name=t.n.replace('Super U et Drive','Super U').replace('Hyper U et Drive','Hyper U').replace('U Express et Drive','U Express');
-      const v=wi<t.visits.length?nf(t.visits[wi]):'—';
-      h+=`<div style="display:flex;justify-content:space-between;gap:10px"><span><span style="color:${RANK_COLORS[ci]}">●</span> ${name}</span><span style="font-weight:700">${v}</span></div>`;
-    });
-    tip.innerHTML=h;tip.style.display='block';
-    const tx=e.clientX+14,ty=e.clientY-20;
-    tip.style.left=(tx+tip.offsetWidth>window.innerWidth?tx-tip.offsetWidth-28:tx)+'px';
-    tip.style.top=ty+'px';
+  const allV=top5.flatMap(s=>s.visits);
+  const mn=Math.min(...allV),mx=Math.max(...allV),rng=mx-mn||1;
+  const x=i=>pL+i/(maxN-1)*iw,y=v=>pT+(1-(v-mn)/rng)*ih;
+  let paths='',xgrid='';
+  for(let i=0;i<maxN;i++){xgrid+=`<line x1="${x(i).toFixed(1)}" y1="${pT}" x2="${x(i).toFixed(1)}" y2="${(pT+ih).toFixed(1)}" stroke="#F3F4F6" stroke-width="1"/>`;}
+  top5.forEach((s,ci)=>{
+    const n=s.visits.length,off=maxN-n;
+    const pts=s.visits.map((v,i)=>x(off+i).toFixed(1)+','+y(v).toFixed(1)).join(' ');
+    paths+=`<polyline points="${pts}" fill="none" stroke="${RANK_COLORS[ci]}" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" opacity=".9"/>`;
+    paths+=`<circle cx="${x(maxN-1).toFixed(1)}" cy="${y(s.visits[n-1]).toFixed(1)}" r="3.5" fill="${RANK_COLORS[ci]}" stroke="white" stroke-width="1.5"/>`;
   });
-  canvas.addEventListener('mouseleave',()=>{draw(null);tip.style.display='none';});
+  document.getElementById('evo-chart').innerHTML=`<svg width="100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${xgrid}${paths}</svg>`;
+  document.getElementById('evo-legend').innerHTML=top5.map((s,i)=>`<span style="display:inline-flex;align-items:center;gap:4px;font-size:9px;color:#6B7280"><span style="width:18px;height:3px;background:${RANK_COLORS[i]};border-radius:2px;display:inline-block"></span>${s.n.substring(0,28)}</span>`).join('');
+
+  // Rankings
+  document.getElementById('rankings').innerHTML=byVisits.slice(0,5).map((s,i)=>`
+    <div class="rank-item" onclick="selectStore(${s.idx})">
+      <span class="rank-num" style="color:${RANK_COLORS[i]}">#${i+1}</span>
+      <span class="rank-name">${s.n}</span>
+      <span class="rank-val">${nf(s.lastV)}</span>
+      <span class="delta ${s.vsMoyV>=0?'pos':'neg'} rank-delta">${s.vsMoyV>=0?'+':''}${s.vsMoyV}%</span>
+    </div>`).join('');
+
+  // Table
+  window._sortKey='lastV';window._sortDir=-1;
+  renderTable();
 }
 
-// ── MAP ──
-const PIN=`<svg xmlns="http://www.w3.org/2000/svg" width="32" height="44" viewBox="0 0 40 54">
-  <ellipse cx="20" cy="52" rx="7" ry="2.8" fill="rgba(0,0,0,0.22)"/>
-  <path d="M20 2C10.06 2 2 10.06 2 20C2 33.8 20 52 20 52C20 52 38 33.8 38 20C38 10.06 29.94 2 20 2Z" fill="#00963A"/>
-  <path d="M12 7C9 10.5 7.5 15 7.5 20" stroke="rgba(255,255,255,0.32)" stroke-width="2.5" fill="none" stroke-linecap="round"/>
-  <circle cx="20" cy="20" r="13" fill="white"/>
-  <text x="20" y="25" text-anchor="middle" font-size="15" font-weight="900" fill="#00963A" font-family="Arial,sans-serif">U</text>
-</svg>`;
-const PIN_ACTIVE=`<svg xmlns="http://www.w3.org/2000/svg" width="36" height="50" viewBox="0 0 40 54">
-  <ellipse cx="20" cy="52" rx="8" ry="3" fill="rgba(0,0,0,0.3)"/>
-  <path d="M20 2C10.06 2 2 10.06 2 20C2 33.8 20 52 20 52C20 52 38 33.8 38 20C38 10.06 29.94 2 20 2Z" fill="#FFCC00"/>
-  <circle cx="20" cy="20" r="13" fill="white"/>
-  <text x="20" y="25" text-anchor="middle" font-size="15" font-weight="900" fill="#00963A" font-family="Arial,sans-serif">U</text>
-</svg>`;
+function renderTable(){
+  const sorted=[...allStores].sort((a,b)=>window._sortDir*(a[window._sortKey]<b[window._sortKey]?-1:1));
+  document.getElementById('table-body').innerHTML=sorted.map((s,i)=>{
+    const dv=delta(s.lastV,s.avgV);
+    return`<tr style="cursor:pointer" onclick="selectStore(${s.idx})">
+      <td style="font-weight:600;white-space:nowrap">${s.n}</td>
+      <td style="color:#6B7280">${s.cp}</td>
+      <td style="text-align:right;font-weight:700">${nf(s.lastV)}</td>
+      <td style="text-align:right">${nf(s.avgV)}</td>
+      <td style="text-align:right"><span class="delta ${dv>=0?'pos':'neg'}">${dv>=0?'+':''}${dv}%</span></td>
+      <td style="text-align:right">${nf(s.lastC)}</td>
+      <td style="text-align:right">${nf(s.lastR)}</td>
+      ${s.commandes&&s.commandes.length?`<td style="text-align:right">${nf(s.lastCmd)}</td><td style="text-align:right"><span class="delta ${delta(s.lastCmd,s.prevCmd)>=0?'pos':'neg'}">${delta(s.lastCmd,s.prevCmd)>=0?'+':''}${delta(s.lastCmd,s.prevCmd)}%</span></td>`:''}</tr>`;
+  }).join('');
+}
 
-const iconNormal=L.divIcon({html:`<div style="filter:drop-shadow(1px 2px 4px rgba(0,0,0,.4));cursor:pointer;transition:transform .15s;transform-origin:bottom center" onmouseover="this.style.transform='scale(1.2)'" onmouseout="this.style.transform='scale(1)'">${PIN}</div>`,iconSize:[32,44],iconAnchor:[16,44],className:''});
-const iconActive=L.divIcon({html:`<div style="filter:drop-shadow(2px 3px 8px rgba(0,0,0,.5));cursor:pointer;transform-origin:bottom center">${PIN_ACTIVE}</div>`,iconSize:[36,50],iconAnchor:[18,50],className:''});
+window.sortTable=function(key){
+  if(window._sortKey===key)window._sortDir*=-1;
+  else{window._sortKey=key;window._sortDir=-1;}
+  renderTable();
+};
 
-const map=L.map('map',{center:[46.8,1.8],zoom:6});
-L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
-
-const cluster=L.markerClusterGroup({
-  maxClusterRadius:55,showCoverageOnHover:false,
-  iconCreateFunction(c){const n=c.getChildCount(),sz=n<10?40:n<20?48:56;return L.divIcon({html:`<div class="u-cluster" style="width:${sz+10}px;height:${sz+10}px"><div class="u-cluster-inner" style="width:${sz}px;height:${sz}px;font-size:${sz<50?13:15}px">${n}</div></div>`,iconSize:[sz+10,sz+10],iconAnchor:[(sz+10)/2,(sz+10)/2],className:''});}
-});
-
-let activeMarker=null;
-const markers=stores.map((s,idx)=>{
-  const m=L.marker([s.lat,s.lng],{icon:iconNormal});
-  m.on('click',()=>{
-    if(activeMarker)activeMarker.setIcon(iconNormal);
-    m.setIcon(iconActive);activeMarker=m;
-    renderPanel(s,idx);
-    map.setView([s.lat,s.lng],13,{animate:true,duration:0.8});
-  });
-  cluster.addLayer(m);return m;
-});
-map.addLayer(cluster);
-
-const ResetCtrl=L.Control.extend({options:{position:'topright'},onAdd(){
-  const btn=L.DomUtil.create('button');
-  btn.title='Vue France entière';
-  btn.style.cssText='background:#0D1B4B;color:white;border:none;border-radius:8px;padding:8px 12px;cursor:pointer;font-size:16px;box-shadow:0 2px 8px rgba(0,0,0,.3);';
-  btn.innerHTML='🇫🇷';
-  btn.onclick=()=>{if(activeMarker){activeMarker.setIcon(iconNormal);activeMarker=null;}map.flyTo([46.8,1.8],6,{duration:1.2});};
-  return btn;
-}});
-map.addControl(new ResetCtrl());
-
-// Default: select store with most visits (byVisits[0])
-const defaultIdx=byVisits[0].idx;
-markers[defaultIdx].setIcon(iconActive);activeMarker=markers[defaultIdx];
-renderPanel(stores[defaultIdx],defaultIdx);
-map.setView([stores[defaultIdx].lat,stores[defaultIdx].lng],12);
+renderGlobal();
+selectStore(byVisits[0].idx);
 </script>
 </body>
 </html>
