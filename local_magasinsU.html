@@ -116,6 +116,12 @@ tr:hover td{background:#F9FAFB}
   </div>
   <div id="store-col" style="flex:1;overflow-y:auto;display:flex;flex-direction:column;background:#EEF1F6">
     <div style="background:#0D1B4B;padding:7px 16px;font-size:10px;font-weight:700;color:rgba(255,255,255,.9);letter-spacing:.1em;text-transform:uppercase;flex-shrink:0">Performance par magasin</div>
+    <div style="padding:8px 10px;background:#f5f6fa;border-bottom:1px solid #E5E7EB;position:relative;flex-shrink:0">
+      <input id="store-search" type="text" placeholder="🔍 Rechercher un magasin ou une ville..." autocomplete="off"
+        style="width:100%;padding:7px 12px;border:1.5px solid #D1D5DB;border-radius:8px;font-size:12px;outline:none;background:#fff;color:#374151"
+        oninput="handleSearch(this.value)" onfocus="handleSearch(this.value)" onblur="setTimeout(()=>document.getElementById('search-results').style.display='none',200)">
+      <div id="search-results" style="display:none;position:absolute;left:10px;right:10px;top:calc(100% - 2px);background:#fff;border:1.5px solid #E5E7EB;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.12);z-index:9999;max-height:260px;overflow-y:auto;margin-top:2px"></div>
+    </div>
     <div id="panel-content" style="flex:1"></div>
   </div>
 </div>
@@ -2525,6 +2531,26 @@ window.sortTable=function(key){
 
 renderGlobal();
 selectStore(byVisits[0].idx);
+
+window.handleSearch=function(q){
+  const box=document.getElementById('search-results');
+  if(!q||q.trim().length<2){box.style.display='none';return;}
+  const term=q.trim().toLowerCase();
+  const hits=allStores.filter(s=>
+    s.n.toLowerCase().includes(term)||s.c.toLowerCase().includes(term)||s.cp.includes(term)
+  ).slice(0,20);
+  if(!hits.length){box.innerHTML='<div style="padding:10px 14px;font-size:11px;color:#9CA3AF">Aucun résultat</div>';box.style.display='block';return;}
+  box.innerHTML=hits.map(s=>`<div onclick="selectStore(${s.idx});document.getElementById('store-search').value='${s.n.replace(/'/g,"\\'")}';document.getElementById('search-results').style.display='none';"
+    style="padding:8px 14px;cursor:pointer;border-bottom:1px solid #F3F4F6;display:flex;align-items:center;justify-content:space-between"
+    onmouseover="this.style.background='#F9FAFB'" onmouseout="this.style.background='#fff'">
+    <div>
+      <div style="font-size:11px;font-weight:600;color:#0D1B4B">${s.n}</div>
+      <div style="font-size:10px;color:#6B7280">${s.cp} ${s.c}</div>
+    </div>
+    <span style="font-size:10px;font-weight:700;color:#00963A">${new Intl.NumberFormat('fr-FR').format(s.lastV)} vis.</span>
+  </div>`).join('');
+  box.style.display='block';
+};
 </script>
 </body>
 </html>
