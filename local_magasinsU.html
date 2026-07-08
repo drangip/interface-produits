@@ -2330,8 +2330,8 @@ const allStores=stores.map((s,i)=>{
   const vsPrevR=delta(s.lastR,s.prevR);
   return{...s,idx:i,vsMoyV,vsPrevV,vsMoyC,vsPrevC,vsMoyR,vsPrevR};
 });
-const byVisits=[...allStores].sort((a,b)=>b.lastV-a.lastV);
-const byProg=[...allStores].sort((a,b)=>b.vsPrevV-a.vsPrevV);
+let byVisits=[...allStores].sort((a,b)=>b.lastV-a.lastV);
+let byProg=[...allStores].sort((a,b)=>b.vsPrevV-a.vsPrevV);
 
 // ── RENDER PANEL ──
 function renderPanel(store,idx){
@@ -2646,28 +2646,37 @@ window.filterByCity=function(city){
   if(activeMarker){activeMarker.setIcon(iconNormal);activeMarker=null;}
 
   if(!city){
+    // Reset to full dataset
+    byVisits=[...allStores].sort((a,b)=>b.lastV-a.lastV);
+    byProg=[...allStores].sort((a,b)=>b.vsPrevV-a.vsPrevV);
     markers.forEach(m=>{if(m)mcg.addLayer(m);});
     map.flyTo([46.8,1.8],6,{duration:1});
     count.textContent='';
+    const def=byVisits[0];
+    markers[def.idx].setIcon(iconActive);activeMarker=markers[def.idx];
+    renderPanel(stores[def.idx],def.idx);
     return;
   }
 
-  const hits=stores.map((s,i)=>({s,i})).filter(({s})=>s.c===city);
-  hits.forEach(({i})=>{if(markers[i])mcg.addLayer(markers[i]);});
+  const hits=allStores.filter(s=>s.c===city);
+  hits.forEach(s=>{if(markers[s.idx])mcg.addLayer(markers[s.idx]);});
   count.textContent=hits.length+' magasin'+(hits.length>1?'s':'');
 
+  // Recompute rankings on city subset
+  byVisits=[...hits].sort((a,b)=>b.lastV-a.lastV);
+  byProg=[...hits].sort((a,b)=>b.vsPrevV-a.vsPrevV);
+
+  const best=byVisits[0];
+  if(!best)return;
+
   if(hits.length===1){
-    const {s,i}=hits[0];
-    map.setView([s.lat,s.lng],14);
-    markers[i].setIcon(iconActive);activeMarker=markers[i];
-    renderPanel(s,i);
-  } else if(hits.length>1){
-    const lats=hits.map(({s})=>s.lat),lngs=hits.map(({s})=>s.lng);
+    map.setView([best.lat,best.lng],14);
+  } else {
+    const lats=hits.map(s=>s.lat),lngs=hits.map(s=>s.lng);
     map.fitBounds([[Math.min(...lats),Math.min(...lngs)],[Math.max(...lats),Math.max(...lngs)]],{padding:[40,40]});
-    const best=hits.sort((a,b)=>b.s.lastV-a.s.lastV)[0];
-    markers[best.i].setIcon(iconActive);activeMarker=markers[best.i];
-    renderPanel(best.s,best.i);
   }
+  markers[best.idx].setIcon(iconActive);activeMarker=markers[best.idx];
+  renderPanel(stores[best.idx],best.idx);
 };
 </script>
 </body>
