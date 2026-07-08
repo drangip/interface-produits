@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>Quick | WPP Media</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css">
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;overflow-y:auto;background:#EEF1F6}
+#layout{display:flex;margin-top:88px}
+#map-col{flex:0 0 44%;overflow:hidden}
+#map{width:100%;height:400px}
+#panel{flex:1;padding:12px 12px 2px;display:flex;flex-direction:column;gap:8px}
+.q-cluster{background:rgba(227,6,19,.18);border-radius:50%;display:flex;align-items:center;justify-content:center}
+.q-cluster-inner{background:#E30613;color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;border:2.5px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.3)}
+#global-section{display:flex;flex-direction:column;gap:8px;padding:0 12px 20px}
+.lhdr{background:#fff;border-radius:10px;padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.lhdr-left{display:flex;align-items:center;gap:10px;flex:1;min-width:0}
+.lhdr-logo{flex-shrink:0;display:flex;align-items:center}
+.lhdr-name{font-size:14px;font-weight:800;color:#0D1B4B;margin-bottom:2px}
+.lhdr-addr{font-size:10px;color:#555;line-height:1.55}
+.lhdr-right{flex-shrink:0;text-align:right}
+.lhdr-badge{display:inline-flex;align-items:center;gap:4px;border:1.5px solid #E30613;color:#E30613;border-radius:6px;padding:3px 8px;font-size:10px;font-weight:600;margin-bottom:3px}
+.lhdr-meta{font-size:9.5px;color:#888;margin-bottom:5px}
+.lbtn{border-radius:6px;padding:5px 10px;font-size:10px;font-weight:600;cursor:pointer;display:inline-flex;align-items:center;gap:3px;transition:opacity .15s;border:none}
+.lbtn:hover{opacity:.8}
+.lsec{font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:#4B5675;display:flex;align-items:center;gap:4px;padding:2px 0}
+.lsec-bar{width:3px;height:12px;background:#E30613;border-radius:2px;flex-shrink:0}
+.lkpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px}
+.lkpi-card{background:#fff;border-radius:10px;padding:12px 11px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.lkpi-top{display:flex;align-items:center;gap:5px;margin-bottom:6px}
+.lkpi-ico{font-size:13px;line-height:1}
+.lkpi-lbl{font-size:8px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#4B5675;line-height:1.2}
+.lkpi-val{font-size:26px;font-weight:800;color:#E30613;line-height:1.05;margin-bottom:2px}
+.lkpi-sub{font-size:8.5px;color:#9CA3AF;margin-bottom:8px}
+.lkpi-sep{height:1px;background:#E5E7EB;margin-bottom:7px}
+.lkpi-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.lkpi-rl{font-size:9px;color:#6B7280}.lkpi-rv{font-size:9px;font-weight:700;color:#374151}
+.delta{font-size:9px;font-weight:700;padding:1px 5px;border-radius:4px}
+.pos{background:#DCFCE7;color:#15803D}.neg{background:#FEE2E2;color:#DC2626}
+.lchart-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.lchart-card{background:#fff;border-radius:10px;padding:10px 11px;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.lchart-top{display:flex;justify-content:space-between;align-items:flex-start}
+.lchart-label{font-size:10px;font-weight:700;color:#374151}
+.lchart-lv{font-size:18px;font-weight:800;color:#E30613;line-height:1}
+.lchart-sub{font-size:7.5px;color:#9CA3AF;margin-bottom:2px}
+.lchart-legend{display:flex;gap:6px;flex-wrap:wrap;margin-top:3px}
+.leg{font-size:7.5px;color:#9CA3AF;display:inline-flex;align-items:center;gap:2px}
+</style>
+</head>
+<body>
+
+<nav id="main-nav" style="position:fixed;top:0;left:0;right:0;z-index:9999;background:#0D1B4B;height:42px;display:flex;align-items:center;padding:0 20px;gap:8px;box-shadow:0 2px 8px rgba(0,0,0,.35);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif">
+  <a href="home.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Home</a>
+  <a href="synthese.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Synthèse</a>
+  <a href="bilan_media.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Bilan Media</a>
+  <a href="total_search.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Total Search</a>
+  <a href="dashboard.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Suivi Produits</a>
+  <a href="audit_flux.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Audit de flux</a>
+  <a href="competitivite_prix.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Compétitivité prix</a>
+  <a href="local_castorama.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Castorama</a>
+  <a href="local_bricodepot.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Brico Dépôt</a>
+  <a href="local_screwfix.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Local Screwfix</a>
+  <a href="local_magasinsU.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Magasins U</a>
+  <a href="local_quick.html" style="padding:4px 14px;border-radius:20px;background:rgba(255,255,255,.15);color:#fff;text-decoration:none;font-size:12px;font-weight:600">Quick</a>
+  <a href="mesure_efficacite.html" style="padding:4px 14px;border-radius:20px;background:transparent;color:rgba(255,255,255,.55);text-decoration:none;font-size:12px;font-weight:600" onmouseover="this.style.color='#fff'" onmouseout="this.style.color='rgba(255,255,255,.55)'">Mesure d'efficacité</a>
+  <div style="margin-left:auto;display:flex;align-items:center;gap:8px">
+    <span style="color:rgba(255,255,255,.5);font-size:11px;font-weight:500;letter-spacing:.03em">Annonceur</span>
+    <select id="annonceurSelect" onchange="switchAnnonceur(this.value)" style="background:#1a2d6b;color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;padding-right:22px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,.5)'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
+      <option value="kingfisher">Kingfisher</option>
+      <option value="coop-u">Coopérative U</option>
+      <option value="quick">Quick</option>
+    </select>
+  </div>
+</nav>
+<script>
+(function(){
+  var COOP_U_PAGES=['local_magasinsU.html'];
+  var QUICK_PAGES=['local_quick.html'];
+  var cur=location.pathname.split('/').pop()||'home.html';
+  var isCU=COOP_U_PAGES.indexOf(cur)>=0;
+  var isQ=QUICK_PAGES.indexOf(cur)>=0;
+  var saved=localStorage.getItem('annonceur');
+  if(!saved){saved=isCU?'coop-u':isQ?'quick':'kingfisher';localStorage.setItem('annonceur',saved);}
+
+  function applyFilter(v){
+    var nav=document.querySelector('nav');
+    if(!nav)return;
+    var links=nav.querySelectorAll('a[href]');
+    links.forEach(function(a){
+      var href=a.getAttribute('href')||'';
+      var isU=COOP_U_PAGES.indexOf(href)>=0;
+      var isQLink=QUICK_PAGES.indexOf(href)>=0;
+      var show=v==='coop-u'?isU:v==='quick'?isQLink:(!isU&&!isQLink);
+      a.style.display=show?'':'none';
+    });
+    var sel=document.getElementById('annonceurSelect');
+    if(sel)sel.value=v;
+  }
+
+  if(saved==='coop-u'&&!isCU){location.replace('local_magasinsU.html');return;}
+  if(saved==='quick'&&!isQ){location.replace('local_quick.html');return;}
+  if(saved==='kingfisher'&&(isCU||isQ)){location.replace('home.html');return;}
+  applyFilter(saved);
+
+  window.switchAnnonceur=function(v){
+    localStorage.setItem('annonceur',v);
+    if(v==='coop-u')location.href='local_magasinsU.html';
+    else if(v==='quick')location.href='local_quick.html';
+    else location.href='home.html';
+  };
+})();
+</script>
+<div id="subbar" style="position:fixed;top:42px;left:0;right:0;height:46px;background:#fff;border-bottom:1px solid #E5E7EB;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 20px;">
+  <img src="public/images/logos/Quick_logo.png" alt="Quick" style="height:32px" onerror="this.style.display='none'">
+  <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style="height:28px" onerror="this.style.display='none'">
+</div>
+
+<div id="layout">
+  <div id="map-col"><div id="map"></div></div>
+  <div id="panel"><div id="panel-content"></div></div>
+</div>
+<div id="global-title" style="padding:16px 12px 6px"></div>
+<div id="global-section" style="display:flex;flex-direction:column;gap:8px;padding:0 12px 20px">
+  <div id="global-row1" style="display:flex;gap:8px"></div>
+  <div id="global-row2" style="display:flex;gap:8px"></div>
+</div>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<script>
+// ── UTILS ──
+const nf=v=>new Intl.NumberFormat('fr-FR').format(Math.round(v||0));
+const avg=a=>a.length?+(a.reduce((s,v)=>s+v,0)/a.length).toFixed(1):0;
+const delta=(last,ref)=>ref>0?+((last-ref)/ref*100).toFixed(1):0;
+const BRAND='#E30613';
+const RANK_COLORS=['#F59E0B','#F97316','#22C55E','#8B5CF6','#EF4444'];
+
+// ── SPARKLINE SVG ──
+function chartSVG(data,gid,color){
+  color=color||BRAND;
+  const W=220,H=88,pL=26,pR=4,pT=6,pB=16;
+  const iw=W-pL-pR,ih=H-pT-pB;
+  const n=data.length;
+  if(n<2)return'<svg width="100%" height="'+H+'"></svg>';
+  const mn=Math.min(...data),mx=Math.max(...data),rng=mx-mn||1;
+  const av=data.reduce((a,b)=>a+b,0)/data.length;
+  const x=i=>pL+i/(n-1)*iw;
+  const y=v=>pT+(1-(v-mn)/rng)*ih;
+  const pts=data.map((v,i)=>`${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+  const ya=y(av);
+  const ap=`M${x(0).toFixed(1)},${y(data[0]).toFixed(1)} `+data.slice(1).map((v,i)=>`L${x(i+1).toFixed(1)},${y(v).toFixed(1)}`).join(' ')+` L${x(n-1).toFixed(1)},${(pT+ih).toFixed(1)} L${pL},${(pT+ih).toFixed(1)} Z`;
+  const ymax=pT+5,yavg=Math.max(pT+10,Math.min(ya,pT+ih-4));
+  return`<svg width="100%" height="${H}" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <defs><linearGradient id="${gid}" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="${color}" stop-opacity=".25"/><stop offset="100%" stop-color="${color}" stop-opacity=".01"/></linearGradient></defs>
+    <path d="${ap}" fill="url(#${gid})"/>
+    <polyline points="${pts}" fill="none" stroke="${color}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+    <line x1="${pL}" y1="${ya.toFixed(1)}" x2="${W-pR}" y2="${ya.toFixed(1)}" stroke="#F59E0B" stroke-width="1" stroke-dasharray="4,3" opacity=".85"/>
+    <circle cx="${x(n-1).toFixed(1)}" cy="${y(data[n-1]).toFixed(1)}" r="4" fill="#F59E0B" stroke="white" stroke-width="1.5"/>
+    <text x="${pL-2}" y="${ymax}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(mx)}</text>
+    <text x="${pL-2}" y="${(yavg+3).toFixed(1)}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(av)}</text>
+    <text x="${pL-2}" y="${(pT+ih+2).toFixed(1)}" text-anchor="end" font-size="7.5" fill="#9CA3AF">${Math.round(mn)}</text>
+  </svg>`;}
+
+// ── STORES DATA ──
+const stores=[
+{n:"Quick Perpignan Drive",cp:"66000",c:"Perpignan",a:"RN 9 Route d'Espagne",lat:42.6611,lng:2.7933,visits:[0,82,94,96,115,118,35,90,133,85,95,90,87,91,85,111,85,103,93,90,100,110,60,38,108,79,58,85,0,53],calls:[1,9,10,15,14,11,2,12,17,11,14,11,4,14,9,8,9,8,5,12,7,7,5,2,13,20,9,12,0,7],routes:[5,117,148,142,174,115,98,125,127,164,171,186,93,114,127,124,123,111,73,120,133,92,93,62,98,87,92,97,0,32],commandes:[0,1,2,2,0,1,0,0,0,1,1,1,0,0,0,0,1,1,2,2,2,0,1,1,0,0,3,8,0,0],lastV:53,prevV:0,avgV:82.3,lastC:7,prevC:0,avgC:9.3,lastR:32,prevR:0,avgR:108.1,lastCmd:0,prevCmd:0,avgCmd:1.0},
+{n:"Quick CC Qwartz",cp:"92390",c:"Villeneuve-la-Garenne",a:"CENTRE COMMERCIAL QWARTZ",lat:48.9488,lng:2.3623,visits:[23,39,25,43,35,43,46,13,2,13,15,27,62,24,23,18,26,0,20,44,33,0,52,58,64,65,58,34,17,40],calls:[1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,1,3,0,0,3,0,0,3,0,0,0],routes:[5,4,1,1,4,3,1,2,2,0,0,2,0,4,2,6,2,0,2,2,2,0,0,4,1,1,1,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:40,prevV:17,avgV:32.1,lastC:0,prevC:0,avgC:0.4,lastR:0,prevR:0,avgR:1.7,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Dorlisheim",cp:"67120",c:"Dorlisheim",a:"ESPACE DE LOISIRS LE TR\u00c8FLE",lat:48.395,lng:7.546,visits:[13,25,31,19,12,15,23,23,26,12,30,10,38,21,9,10,10,11,1,8,24,18,19,23,21,9,10,35],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:35,prevV:10,avgV:18.1,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Fleury-M\u00e9rogis",cp:"91700",c:"Fleury-M\u00e9rogis",a:"3 Rue du Ch\u00eane \u00c0 Champagne",lat:48.6337,lng:2.4076,visits:[0,51,59,60,44,44,43,32],calls:[0,12,4,33,26,5,24,2],routes:[3,190,96,167,163,87,156,29],commandes:[0,0,2,4,1,0,2,0],lastV:32,prevV:43,avgV:41.6,lastC:2,prevC:24,avgC:13.2,lastR:29,prevR:156,avgR:111.4,lastCmd:0,prevCmd:2,avgCmd:1.1},
+{n:"Quick Lys-lez-Lannoy",cp:"59390",c:"Lys-lez-Lannoy",a:"CENTRE COMMERCIAL AUCHAN",lat:50.6296,lng:3.2782,visits:[26,48,30,31,49,2,28,14,26,22,0,20,30,15,11,8,36,0,27,21,12,25,36,31,45,34,47,38,24,30],calls:[0,0,2,3,0,0,0,0,0,0,0,6,4,0,0,0,3,0,1,0,0,4,1,0,3,2,5,7,0,0],routes:[0,0,1,2,2,1,2,0,1,1,0,1,1,0,1,0,2,0,2,2,0,1,2,4,3,1,2,6,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0],lastV:30,prevV:24,avgV:25.5,lastC:0,prevC:0,avgC:1.4,lastR:0,prevR:0,avgR:1.3,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick N\u00eemes Capouchin\u00e9",cp:"30900",c:"N\u00eemes",a:"65 Rue Christian Martinez",lat:44.0658,lng:4.072,visits:[0,30,50,30,42,44,26,29],calls:[0,11,9,13,16,20,6,5],routes:[1,115,58,122,97,109,50,46],commandes:[0,5,0,1,0,22,0,0],lastV:29,prevV:26,avgV:31.4,lastC:5,prevC:6,avgC:10.0,lastR:46,prevR:50,avgR:74.8,lastCmd:0,prevCmd:0,avgCmd:3.5},
+{n:"Quick Montargis",cp:"45200",c:"Montargis",a:"2 Rue du Port",lat:47.7491,lng:1.9169,visits:[0,50,41,77,67,32,44,12,55,80,38,43,48,44,37,39,29,34,37,27,42,41,39,28,47,26,35,34,0,22],calls:[0,6,1,6,8,3,4,2,1,3,1,2,4,4,7,1,4,4,3,3,2,3,4,3,5,0,5,6,0,0],routes:[0,56,60,41,51,53,60,33,29,37,35,35,49,37,28,41,37,31,21,19,35,26,35,33,38,18,32,19,0,11],commandes:[0,0,1,1,1,0,2,0,0,2,2,0,0,0,0,0,0,1,0,0,0,3,7,2,0,0,0,0,0,0],lastV:22,prevV:0,avgV:38.3,lastC:0,prevC:0,avgC:3.2,lastR:11,prevR:0,avgR:33.3,lastCmd:0,prevCmd:0,avgCmd:0.7},
+{n:"Quick Chambly",cp:"60230",c:"Chambly",a:"Angle Rue L\u00e9onard de Vinci",lat:49.2729,lng:2.3818,visits:[0,48,38,23,22,47,22,21],calls:[0,8,2,4,6,8,3,4],routes:[1,78,44,87,71,48,25,13],commandes:[0,1,0,0,1,0,3,0],lastV:21,prevV:22,avgV:27.6,lastC:4,prevC:3,avgC:4.4,lastR:13,prevR:25,avgR:45.9,lastCmd:0,prevCmd:3,avgCmd:0.6},
+{n:"Quick Coigni\u00e8res",cp:"78310",c:"Coigni\u00e8res",a:"LIEU-DIT",lat:48.6454,lng:1.8151,visits:[28,48,33,27,30,12,13,22,60,35,40,43,15,47,23,24,50,39,26,50,18,19,27,60,35,55,10,21],calls:[0,8,5,2,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,1,0,2,2,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:21,prevV:10,avgV:32.5,lastC:0,prevC:0,avgC:0.7,lastR:0,prevR:0,avgR:0.2,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick N\u00eemes Costi\u00e8res",cp:"30900",c:"N\u00eemes",a:"155 Rue Paul Laurent",lat:43.8327,lng:4.242,visits:[275,0,274,145,98,173,123,164,165,126,119,129,117,122,132,120,121,128,130,119,107,171,0,26,31,29,33,29,36,20],calls:[10,1,12,19,7,13,18,22,13,16,10,11,11,17,23,8,14,19,14,12,15,0,0,2,6,7,2,7,4,0],routes:[164,1,172,136,131,108,170,132,124,107,143,142,106,137,125,120,113,109,98,94,76,34,0,22,30,21,33,29,23,10],commandes:[0,0,0,1,0,2,0,0,0,1,0,3,2,0,3,0,0,0,0,2,0,2,0,0,2,0,0,0,0,0],lastV:20,prevV:36,avgV:108.7,lastC:0,prevC:4,avgC:10.4,lastR:10,prevR:23,avgR:90.3,lastCmd:0,prevCmd:0,avgCmd:0.6},
+{n:"Quick",cp:"13015",c:"Marseille",a:"409 Rue de Lyon",lat:43.4434,lng:5.3683,visits:[0,38,25,31,26,39,24,19],calls:[0,31,11,11,24,7,13,5],routes:[4,138,126,79,131,83,112,21],commandes:[0,1,0,0,0,0,0,0],lastV:19,prevV:24,avgV:25.2,lastC:5,prevC:13,avgC:12.8,lastR:21,prevR:112,avgR:86.8,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Quick Saint Quentin",cp:"2100",c:"Fayet",a:"Rue des Marlettes",lat:47.1586,lng:5.1382,visits:[0,40,17,12,28,32,21,15],calls:[0,1,2,4,2,2,1,1],routes:[0,24,48,18,43,43,30,10],commandes:[0,0,0,0,0,0,0,0],lastV:15,prevV:21,avgV:20.6,lastC:1,prevC:1,avgC:1.6,lastR:10,prevR:30,avgR:27.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Villeneuve-Saint-Georges",cp:"94190",c:"Villeneuve-Saint-Georges",a:"1 Impasse Saint-Georges",lat:48.7009,lng:2.485,visits:[151,77,48,59,66,49,47,46,12,14,34,13,11,20,10,55,10,17,12,34,17,28,19,45,27,16,26,13],calls:[0,20,16,7,17,15,5,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[15,297,311,172,272,255,177,76,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,1,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:13,prevV:26,avgV:34.9,lastC:0,prevC:0,avgC:3.0,lastR:0,prevR:0,avgR:56.2,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Quick Douai F\u00e9rin",cp:"59169",c:"F\u00e9rin",a:"342 Route nationale",lat:50.6012,lng:3.2098,visits:[75,42,46,36,42,33,27,14,11,20,14,16,12,5,30,23,20,21,31,20,27,24,9,13,35,1,29,13],calls:[0,4,1,2,2,2,3,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,57,76,53,73,69,30,22,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,3,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:13,prevV:29,avgV:24.6,lastC:0,prevC:0,avgC:0.6,lastR:0,prevR:0,avgR:13.6,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Quick Le Mans Sud",cp:"72100",c:"Le Mans",a:"132 Avenue Georges Durand",lat:48.0537,lng:0.2202,visits:[90,64,45,50,55,56,29,18,12,6,9,11,14,8,7,11,27,16,16,6,21,3,23,14,12,11,4,12],calls:[8,8,0,3,9,11,4,10,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[87,155,2,137,97,103,61,37,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,5,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:12,prevV:4,avgV:23.2,lastC:0,prevC:0,avgC:1.9,lastR:0,prevR:0,avgR:24.2,lastCmd:0,prevCmd:0,avgCmd:0.2},
+{n:"Quick \u00c9tampes",cp:"91150",c:"\u00c9tampes",a:"Zac Du Plateau De Guinette",lat:48.7185,lng:2.5064,visits:[9,20,0,18,18,16,27,12],calls:[0,0,0,2,3,0,0,0],routes:[0,0,0,1,0,1,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:12,prevV:27,avgV:15.0,lastC:0,prevC:0,avgC:0.6,lastR:0,prevR:0,avgR:0.2,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Besan\u00e7on",cp:"25000",c:"Besan\u00e7on",a:"27 Grande Rue",lat:47.2297,lng:6.1065,visits:[63,40,48,30,27,33,37,22,10,7,4,5,7,12,13,2,11,6,13,20,4,10,4,6,12,12,14,2],calls:[1,3,2,3,1,6,6,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[2,83,26,62,40,35,46,23,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,10,4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:2,prevV:14,avgV:16.9,lastC:0,prevC:0,avgC:0.8,lastR:0,prevR:0,avgR:11.3,lastCmd:0,prevCmd:0,avgCmd:0.5},
+{n:"Quick Center Parcs Normandie",cp:"27130",c:"Verneuil D'Avre",a:"Ecp France-domaine Des",lat:49.1471,lng:1.2446,visits:[9,0,8,7,14,15,0,6,8,6,6,3,8,8,2,14,2,7,5,3,9,2,4,6,4,7,10,1,4,0],calls:[5,0,6,2,7,1,1,2,1,0,1,1,0,2,1,2,0,0,3,2,0,0,0,1,0,0,0,0,2,0],routes:[54,0,22,18,17,22,19,14,22,15,20,13,16,10,14,22,8,11,9,5,2,7,7,8,5,14,9,6,1,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:4,avgV:5.9,lastC:0,prevC:2,avgC:1.3,lastR:0,prevR:1,avgR:13.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Saint-Denis Grand Stade",cp:"93200",c:"Saint-Denis",a:"QUARTIER STADE DE FRANCE",lat:49.0026,lng:2.2461,visits:[0,0,0,0,0,0,0,0],calls:[4,0,4,0,0,3,0,0],routes:[6,6,6,1,0,10,1,1],commandes:[4,0,1,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:1.4,lastR:1,prevR:1,avgR:3.9,lastCmd:0,prevCmd:0,avgCmd:0.6},
+{n:"Quick Champs-Elys\u00e9es 2",cp:"75008",c:"Paris",a:"122 Avenue des Champs-\u00c9lys\u00e9es",lat:48.9408,lng:2.3165,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,2,0,0,0,0],routes:[3,0,0,0,0,0,1,0,4,0,0,8,0,0,0,0,0,10,0,0,0,0,0,0,3,0,0,0,3],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.1,lastR:3,prevR:0,avgR:1.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick",cp:"78140",c:"V\u00e9lizy-Villacoublay",a:"2 Avenue de l'Europe",lat:48.8756,lng:1.9843,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0],routes:[16,8,0,10,0,0,1,0,0,0,0,0,0,0,0,0,0,0,13,5,0,0,0,0,0,0,4,0,3],commandes:[0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,8,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.1,lastR:3,prevR:0,avgR:2.1,lastCmd:0,prevCmd:0,avgCmd:0.3},
+{n:"Quick Rosny DI 2",cp:"93110",c:"Rosny-sous-Bois",a:"220 BOULEVARD D'ALSACE LORRAINE",lat:48.9466,lng:2.285,visits:[0,0,0,0,0,0,0,0],calls:[2,0,4,8,5,0,4,1],routes:[2,0,14,7,10,0,1,3],commandes:[0,0,2,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:4,avgC:3.0,lastR:3,prevR:1,avgR:4.6,lastCmd:0,prevCmd:0,avgCmd:0.2},
+{n:"Quick Aulnay",cp:"93600",c:"Aulnay-sous-Bois",a:"Carrefour de l'Europe",lat:48.933,lng:2.3358,visits:[0,0,0,0,0,0,0,0],calls:[2,7,3,0,0,11,2,1],routes:[8,7,7,0,0,12,0,2],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:2,avgC:3.2,lastR:2,prevR:0,avgR:4.5,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Sartrouville",cp:"78500",c:"Sartrouville",a:"Avenue Robert Schuman",lat:48.9602,lng:1.958,visits:[0,0,0,0,0,0,0,0],calls:[3,0,7,12,1,0,2,0],routes:[13,0,9,12,9,0,1,1],commandes:[0,0,0,1,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:2,avgC:3.1,lastR:1,prevR:1,avgR:5.6,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Quick Merignac",cp:"33700",c:"M\u00e9rignac",a:"232 Avenue de la Marne",lat:44.9694,lng:-0.4334,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0],routes:[0,1,0,8,0,0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.1,lastR:0,prevR:2,avgR:0.4,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Cr\u00e9teil Pompadour",cp:"94000",c:"Cr\u00e9teil",a:"4 rue de la Haute Quinte",lat:48.9438,lng:2.4007,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[2,4,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,7,0,0,0,0,2,0,0,0],routes:[12,5,0,15,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,24,0,14,0,0,0,0,6,0,4,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.7,lastR:0,prevR:4,avgR:2.7,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick",cp:"34000",c:"Montpellier",a:"Place Auguste Gibert",lat:43.7703,lng:3.8722,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[3,1,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[5,5,5,0,0,0,0,0,0,0,0,0,0,5,0,10,0,0,0,4,0,0,0,0,0,0,0,0,1],commandes:[2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.2,lastR:1,prevR:0,avgR:1.2,lastCmd:0,prevCmd:0,avgCmd:0.4},
+{n:"Quick",cp:"6250",c:"Mougins",a:"1 Chemin de font graissan",lat:50.4292,lng:2.6359,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.1,lastR:0,prevR:1,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Quick Montreuil",cp:"93100",c:"Montreuil",a:"55 Boulevard Rouget de Lisle",lat:48.6958,lng:2.6313,visits:[0,0,0,0,0,0,0,0],calls:[2,4,2,0,0,2,1,0],routes:[4,4,1,1,0,18,3,3],commandes:[0,0,0,0,0,0,2,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:1,avgC:1.4,lastR:3,prevR:3,avgR:4.2,lastCmd:0,prevCmd:2,avgCmd:0.2},
+{n:"Quick Belle Epine",cp:"94531",c:"Thiais",a:"CC Belle Epine",lat:48.7848,lng:2.3918,visits:[0,0,0,0,0,0,0,0],calls:[4,0,2,1,1,3,0,1],routes:[16,0,3,2,1,14,0,3],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:0,avgC:1.5,lastR:3,prevR:0,avgR:4.9,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Argenteuil",cp:"95100",c:"Argenteuil",a:"28 Avenue Gabriel P\u00e9ri",lat:49.0882,lng:2.3949,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,4,0,0,4,0,8,0,0,0,7,0,0,12,0,0,0,0,0,0,1,0,0,0,0,2,0],routes:[0,0,0,8,0,0,3,0,5,0,0,0,8,0,0,9,0,0,0,0,0,0,0,0,0,0,0,1,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:2,avgC:1.3,lastR:0,prevR:1,avgR:1.2,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Villeurbanne Route de Genas",cp:"69100",c:"Villeurbanne",a:"267 Route de Genas",lat:45.6729,lng:5.1026,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,1,0,0,0,0],routes:[5,0,6,4,0,0,1,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.1,lastR:0,prevR:1,avgR:2.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Bordeaux Rives d'Arcins",cp:"33140",c:"Villenave-d'Ornon",a:"9 Rue Andr\u00e9 Bourvil",lat:44.7707,lng:-0.6371,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,3,0,0,0,0,0,0,3,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,0,1],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.1,lastR:1,prevR:0,avgR:0.4,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Rosny CC",cp:"93110",c:"Rosny-sous-Bois",a:"Centre Commercial Rosny 2",lat:49.002,lng:2.4945,visits:[0,0,0,0,0,0,0,0],calls:[4,0,0,0,2,2,0,1],routes:[2,1,0,0,2,1,0,2],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:0,avgC:1.1,lastR:2,prevR:0,avgR:1.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Pontault Combault (Les Arpents)",cp:"77340",c:"Pontault-Combault",a:"Parc d'activit\u00e9 Les Arpents",lat:48.4465,lng:2.8591,visits:[0,0,0,0,0,0,0,0],calls:[3,0,0,0,3,0,1,0],routes:[9,0,9,0,5,2,10,2],commandes:[2,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:1,avgC:0.9,lastR:2,prevR:10,avgR:4.6,lastCmd:0,prevCmd:0,avgCmd:0.2},
+{n:"Quick Nancy Mazagran",cp:"54000",c:"Nancy",a:"10/12 Rue Mazagran",lat:48.5572,lng:6.3465,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,1,5,0,0,0,1,0,0,0,0,4],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.2,lastR:4,prevR:0,avgR:0.5,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Cr\u00e9teil Pr\u00e9fecture",cp:"94000",c:"Cr\u00e9teil",a:"6 Avenue de la Br\u00e8che",lat:48.9368,lng:2.4842,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,3,2,0,1,0],routes:[0,0,5,3,7,5,0,2],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:1,avgC:0.8,lastR:2,prevR:0,avgR:2.8,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Toulouse Mirail",cp:"31100",c:"Toulouse",a:"Mirail FR",lat:43.6829,lng:1.418,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,1,0,4,0,0,0,0,0,0,0,0,0,0,0,0,1,2,0,0,0,3,0,0,0,0,0,0,8],routes:[0,0,0,3,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,3,0,0,0,0,0,1],commandes:[0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:8,prevC:0,avgC:0.7,lastR:1,prevR:0,avgR:0.3,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Quick Garges Les Gonesses",cp:"95140",c:"Garges-l\u00e8s-Gonesse",a:"Avenue de Stalingrad",lat:49.1841,lng:2.0908,visits:[0,0,0,0,0,0,0,0],calls:[9,3,8,10,0,0,2,4],routes:[7,1,18,14,0,0,1,1],commandes:[0,0,0,2,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:4,prevC:2,avgC:4.5,lastR:1,prevR:1,avgR:5.2,lastCmd:0,prevCmd:0,avgCmd:0.2},
+{n:"Quick",cp:"21000",c:"Dijon",a:"Gare de Dijon",lat:47.3897,lng:5.2664,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,1,3,2,0,0],routes:[0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,3,0,4,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.3,lastR:0,prevR:0,avgR:0.3,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Aix Ouest",cp:"13090",c:"Aix-en-Provence",a:"ZAC des 2 Ormes",lat:43.6674,lng:5.5513,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[1,0,0,0,0,0,0,0,0,0,0,0,0,0,9,0,0,0,0,0,0,0,0,0,0,0,0,0,1],routes:[9,0,0,0,0,0,0,0,0,11,0,0,1,0,11,0,0,0,0,0,0,0,8,0,0,6,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:0,avgC:0.4,lastR:0,prevR:0,avgR:1.6,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Blagnac",cp:"31700",c:"Blagnac",a:"ZAC du grand Noble",lat:43.4555,lng:1.6448,visits:[0,0,0,0,0,0,0,0],calls:[0,1,2,0,0,2,0,2],routes:[0,1,0,0,1,2,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:2,prevC:0,avgC:0.9,lastR:0,prevR:0,avgR:0.5,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Mulhouse Dornach",cp:"68200",c:"Mulhouse",a:"236 Rue de Belfort",lat:47.8951,lng:7.1455,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,2,0,3,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],routes:[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:2,prevC:0,avgC:0.3,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Saint Etienne Expo",cp:"42000",c:"Saint-\u00c9tienne",a:"38 bis PLAINE ACHILLE",lat:45.3819,lng:4.5694,visits:[0,0,0,0,0,0,0,0],calls:[1,0,0,0,1,1,12,0],routes:[3,0,0,2,0,0,4,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:12,avgC:1.9,lastR:0,prevR:4,avgR:1.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Lille Loos",cp:"59120",c:"Loos",a:"Centre Commercial Match",lat:50.7159,lng:3.0809,visits:[0,0,0,0,0,0,0,0],calls:[0,1,1,3,0,0,4,0],routes:[0,4,0,8,0,0,5,3],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:4,avgC:1.1,lastR:3,prevR:5,avgR:2.5,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Caen C\u00f4te de Nacre",cp:"14000",c:"Caen",a:"17 Rue Jean-Baptiste Colbert",lat:49.0137,lng:-0.5462,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,1,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.1,lastR:1,prevR:0,avgR:0.2,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick",cp:"13730",c:"Saint-Victoret",a:"LIEU-DIT LES RAUMETTES",lat:43.6994,lng:5.4917,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,1,0,4,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0],routes:[0,0,0,0,0,0,0,0,0,0,0,5,0,8,8,0,0,0,0,0,8,0,0,0,0,2,0,0,4],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:1,avgC:0.2,lastR:4,prevR:0,avgR:1.2,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Beausevran",cp:"93270",c:"Sevran",a:"Centre Commercial Beau Sevran",lat:48.7929,lng:2.3104,visits:[0,0,0,0,0,0,0,0],calls:[6,4,6,0,0,1,2,5],routes:[3,0,0,0,0,4,3,0],commandes:[2,0,2,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:5,prevC:2,avgC:3.0,lastR:0,prevR:3,avgR:1.2,lastCmd:0,prevCmd:0,avgCmd:0.5},
+{n:"Quick Rouen Saint-Sever",cp:"76046",c:"Rouen",a:"CENTRE COMMERCIAL SAINT SEVER",lat:49.4019,lng:1.2995,visits:[0,0,0,0,0,0,0,0],calls:[0,2,1,0,2,0,2,1],routes:[0,0,0,0,0,0,1,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:2,avgC:1.0,lastR:0,prevR:1,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Tourcoing",cp:"59200",c:"Tourcoing",a:"310 Boulevard Gambetta",lat:50.7841,lng:3.2874,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,3,0,0,0,0,0,0,0,1,0,0,0,0,0,8,0,0,1,0,4,0,0,0,0,0,1],routes:[0,0,0,1,0,0,0,0,0,0,2,5,0,0,0,0,0,6,0,0,0,0,4,0,0,0,0,0,1],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:0,avgC:0.6,lastR:1,prevR:0,avgR:0.7,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Quick Geispolsheim",cp:"67118",c:"Geispolsheim",a:"Centre Commercial La Vigie",lat:48.5997,lng:7.6645,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,1,0,0,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,0,3,0,0,0,0,0,0],routes:[0,2,1,0,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,0,4,0,0,0,0,0,1],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.2,lastR:1,prevR:0,avgR:0.4,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Cesson",cp:"77240",c:"Cesson",a:"CC BOISSENART",lat:48.5782,lng:2.5637,visits:[0,0,0,0,0,0,0,0],calls:[0,1,0,0,0,5,2,1],routes:[3,12,8,0,0,8,1,3],commandes:[0,0,0,0,0,1,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:2,avgC:1.1,lastR:3,prevR:1,avgR:4.4,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Quick Limoges Jean Jaur\u00e8s",cp:"87000",c:"Limoges",a:"1 rue du Clocher",lat:45.7595,lng:1.4425,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0,2,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.2,lastR:1,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Troyes",cp:"10000",c:"Troyes",a:"111 Avenue Robert Schumann",lat:48.1298,lng:3.9138,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1],routes:[0,0,0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:0,avgC:0.1,lastR:0,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King",cp:"84130",c:"Le Pontet",a:"342 Avenue Louis Braille",lat:44.1232,lng:5.0309,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Poitiers CV",cp:"86000",c:"Poitiers",a:"35 Place du Mar\u00e9chal-Leclerc",lat:46.6729,lng:0.5589,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Roques-sur-Garonne",cp:"31120",c:"Roques",a:"8 All\u00e9e de Fraixinet",lat:43.4778,lng:1.3861,visits:[0,0,0,0,0,0,0,0],calls:[0,1,0,1,2,4,0,4],routes:[0,3,0,0,3,3,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:4,prevC:0,avgC:1.5,lastR:0,prevR:0,avgR:1.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Dammarie-les-Lys",cp:"77190",c:"Dammarie-les-Lys",a:"824 Avenue du Lys",lat:48.7202,lng:2.7339,visits:[0,0,0,0,0,0,0,0],calls:[2,0,0,6,2,0,0,0],routes:[0,0,8,5,6,0,2,1],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:1.2,lastR:1,prevR:2,avgR:2.8,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Mantes Buchelay",cp:"78200",c:"Buchelay",a:"LES CLOSEAUX",lat:48.8294,lng:1.9883,visits:[0,0,0,0,0,0,0,0],calls:[1,1,9,0,4,0,0,0],routes:[0,0,2,0,4,0,0,2],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:1.9,lastR:2,prevR:0,avgR:1.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Roubaix",cp:"59100",c:"Roubaix",a:"4.6 Boulevard Gambetta",lat:50.6142,lng:2.9849,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,2,0,0,0,0,0,0,0,0,0,0,0,8,0,0,0,1,0,0,0,0,0,1,4,0,0,0,1],routes:[0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,1],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:0,avgC:0.6,lastR:1,prevR:0,avgR:0.2,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Quick Orl\u00e9ans place d'Arc",cp:"45000",c:"Orl\u00e9ans",a:"Centre Commercial d'Arc",lat:47.7827,lng:1.8287,visits:[0,0,0,0,0,0,0,0],calls:[0,0,4,4,0,0,0,0],routes:[1,0,1,0,0,0,2,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:1.0,lastR:0,prevR:2,avgR:0.5,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Li\u00e9vin",cp:"62800",c:"Li\u00e9vin",a:"ANGLE DE LA",lat:50.2751,lng:2.4837,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[4,3,0,2,0,1,1,1],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:1,prevR:1,avgR:1.5,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick \u00c9cully",cp:"69130",c:"\u00c9cully",a:"4 Chemin Jean-Marie Vianney",lat:45.7004,lng:4.7071,visits:[0,0,0,0,0,0,0,0],calls:[1,0,0,10,0,0,0,0],routes:[1,0,0,0,0,0,0,0],commandes:[0,0,0,1,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:1.4,lastR:0,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Quick Marseille Le Merlan",cp:"13014",c:"Marseille",a:"CENTRE COMMERCIAL",lat:43.1723,lng:5.1969,visits:[0,0,0,0,0,0,0,0],calls:[0,2,1,4,5,0,0,5],routes:[0,7,2,2,6,0,2,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:5,prevC:0,avgC:2.1,lastR:0,prevR:2,avgR:2.4,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Aubi\u00e8re",cp:"63170",c:"Aubi\u00e8re",a:"29 Avenue du Roussillon",lat:45.9361,lng:3.2342,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,3,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,1,0,0,0,0,1,1],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.2,lastR:1,prevR:1,avgR:0.2,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Chalon-sur-Sa\u00f4ne",cp:"71000",c:"Chalon-sur-Sa\u00f4ne",a:"CENTRE COMMERCIAL G\u00c9ANT LA THALIE",lat:46.7984,lng:4.526,visits:[0,0,0,0,0,0,0,0],calls:[0,0,1,1,0,0,3,0],routes:[0,0,0,0,0,0,0,0],commandes:[0,0,1,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:3,avgC:0.6,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Quick Aulnay CC",cp:"93606",c:"Aulnay-sous-Bois",a:"CENTRE COMMERCIAL PARINOR",lat:48.8396,lng:2.5558,visits:[0,0,0,0,0,0,0,0],calls:[0,0,6,5,1,0,0,0],routes:[1,0,0,3,1,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:1.5,lastR:0,prevR:0,avgR:0.6,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Nice M\u00e9decin",cp:"6000",c:"Nice",a:"58 Avenue Jean M\u00e9decin",lat:43.735,lng:7.3712,visits:[0,0,0,0,0,0,0,0],calls:[0,1,0,0,0,0,0,0],routes:[1,0,0,0,1,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.1,lastR:0,prevR:0,avgR:0.2,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King",cp:"16470",c:"Saint-Michel",a:"Giratoire de Girac",lat:45.5922,lng:-0.0676,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Beauvais Manoury",cp:"60000",c:"Beauvais",a:"LIEU-DIT LES MANOURY",lat:49.5106,lng:2.504,visits:[0,0,0,0,0,0,0,0],calls:[0,0,1,0,0,0,2,0],routes:[3,2,4,0,2,0,14,2],commandes:[4,0,0,0,0,0,1,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:2,avgC:0.4,lastR:2,prevR:14,avgR:3.4,lastCmd:0,prevCmd:1,avgCmd:0.6},
+{n:"Quick Chelles",cp:"77507",c:"Chelles",a:"CENTRE COMMERCIAL",lat:48.7171,lng:2.5643,visits:[0,0,0,0,0,0,0,0],calls:[2,0,0,0,1,0,0,0],routes:[2,3,0,0,1,5,0,1],commandes:[0,1,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.4,lastR:1,prevR:0,avgR:1.5,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Quick Pau Facult\u00e9",cp:"64000",c:"Pau",a:"129 Boulevard Lucien Favre",lat:43.1709,lng:-0.3888,visits:[0,0,0,0,0,0,0,0],calls:[0,3,0,0,0,0,2,0],routes:[0,2,0,0,0,0,1,1],commandes:[0,4,3,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:2,avgC:0.6,lastR:1,prevR:1,avgR:0.5,lastCmd:0,prevCmd:0,avgCmd:0.9},
+{n:"Quick",cp:"53000",c:"Laval",a:"LOTISSEMENT GREEN VILLAGE",lat:48.1879,lng:-0.6075,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,2],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.1,lastR:2,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Poitiers Drive",cp:"86000",c:"Poitiers",a:"39 Avenue Jacques C\u0153ur",lat:46.4137,lng:0.4256,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,0,3,1,0,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.5,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King",cp:"77144",c:"Mont\u00e9vrain",a:"Parc commercial Clos du Ch\u00eane",lat:48.6653,lng:2.9484,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,3,0,0,0,8,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,3,2],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:2,prevR:3,avgR:0.6,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Montbeliard",cp:"25200",c:"Montb\u00e9liard",a:"7 Avenue Chabaud Latour",lat:47.2702,lng:5.8682,visits:[0,0,0,0,0,0,0,0],calls:[3,0,1,0,2,0,0,2],routes:[0,0,0,0,1,0,0,1],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:2,prevC:0,avgC:1.0,lastR:1,prevR:0,avgR:0.2,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Clermont-Ferrand",cp:"63000",c:"Clermont-Ferrand",a:"42 Avenue des \u00c9tats Unis",lat:45.6753,lng:3.0297,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:0,avgC:0.1,lastR:0,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Burger King",cp:"31120",c:"Portet-sur-Garonne",a:"7 Boulevard de l'Europe",lat:43.4374,lng:1.4345,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Creil Nogent sur Oise",cp:"60100",c:"Creil",a:"232 Avenue de l'Europe",lat:49.499,lng:2.468,visits:[0,0,0,0,0,0,0,0],calls:[0,1,1,0,0,0,0,4],routes:[2,0,4,0,0,0,2,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:4,prevC:0,avgC:0.8,lastR:0,prevR:2,avgR:1.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Reims Cormontreuil",cp:"51350",c:"Cormontreuil",a:"68 Rue du Commerce",lat:48.9413,lng:3.9768,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,3,0,0,0,5,2,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],routes:[0,0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.4,lastR:0,prevR:0,avgR:0.2,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Dijon Quetigny",cp:"21800",c:"Quetigny",a:"P\u00f4le Commercial du Grand Quetigny",lat:47.191,lng:4.8745,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],routes:[1,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.1,lastR:0,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick",cp:"77100",c:"Meaux",a:"71-81 Avenue de la Victoire",lat:48.9634,lng:3.0894,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[5,0,0,0,0,0,0,1,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[1,0,0,0,0,0,0,2,1,0,0,2,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,1],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.3,lastR:1,prevR:0,avgR:0.3,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Reims Ch\u00e2teau d'eau",cp:"51100",c:"Reims",a:"ANGLE AVENUE DU GAL BONAPARTE",lat:49.3847,lng:4.1693,visits:[0,0,0,0,0,0,0,0],calls:[0,0,3,0,1,0,1,0],routes:[0,0,0,0,1,0,2,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:1,avgC:0.6,lastR:0,prevR:2,avgR:0.4,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Creil",cp:"60740",c:"Saint-Maximin",a:"CC",lat:49.3101,lng:2.4564,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,2,1,0,0,2],routes:[0,2,0,1,1,1,1,4],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:2,prevC:0,avgC:0.6,lastR:4,prevR:1,avgR:1.2,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Niort",cp:"79000",c:"Niort",a:"ESPACE",lat:46.4033,lng:-0.5789,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,0,1,0,0,0,2,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:2,avgR:0.4,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King",cp:"92290",c:"Ch\u00e2tenay-Malabry",a:"359 Avenue de la Division Leclerc",lat:48.7753,lng:2.3479,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Flins",cp:"78410",c:"Flins-sur-Seine",a:"C.C. Carrefour",lat:48.7786,lng:1.7894,visits:[0,0,0,0,0,0,0,0],calls:[0,1,0,0,0,0,0,1],routes:[1,0,1,0,2,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:0,avgC:0.2,lastR:0,prevR:0,avgR:0.5,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Brive Beauregard",cp:"19100",c:"Brive-la-Gaillarde",a:"Z.I Beauregard",lat:45.0825,lng:1.4354,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:1,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Aubagne Route de Gemenos",cp:"13400",c:"Aubagne",a:"CENTRE COMMERCIAL AUCHAN",lat:43.4347,lng:5.5007,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,4,0,0,0,0,0,0],routes:[0,5,0,0,3,0,0,0,0,2,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.2,lastR:0,prevR:0,avgR:0.4,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Gonfreville",cp:"76700",c:"Gonfreville-l'Orcher",a:"Centre Commercial E.Leclerc",lat:49.3576,lng:0.984,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,1,0,0],routes:[0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.1,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Cr\u00e9teil Soleil",cp:"94000",c:"Cr\u00e9teil",a:"P\u00f4le restauration",lat:48.8528,lng:2.6418,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,2,0,0,0,2,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],routes:[0,1,0,0,0,0,2,0,0,0,1,0,0,0,0,0,0,0,2,2,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.2,lastR:0,prevR:0,avgR:0.3,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King",cp:"45160",c:"Olivet",a:"742 Avenue de Verdun",lat:47.9796,lng:2.0339,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Al\u00e8s",cp:"30100",c:"Al\u00e8s",a:"Avenue Olivier de Serres",lat:43.7835,lng:4.0192,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,2,5,0],routes:[0,0,0,2,0,1,4,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:5,avgC:0.9,lastR:0,prevR:4,avgR:0.9,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Montauban",cp:"82000",c:"Montauban",a:"ZONE DU FUTUROPOLE",lat:43.9162,lng:1.2088,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[1,0,0,0,0,0,0,1],commandes:[1,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:1,prevR:0,avgR:0.2,lastCmd:0,prevCmd:0,avgCmd:0.1},
+{n:"Burger King Royan",cp:"17200",c:"Royan",a:"2 Rue Henri Matisse",lat:45.8666,lng:-0.7928,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick",cp:"34690",c:"Fabr\u00e8gues",a:"Aire d'Autoroute de",lat:43.6076,lng:3.7059,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick",cp:"54180",c:"Houdemont",a:"--",lat:48.6762,lng:6.3258,visits:[0,0],calls:[0,0],routes:[0,0],commandes:[0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Tarbes",cp:"65000",c:"Tarbes",a:"2 Chemin de Bastillac",lat:43.1163,lng:0.1169,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0],routes:[0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Angoul\u00eame CV",cp:"16000",c:"Angoul\u00eame",a:"8 Place de l'H\u00f4tel de ville",lat:45.6079,lng:0.1071,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,1],routes:[0,0,0,0,0,0,0,1],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:0,avgC:0.1,lastR:1,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Center Parcs Moselle",cp:"57790",c:"Hattigny",a:"CENTER PARCS - DOMAINE LES TROIS FOR\u00caTS",lat:49.1063,lng:6.0837,visits:[0,0,1,0,1,0,1,0,0,0,2,0,1,5,2,1,0,2,1,0,0,0,0,1,2,2,0,0,0,0],calls:[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.7,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Troyes Barberey",cp:"10600",c:"Barberey-Saint-Sulpice",a:"Rue de la Gare",lat:48.2253,lng:4.1671,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,2,0,0,0,0,0,0,3,0,0,0,0,0,0,0,0,0,0,1,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:1,avgC:0.2,lastR:0,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Arras",cp:"62000",c:"Arras",a:"RN, Parc des Bonnettes",lat:50.6192,lng:2.4539,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,4,0,0,0,0,4,0,0,1,0,0,2,0,3,1,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.5,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Le Puy-en-Velay",cp:"43000",c:"Le Puy-en-Velay",a:"3 Boulevard de Cluny",lat:45.2113,lng:3.786,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,2,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King",cp:"62100",c:"Calais",a:"Chemin Vert",lat:50.7776,lng:1.8513,visits:[0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,1],routes:[0,0,1,0,0,0,0],commandes:[0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:0,avgC:0.1,lastR:0,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King",cp:"42300",c:"Mably",a:"68 Rue Alfred de Musset",lat:45.59,lng:4.377,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick",cp:"18000",c:"Bourges",a:"ZAC DU PRADO",lat:47.2038,lng:2.3863,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,0,1,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Poitiers",cp:"86000",c:"Poitiers",a:"252 Avenue du 8 Mai 1945",lat:46.4996,lng:0.2429,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,0,0,1,2,2,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.6,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King Rennes Centre ville",cp:"35000",c:"Rennes",a:"1 Quai Lamennais",lat:48.2648,lng:-1.8249,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,2,0,0,0],routes:[0,0,0,0,1,1,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.2,lastR:0,prevR:0,avgR:0.2,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Bailleul",cp:"59270",c:"Bailleul",a:"ZAC DU",lat:50.6348,lng:2.9858,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,1,0],routes:[2,0,0,0,1,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:1,avgC:0.1,lastR:0,prevR:0,avgR:0.4,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick - D\u00f4me",cp:"86120",c:"Morton",a:"Center Parcs - Domaine Le Bois aux Daims",lat:46.5413,lng:0.4069,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,2,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.2,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King",cp:"34300",c:"Agde",a:"Route de S\u00e8te",lat:43.553,lng:3.8785,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Rouen Barentin",cp:"76360",c:"Barentin",a:"7 Carrefour de la Liberte",lat:49.4288,lng:1.2961,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,0,0,0,3,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.4,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King",cp:"59330",c:"Hautmont",a:"Route De Louvroil Aushopping Louvroil",lat:50.6567,lng:2.9477,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1,1],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:1,prevR:1,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Macdo",cp:"80200",c:"P\u00e9ronne",a:"Lille",lat:50.0143,lng:2.1737,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,2],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:2,prevR:0,avgR:0.1,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King Vendenheim",cp:"67550",c:"Vendenheim",a:"Route Nationale De Brumath",lat:48.5726,lng:7.7414,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,0,1,2,0,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.4,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick - Ch\u00e2lons-en-Champagne",cp:"51000",c:"Ch\u00e2lons-en-Champagne",a:"19 Avenue Winston Churchill",lat:48.8294,lng:4.1693,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,1,0,0,0,1,1,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:1,avgR:0.4,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Marseille Grand Littoral",cp:"13015",c:"Marseille",a:"C.C. Grand Littoral",lat:43.1913,lng:5.1817,visits:[0,0,0,0,0,0,0,0],calls:[0,4,0,5,0,0,0,1],routes:[1,0,0,2,0,0,1,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:1,prevC:0,avgC:1.2,lastR:0,prevR:1,avgR:0.5,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Auch",cp:"32000",c:"Auch",a:"CENTRE COMMERCIAL CARREFOUR",lat:43.7145,lng:0.7599,visits:[0,0,0,0,0,0,0,0],calls:[0,0,1,1,0,0,0,0],routes:[0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.2,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Quick Auxerre",cp:"89000",c:"Auxerre",a:"74 Avenue Haussmann",lat:47.8406,lng:3.6063,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,1,0],routes:[0,0,1,0,0,2,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:1,avgC:0.1,lastR:0,prevR:0,avgR:0.4,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King",cp:"3400",c:"Yzeure",a:"172 Rue Des Epoux Contoux",lat:43.7373,lng:3.8445,visits:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King",cp:"62219",c:"Longuenesse",a:"24 Rue de la Lib\u00e9ration",lat:50.5809,lng:2.4724,visits:[0,0,0,0,0,0,0,0],calls:[0,0,0,0,0,0,0,0],routes:[0,0,0,0,0,0,0,0],commandes:[0,0,0,0,0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0},
+{n:"Burger King",cp:"6210",c:"Mandelieu",a:"Parc d'Act. l'Echangeur. All\u00e9e L Bl\u00e9riot",lat:50.4539,lng:2.5561,visits:[0,0,0,0],calls:[0,0,0,0],routes:[0,0,0,0],commandes:[0,0,0,0],lastV:0,prevV:0,avgV:0.0,lastC:0,prevC:0,avgC:0.0,lastR:0,prevR:0,avgR:0.0,lastCmd:0,prevCmd:0,avgCmd:0.0}
+];
+
+const allStores=stores.map((s,i)=>{
+  const vsMoyV=delta(s.lastV,s.avgV);
+  const vsPrevV=delta(s.lastV,s.prevV);
+  const vsMoyC=delta(s.lastC,s.avgC);
+  const vsMoyR=delta(s.lastR,s.avgR);
+  const vsMoyCmd=delta(s.lastCmd,s.avgCmd);
+  return{...s,idx:i,vsMoyV,vsPrevV,vsMoyC,vsMoyR,vsMoyCmd};
+});
+const byVisits=[...allStores].sort((a,b)=>b.lastV-a.lastV);
+const byProg=[...allStores].sort((a,b)=>b.vsPrevV-a.vsPrevV);
+
+// ── QUICK PIN SVG ──
+function pinSVG(active){
+  const fill=active?'#FFCC00':BRAND;
+  const text=active?'Q':'Q';
+  const textColor=active?'#0D1B4B':'#fff';
+  return `<svg xmlns="http://www.w3.org/2000/svg" width="28" height="38" viewBox="0 0 28 38">
+    <path d="M14 0C6.27 0 0 6.27 0 14c0 9.33 14 24 14 24S28 23.33 28 14C28 6.27 21.73 0 14 0z" fill="${fill}" stroke="#fff" stroke-width="1.5"/>
+    <text x="14" y="19" text-anchor="middle" font-family="Arial,sans-serif" font-size="12" font-weight="800" fill="${textColor}">Q</text>
+  </svg>`;}
+
+// ── MAP ──
+const map=L.map('map',{zoomControl:true,attributionControl:false}).setView([46.8,2.3],6);
+L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
+
+const markers=L.markerClusterGroup({
+  iconCreateFunction:function(cluster){
+    const n=cluster.getChildCount();
+    const sz=n<10?32:n<50?38:44;
+    return L.divIcon({className:'',iconSize:[sz,sz],html:`<div class="q-cluster" style="width:${sz}px;height:${sz}px"><div class="q-cluster-inner" style="width:${sz-8}px;height:${sz-8}px;font-size:${sz>38?13:11}px">${n}</div></div>`});
+  },maxClusterRadius:50
+});
+
+let activeMarker=null;
+const markerMap={};
+
+allStores.forEach(s=>{
+  const icon=L.divIcon({className:'',iconSize:[28,38],iconAnchor:[14,38],html:pinSVG(false)});
+  const m=L.marker([s.lat,s.lng],{icon});
+  m.on('click',()=>selectStore(s.idx));
+  markerMap[s.idx]=m;
+  markers.addLayer(m);
+});
+map.addLayer(markers);
+
+function setActiveMarker(idx){
+  if(activeMarker!==null&&markerMap[activeMarker]){
+    markerMap[activeMarker].setIcon(L.divIcon({className:'',iconSize:[28,38],iconAnchor:[14,38],html:pinSVG(false)}));
+  }
+  activeMarker=idx;
+  if(markerMap[idx]){
+    markerMap[idx].setIcon(L.divIcon({className:'',iconSize:[28,38],iconAnchor:[14,38],html:pinSVG(true)}));
+    map.setView([allStores[idx].lat,allStores[idx].lng],13,{animate:true});
+  }
+}
+
+// ── KPI CARD ──
+function kpiCard(ico,lbl,last,prev,av,unit,gid,data){
+  const d=delta(last,av);const dp=delta(last,prev);
+  const dc=d>=0?'pos':'neg';const dpc=dp>=0?'pos':'neg';
+  return`<div class="lkpi-card">
+    <div class="lkpi-top"><span class="lkpi-ico">${ico}</span><span class="lkpi-lbl">${lbl}</span></div>
+    <div class="lkpi-val">${nf(last)}<span style="font-size:11px;font-weight:600;color:#6B7280;margin-left:2px">${unit}</span></div>
+    <div class="lkpi-sub">Dern. semaine</div>
+    ${chartSVG(data,gid,BRAND)}
+    <div class="lkpi-sep"></div>
+    <div class="lkpi-row"><span class="lkpi-rl">vs moy.</span><span class="delta ${dc}">${d>=0?'+':''}${d}%</span></div>
+    <div class="lkpi-row"><span class="lkpi-rl">vs préc.</span><span class="delta ${dpc}">${dp>=0?'+':''}${dp}%</span></div>
+    <div class="lkpi-row"><span class="lkpi-rl">Moy.</span><span class="lkpi-rv">${nf(av)}</span></div>
+  </div>`;}
+
+// ── STORE PANEL ──
+function selectStore(idx){
+  const s=allStores[idx];
+  setActiveMarker(idx);
+  const rV=byVisits.findIndex(x=>x.idx===idx)+1;
+  const rP=byProg.findIndex(x=>x.idx===idx)+1;
+  document.getElementById('panel-content').innerHTML=`
+    <div class="lhdr">
+      <div class="lhdr-left">
+        <div class="lhdr-logo"><img src="public/images/logos/Quick_logo.png" alt="Quick" style="height:36px" onerror="this.style.display='none'"></div>
+        <div><div class="lhdr-name">${s.n}</div><div class="lhdr-addr">${s.a?s.a+' — ':''}<b>${s.cp} ${s.c}</b></div></div>
+      </div>
+      <div class="lhdr-right">
+        <div class="lhdr-badge">🏆 #${rV} Visites</div>
+        <div class="lhdr-meta">#${rP} progression</div>
+      </div>
+    </div>
+    <div class="lsec"><div class="lsec-bar"></div>KPIs — dernière semaine</div>
+    <div class="lkpi-grid">
+      ${kpiCard('👣','Visites',s.lastV,s.prevV,s.avgV,'',`gv${idx}`,s.visits)}
+      ${kpiCard('📞','Appels',s.lastC,s.prevC,s.avgC,'',`gc${idx}`,s.calls)}
+      ${kpiCard('🗺️','Itinéraires',s.lastR,s.prevR,s.avgR,'',`gr${idx}`,s.routes)}
+      ${kpiCard('🍔','Commandes',s.lastCmd,s.prevCmd,s.avgCmd,'',`gd${idx}`,s.commandes)}
+    </div>`;
+}
+
+// ── GLOBAL RANKINGS ──
+function setupGlobalRankings(){
+  document.getElementById('global-title').innerHTML=`<div style="font-size:13px;font-weight:700;color:#0D1B4B">Classements — tous les restaurants</div>`;
+  const top5V=byVisits.slice(0,5);
+  const top5P=byProg.slice(0,5);
+  function rankCard(title,items,valFn,labelFn){
+    const rows=items.map((s,i)=>`
+      <div style="display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid #F3F4F6;cursor:pointer" onclick="selectStore(${s.idx})">
+        <span style="font-size:11px;font-weight:800;color:${RANK_COLORS[i]};width:16px;text-align:center">#${i+1}</span>
+        <span style="flex:1;font-size:10px;color:#374151;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${s.n}</span>
+        <span style="font-size:10px;font-weight:700;color:#0D1B4B">${valFn(s)}</span>
+      </div>`).join('');
+    return`<div style="background:#fff;border-radius:10px;padding:12px 14px;flex:1;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:10px;font-weight:700;color:#4B5675;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">${title}</div>
+      ${rows}</div>`;}
+  document.getElementById('global-row1').innerHTML=
+    rankCard('Top visites',top5V,s=>nf(s.lastV))+
+    rankCard('Top progression',top5P,s=>(s.vsPrevV>=0?'+':'')+s.vsPrevV+'%');
+
+  // Evolution chart top 5 visites
+  setupEvoChart(top5V);
+}
+
+function setupEvoChart(top5){
+  const maxN=Math.max(...top5.map(s=>s.visits.length));
+  const W=600,H=160,pL=32,pR=12,pT=10,pB=20;
+  const iw=W-pL-pR,ih=H-pT-pB;
+  const allVals=top5.flatMap(s=>s.visits);
+  const mn=Math.min(...allVals),mx=Math.max(...allVals),rng=mx-mn||1;
+  const x=i=>pL+i/(maxN-1)*iw;
+  const y=v=>pT+(1-(v-mn)/rng)*ih;
+  let paths='';
+  top5.forEach((s,ci)=>{
+    const n=s.visits.length;
+    const offset=maxN-n;
+    const pts=s.visits.map((v,i)=>`${x(offset+i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    paths+=`<polyline points="${pts}" fill="none" stroke="${RANK_COLORS[ci]}" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" opacity=".85"/>`;
+    const lx=x(maxN-1),ly=y(s.visits[n-1]);
+    paths+=`<circle cx="${lx.toFixed(1)}" cy="${ly.toFixed(1)}" r="3.5" fill="${RANK_COLORS[ci]}" stroke="white" stroke-width="1.2"/>`;
+  });
+  const leg=top5.map((s,i)=>`<span class="leg"><svg width="12" height="3"><line x1="0" y1="1.5" x2="12" y2="1.5" stroke="${RANK_COLORS[i]}" stroke-width="2"/></svg>${s.n.substring(0,22)}</span>`).join('');
+  document.getElementById('global-row2').innerHTML=`
+    <div style="background:#fff;border-radius:10px;padding:12px 14px;flex:1;box-shadow:0 1px 4px rgba(0,0,0,.06)">
+      <div style="font-size:10px;font-weight:700;color:#4B5675;text-transform:uppercase;letter-spacing:.06em;margin-bottom:6px">Évolution visites — Top 5</div>
+      <svg width="100%" viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">${paths}</svg>
+      <div class="lchart-legend">${leg}</div>
+    </div>`;}
+
+setupGlobalRankings();
+selectStore(byVisits[0].idx);
+</script>
+</body>
+</html>

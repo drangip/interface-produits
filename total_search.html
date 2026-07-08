@@ -58,17 +58,20 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
     <span style="color:rgba(255,255,255,.5);font-size:11px;font-weight:500;letter-spacing:.03em">Annonceur</span>
     <select id="annonceurSelect" onchange="switchAnnonceur(this.value)" style="background:#1a2d6b;color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:6px;padding:3px 10px;font-size:12px;font-weight:600;cursor:pointer;outline:none;appearance:none;-webkit-appearance:none;padding-right:22px;background-image:url(&quot;data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='rgba(255,255,255,.5)'/%3E%3C/svg%3E&quot;);background-repeat:no-repeat;background-position:right 7px center">
       <option value="kingfisher">Kingfisher</option>
-      <option value="coop-u">Coop&#233;rative U</option>
+      <option value="coop-u">Coopérative U</option>
+      <option value="quick">Quick</option>
     </select>
   </div>
 </nav>
 <script>
 (function(){
   var COOP_U_PAGES=['local_magasinsU.html'];
+  var QUICK_PAGES=['local_quick.html'];
   var cur=location.pathname.split('/').pop()||'home.html';
   var isCU=COOP_U_PAGES.indexOf(cur)>=0;
+  var isQ=QUICK_PAGES.indexOf(cur)>=0;
   var saved=localStorage.getItem('annonceur');
-  if(!saved){saved=isCU?'coop-u':'kingfisher';localStorage.setItem('annonceur',saved);}
+  if(!saved){saved=isCU?'coop-u':isQ?'quick':'kingfisher';localStorage.setItem('annonceur',saved);}
 
   function applyFilter(v){
     var nav=document.querySelector('nav');
@@ -77,19 +80,24 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
     links.forEach(function(a){
       var href=a.getAttribute('href')||'';
       var isU=COOP_U_PAGES.indexOf(href)>=0;
-      a.style.display=(v==='coop-u'?isU:!isU)?'':'none';
+      var isQLink=QUICK_PAGES.indexOf(href)>=0;
+      var show=v==='coop-u'?isU:v==='quick'?isQLink:(!isU&&!isQLink);
+      a.style.display=show?'':'none';
     });
     var sel=document.getElementById('annonceurSelect');
     if(sel)sel.value=v;
   }
 
   if(saved==='coop-u'&&!isCU){location.replace('local_magasinsU.html');return;}
-  if(saved==='kingfisher'&&isCU){location.replace('home.html');return;}
+  if(saved==='quick'&&!isQ){location.replace('local_quick.html');return;}
+  if(saved==='kingfisher'&&(isCU||isQ)){location.replace('home.html');return;}
   applyFilter(saved);
 
   window.switchAnnonceur=function(v){
     localStorage.setItem('annonceur',v);
-    location.href=v==='coop-u'?'local_magasinsU.html':'home.html';
+    if(v==='coop-u')location.href='local_magasinsU.html';
+    else if(v==='quick')location.href='local_quick.html';
+    else location.href='home.html';
   };
 })();
 </script>
