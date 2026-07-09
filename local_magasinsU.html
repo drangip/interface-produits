@@ -113,13 +113,21 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ov
 </script>
 <div id="subbar" style="position:fixed;top:42px;left:0;right:0;height:46px;background:#fff;border-bottom:1px solid #E5E7EB;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 20px;gap:16px">
   <img src="public/images/logos/magasinsU-logo.png" alt="Magasins U" style="height:32px;flex-shrink:0" onerror="this.style.display='none'">
-  <div style="display:flex;align-items:center;gap:8px;flex:1;max-width:360px">
-    <label style="font-size:11px;font-weight:600;color:#6B7280;white-space:nowrap">Ville</label>
-    <select id="city-filter" onchange="filterByCity(this.value)"
-      style="flex:1;padding:5px 10px;border:1.5px solid #D1D5DB;border-radius:7px;font-size:12px;color:#374151;background:#fff;outline:none;cursor:pointer">
-      <option value="">Toutes les villes</option>
-    </select>
-    <span id="city-count" style="font-size:10px;color:#9CA3AF;white-space:nowrap"></span>
+  <div style="display:flex;align-items:center;gap:12px;flex:1">
+    <div style="display:flex;align-items:center;gap:8px">
+      <label style="font-size:11px;font-weight:600;color:#6B7280;white-space:nowrap">Ville</label>
+      <select id="city-filter" onchange="filterByCity(this.value)"
+        style="min-width:160px;padding:5px 10px;border:1.5px solid #D1D5DB;border-radius:7px;font-size:12px;color:#374151;background:#fff;outline:none;cursor:pointer">
+        <option value="">Toutes les villes</option>
+      </select>
+      <span id="city-count" style="font-size:10px;color:#9CA3AF;white-space:nowrap"></span>
+    </div>
+    <div id="store-selector-wrap" style="display:none;align-items:center;gap:8px">
+      <label style="font-size:11px;font-weight:600;color:#6B7280;white-space:nowrap">Magasin</label>
+      <select id="store-filter" onchange="selectStoreById(this.value)"
+        style="min-width:200px;padding:5px 10px;border:1.5px solid #00963A;border-radius:7px;font-size:12px;color:#374151;background:#fff;outline:none;cursor:pointer">
+      </select>
+    </div>
   </div>
   <img src="public/images/logos/WPP-Media-logo-2.png" alt="WPP Media" style="height:28px;flex-shrink:0" onerror="this.style.display='none'">
 </div>
@@ -2640,18 +2648,38 @@ map.setView([stores[defaultIdx].lat,stores[defaultIdx].lng],12);
   cities.forEach(c=>{const o=document.createElement('option');o.value=c;o.textContent=c;sel.appendChild(o);});
 })();
 
+function updateStoreSelector(hits){
+  const wrap=document.getElementById('store-selector-wrap');
+  const sel=document.getElementById('store-filter');
+  if(hits.length<=1){wrap.style.display='none';return;}
+  const sorted=[...hits].sort((a,b)=>b.lastV-a.lastV);
+  sel.innerHTML=sorted.map(s=>`<option value="${s.idx}">${s.n} (${s.cp})</option>`).join('');
+  wrap.style.display='flex';
+}
+
+window.selectStoreById=function(idx){
+  idx=parseInt(idx);
+  const s=allStores[idx];
+  if(!s)return;
+  if(activeMarker){activeMarker.setIcon(iconNormal);activeMarker=null;}
+  map.setView([s.lat,s.lng],14,{animate:true});
+  markers[idx].setIcon(iconActive);activeMarker=markers[idx];
+  renderPanel(stores[idx],idx);
+};
+
 window.filterByCity=function(city){
   const count=document.getElementById('city-count');
+  const wrap=document.getElementById('store-selector-wrap');
   mcg.clearLayers();
   if(activeMarker){activeMarker.setIcon(iconNormal);activeMarker=null;}
 
   if(!city){
-    // Reset to full dataset
     byVisits=[...allStores].sort((a,b)=>b.lastV-a.lastV);
     byProg=[...allStores].sort((a,b)=>b.vsPrevV-a.vsPrevV);
     markers.forEach(m=>{if(m)mcg.addLayer(m);});
     map.flyTo([46.8,1.8],6,{duration:1});
     count.textContent='';
+    wrap.style.display='none';
     const def=byVisits[0];
     markers[def.idx].setIcon(iconActive);activeMarker=markers[def.idx];
     renderPanel(stores[def.idx],def.idx);
@@ -2662,9 +2690,9 @@ window.filterByCity=function(city){
   hits.forEach(s=>{if(markers[s.idx])mcg.addLayer(markers[s.idx]);});
   count.textContent=hits.length+' magasin'+(hits.length>1?'s':'');
 
-  // Recompute rankings on city subset
   byVisits=[...hits].sort((a,b)=>b.lastV-a.lastV);
   byProg=[...hits].sort((a,b)=>b.vsPrevV-a.vsPrevV);
+  updateStoreSelector(hits);
 
   const best=byVisits[0];
   if(!best)return;
