@@ -2644,13 +2644,13 @@ map.setView([stores[defaultIdx].lat,stores[defaultIdx].lng],12);
 
 window.filterByCity=function(city){
   const count=document.getElementById('city-count');
-  mcg.clearLayers();
+  cluster.clearLayers();
   if(activeMarker){activeMarker.setIcon(iconNormal);activeMarker=null;}
 
   if(!city){
     byVisits=[...allStores].sort((a,b)=>b.lastV-a.lastV);
     byProg=[...allStores].sort((a,b)=>b.vsPrevV-a.vsPrevV);
-    markers.forEach(m=>{if(m)mcg.addLayer(m);});
+    markers.forEach(m=>{if(m)cluster.addLayer(m);});
     map.flyTo([46.8,1.8],6,{duration:1});
     count.textContent='';
     const def=byVisits[0];
@@ -2660,7 +2660,7 @@ window.filterByCity=function(city){
   }
 
   const hits=allStores.filter(s=>s.c===city);
-  hits.forEach(s=>{if(markers[s.idx])mcg.addLayer(markers[s.idx]);});
+  hits.forEach(s=>{if(markers[s.idx])cluster.addLayer(markers[s.idx]);});
   count.textContent=hits.length+' magasin'+(hits.length>1?'s':'');
 
   byVisits=[...hits].sort((a,b)=>b.lastV-a.lastV);
