@@ -60,6 +60,7 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
       <option value="kingfisher">Kingfisher</option>
       <option value="coop-u">Coopérative U</option>
       <option value="quick">Quick</option>
+      <option value="norauto">Norauto</option>
     </select>
   </div>
 </nav>
@@ -67,11 +68,13 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 (function(){
   var COOP_U_PAGES=['local_magasinsU.html'];
   var QUICK_PAGES=['local_quick.html'];
+  var NORAUTO_PAGES=['local_norauto.html'];
   var cur=location.pathname.split('/').pop()||'home.html';
   var isCU=COOP_U_PAGES.indexOf(cur)>=0;
   var isQ=QUICK_PAGES.indexOf(cur)>=0;
+  var isN=NORAUTO_PAGES.indexOf(cur)>=0;
   var saved=localStorage.getItem('annonceur');
-  if(!saved){saved=isCU?'coop-u':isQ?'quick':'kingfisher';localStorage.setItem('annonceur',saved);}
+  if(!saved){saved=isCU?'coop-u':isQ?'quick':isN?'norauto':'kingfisher';localStorage.setItem('annonceur',saved);}
 
   function applyFilter(v){
     var nav=document.querySelector('nav');
@@ -81,7 +84,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
       var href=a.getAttribute('href')||'';
       var isU=COOP_U_PAGES.indexOf(href)>=0;
       var isQLink=QUICK_PAGES.indexOf(href)>=0;
-      var show=v==='coop-u'?isU:v==='quick'?isQLink:(!isU&&!isQLink);
+      var isNLink=NORAUTO_PAGES.indexOf(href)>=0;
+      var show=v==='coop-u'?isU:v==='quick'?isQLink:v==='norauto'?isNLink:(!isU&&!isQLink&&!isNLink);
       a.style.display=show?'':'none';
     });
     var sel=document.getElementById('annonceurSelect');
@@ -90,13 +94,15 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;ba
 
   if(saved==='coop-u'&&!isCU){location.replace('local_magasinsU.html');return;}
   if(saved==='quick'&&!isQ){location.replace('local_quick.html');return;}
-  if(saved==='kingfisher'&&(isCU||isQ)){location.replace('home.html');return;}
+  if(saved==='norauto'&&!isN){location.replace('local_norauto.html');return;}
+  if(saved==='kingfisher'&&(isCU||isQ||isN)){location.replace('home.html');return;}
   applyFilter(saved);
 
   window.switchAnnonceur=function(v){
     localStorage.setItem('annonceur',v);
     if(v==='coop-u')location.href='local_magasinsU.html';
     else if(v==='quick')location.href='local_quick.html';
+    else if(v==='norauto')location.href='local_norauto.html';
     else location.href='home.html';
   };
 })();
