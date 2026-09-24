@@ -491,7 +491,7 @@ const iconNormal=L.divIcon({html:`<div style="filter:drop-shadow(1px 2px 4px rgb
 const iconActive=L.divIcon({html:`<div style="filter:drop-shadow(2px 3px 8px rgba(0,0,0,.5));cursor:pointer;transform-origin:bottom center">${PIN_ACTIVE}</div>`,iconSize:[36,50],iconAnchor:[18,50],className:''});
 
 const map=L.map('map',{center:[50.2,2.8],zoom:7});
-L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{attribution:'© OpenStreetMap © CARTO',subdomains:'abcd',maxZoom:19}).addTo(map);
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Street_Map/MapServer/tile/{z}/{y}/{x}',{attribution:'Tiles © Esri',maxZoom:19}).addTo(map);
 
 const cluster=L.markerClusterGroup({
   maxClusterRadius:55,showCoverageOnHover:false,

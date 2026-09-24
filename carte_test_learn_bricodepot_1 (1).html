@@ -1404,10 +1404,10 @@ const map = L.map('map', {
   preferCanvas: true
 }).setView([46.8, 2.5], 6);
 
-L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png', {
-  attribution: '&copy; OpenStreetMap &copy; CARTO · Données démo simulées',
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Dark_Gray_Base/MapServer/tile/{z}/{y}/{x}', {
+  attribution: 'Tiles &copy; Esri · Données démo simulées',
   subdomains: 'abcd',
-  maxZoom: 19
+  maxZoom: 16
 }).addTo(map);
 
 // Labels régions FR (toutes les régions Brico Dépôt = couverture nationale)

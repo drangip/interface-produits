@@ -336,7 +336,7 @@ const byProg=[...allStores].sort((a,b)=>b.vsPrevV-a.vsPrevV);
 
 // ── MAP ──
 const map=L.map('map',{zoomControl:true,attributionControl:false}).setView([46.8,2.3],6);
-L.tileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png',{maxZoom:18}).addTo(map);
+L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/World_Light_Gray_Base/MapServer/tile/{z}/{y}/{x}',{maxZoom:16}).addTo(map);
 const mcg=L.markerClusterGroup({
   iconCreateFunction:function(cl){
     const n=cl.getChildCount(),sz=n<10?30:n<50?36:42;
